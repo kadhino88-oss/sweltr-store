@@ -1,0 +1,66 @@
+import LegalPage from "@/components/LegalPage";
+
+export const metadata = { title: "Mentions légales — SWELTR" };
+
+export default function MentionsLegales() {
+  return (
+    <LegalPage title="Mentions légales" updated="Juillet 2026">
+      <section>
+        <h2>Éditeur du site</h2>
+        <p>
+          Le site SWELTR est édité par <strong>BK ENTREPRISE</strong>,
+          entreprise individuelle (auto-entrepreneur), dont le siège est situé au{" "}
+          <strong>122 rue des Lauriers, 74380 Cranves-Sales, France</strong>.
+        </p>
+        <p>
+          Contact : <strong>contact@bkentreprise.com</strong> — <strong>+33 7 74 55 53 70</strong>
+        </p>
+        <p>Directeur de la publication : BK Entreprise.</p>
+      </section>
+
+      <section>
+        <h2>Hébergement</h2>
+        <p>
+          Le site est hébergé par Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis —{" "}
+          <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">vercel.com</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Propriété intellectuelle</h2>
+        <p>
+          L'ensemble des contenus présents sur ce site (textes, visuels, logo) est la propriété de
+          SWELTR, sauf mention contraire. Les photographies produit sont fournies par nos
+          partenaires fournisseurs et utilisées dans le cadre de la commercialisation des produits
+          présentés.
+        </p>
+      </section>
+
+      <section>
+        <h2>Activité</h2>
+        <p>
+          SWELTR est un site de vente en ligne fonctionnant selon un modèle de dropshipping : les
+          produits commandés sont expédiés directement par nos fournisseurs partenaires vers
+          l'adresse indiquée par le client lors de la commande.
+        </p>
+      </section>
+
+      <section>
+        <h2>Paiement</h2>
+        <p>
+          Les paiements sont traités par Stripe Payments Europe, Ltd., un prestataire de paiement
+          sécurisé tiers. SWELTR ne stocke aucune donnée bancaire.
+        </p>
+      </section>
+
+      <section>
+        <h2>Contact</h2>
+        <p>
+          Pour toute question relative au site ou à une commande, tu peux nous contacter à l'adresse{" "}
+          <strong>contact@bkentreprise.com</strong> ou par téléphone au{" "}
+          <strong>+33 7 74 55 53 70</strong>.
+        </p>
+      </section>
+    </LegalPage>
+  );
+}
