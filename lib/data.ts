@@ -20,8 +20,7 @@ export type Tier = {
 // Photos produit officielles CJ Dropshipping (une par article sourcé) — gamme hiver, sourcée le 03/09/2026
 export const PRODUCT_IMAGES = {
   heatedGloves: "https://cf.cjdropshipping.com/20180920/2155711379153.jpg",
-  heatedScarf:
-    "https://oss-cf.cjdropshipping.com/product/2024/12/12/06/d2ed1c7d-9d9b-41e5-847d-001e7b0b186b.jpg",
+  heatedScarf: "https://cf.cjdropshipping.com/quick/product/72a24559-48af-49ce-b41c-0d3ceb7c9614.jpg",
   thermalSocks: "https://cf.cjdropshipping.com/00978b38-af86-4a0e-8569-e9f40a644f72.jpg",
 };
 
@@ -37,9 +36,9 @@ export const HEATED_SCARF_GALLERY = [
   "https://cf.cjdropshipping.com/quick/product/72a24559-48af-49ce-b41c-0d3ceb7c9614.jpg",
   "https://cf.cjdropshipping.com/quick/product/b0cfd092-bb3d-4cbb-8057-b6c84adfff2e.jpg",
   "https://cf.cjdropshipping.com/quick/product/da4bdaad-0ebc-4bee-ab3e-a951afe847d7.jpg",
-  "https://oss-cf.cjdropshipping.com/product/2024/12/12/06/d2ed1c7d-9d9b-41e5-847d-001e7b0b186b.jpg",
   "https://cf.cjdropshipping.com/quick/product/ed3b69ac-e870-4b82-8fe2-406f45894e00.jpg",
   "https://cf.cjdropshipping.com/quick/product/8b28030b-d38f-4db3-ac4e-f81174e83a3c.jpg",
+  "https://oss-cf.cjdropshipping.com/product/2024/12/12/06/d2ed1c7d-9d9b-41e5-847d-001e7b0b186b.jpg",
 ];
 
 // Galerie complète des chaussettes thermiques (via productImageSet CJ)
