@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Check, Clock, Loader2, ArrowRight } from "lucide-react";
+import { track } from "@vercel/analytics/react";
 import { TIERS } from "@/lib/data";
 import Reveal from "@/components/Reveal";
 import CountdownTimer from "@/components/CountdownTimer";
@@ -14,7 +15,11 @@ export default function ProductTiers({
 }: {
   onAdd: () => void;
 }) {
-  const [tier, setTier] = useState("duo");
+  const [tier, setTierState] = useState("duo");
+  function setTier(id: string) {
+    setTierState(id);
+    track("select_kit", { tierId: id });
+  }
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const selected = useMemo(() => TIERS.find((t) => t.id === tier)!, [tier]);
@@ -22,6 +27,7 @@ export default function ProductTiers({
   async function handleCheckout() {
     setLoading(true);
     setError(null);
+    track("begin_checkout", { tierId: tier, price: selected.price });
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Check, Star, Loader2, ShieldCheck, Truck } from "lucide-react";
 import { Tier, REPORTS } from "@/lib/data";
+import { track } from "@vercel/analytics/react";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Reveal from "@/components/Reveal";
 import Footer from "@/components/Footer";
@@ -15,9 +16,15 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    track("view_product", { tierId: tier.id });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function handleCheckout() {
     setLoading(true);
     setError(null);
+    track("begin_checkout", { tierId: tier.id, price: tier.price });
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
