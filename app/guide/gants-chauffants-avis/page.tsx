@@ -75,6 +75,15 @@ export default function GuideGantsChauffants() {
       </section>
 
       <section>
+        <h2>Aller plus loin</h2>
+        <p>
+          Ce guide se concentre sur les mains. Pour une vue d'ensemble (mains, cou, pieds) et les
+          erreurs courantes qui font qu'on a froid malgré un bon équipement, voir{" "}
+          <Link href="/guide/ne-plus-avoir-froid-hiver">notre guide complet contre le froid</Link>.
+        </p>
+      </section>
+
+      <section>
         <h2>Questions fréquentes</h2>
         <p>
           <strong>Les gants chauffants marchent-ils sous la pluie ?</strong> Oui pour une exposition
