@@ -20,6 +20,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...productPages,
     {
+      url: `${siteUrl}/guide/gants-chauffants-avis`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
       url: `${siteUrl}/cgv`,
       lastModified: new Date(),
       changeFrequency: "yearly",
