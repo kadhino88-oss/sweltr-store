@@ -12,7 +12,7 @@ export default function FieldReports() {
           Avis terrain
         </span>
         <h2 className="font-display font-bold text-3xl md:text-4xl mt-3">
-          Testé en conditions réelles de chaleur
+          Testé en conditions réelles de grand froid
         </h2>
       </Reveal>
       <div className="grid md:grid-cols-3 gap-6">

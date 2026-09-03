@@ -1,13 +1,13 @@
 "use client";
 
-import { Battery, Volume2, Truck, ShieldCheck } from "lucide-react";
+import { Battery, Flame, Truck, ShieldCheck } from "lucide-react";
 import Reveal from "@/components/Reveal";
 
 const STATS = [
-  { icon: Battery, label: "16h d'autonomie" },
-  { icon: Volume2, label: "< 45dB, silencieux" },
+  { icon: Battery, label: "Jusqu'à 4h de chaleur" },
+  { icon: Flame, label: "3 paliers de température" },
   { icon: Truck, label: "Expédié sous 48h" },
-  { icon: ShieldCheck, label: "Garantie fraîcheur 30 jours" },
+  { icon: ShieldCheck, label: "Garantie chaleur 30 jours" },
 ];
 
 export default function TrustBar() {

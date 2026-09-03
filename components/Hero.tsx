@@ -2,12 +2,12 @@
 
 import { useState, useMemo, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Wind } from "lucide-react";
+import { Snowflake } from "lucide-react";
 import { heatCopy } from "@/lib/data";
 import FanVisual from "@/components/FanVisual";
 
 export default function Hero() {
-  const [heat, setHeat] = useState(34);
+  const [heat, setHeat] = useState(-3);
   const hc = useMemo(() => heatCopy(heat), [heat]);
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -26,7 +26,7 @@ export default function Hero() {
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full font-mono text-[11px] tracking-widest uppercase mb-6"
             style={{ background: "#1E1E24", color: hc.color, border: `1px solid ${hc.color}44` }}
           >
-            Indice de chaleur en direct
+            Indice de froid en direct
           </motion.div>
 
           <motion.h1
@@ -50,7 +50,7 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="text-lg max-w-lg mb-10 text-soft"
           >
-            Ventilateur de cou, mini turbo et serviette rafraîchissante. Conçus pour les jours
+            Gants chauffants, écharpe chauffante et chaussettes thermiques. Conçus pour les jours
             où ton corps refuse tout simplement de coopérer.
           </motion.p>
 
@@ -70,8 +70,8 @@ export default function Hero() {
             </div>
             <input
               type="range"
-              min={18}
-              max={45}
+              min={-15}
+              max={15}
               value={heat}
               onChange={(e) => setHeat(Number(e.target.value))}
               className="heat-range w-full"
@@ -82,8 +82,8 @@ export default function Hero() {
               aria-label="Régler la température du jour"
             />
             <div className="flex justify-between font-mono text-[10px] mt-1 text-[#6B6B74]">
-              <span>18°C</span>
-              <span>45°C</span>
+              <span>-15°C</span>
+              <span>15°C</span>
             </div>
             <p className="text-sm mt-4 text-soft">{hc.desc}</p>
           </motion.div>
@@ -98,7 +98,7 @@ export default function Hero() {
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-display font-semibold text-sm uppercase tracking-wide"
             style={{ background: hc.color, color: "#0B0B0F" }}
           >
-            Affronter cette chaleur <Wind size={16} />
+            Affronter ce froid <Snowflake size={16} />
           </motion.a>
         </motion.div>
 

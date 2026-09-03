@@ -7,9 +7,9 @@ import { PRODUCT_IMAGES } from "@/lib/data";
 import Reveal from "@/components/Reveal";
 
 const ITEMS = [
-  { key: "neckFan", label: "Ventilateur de cou", src: PRODUCT_IMAGES.neckFan, href: "/produit/solo" },
-  { key: "miniTurbo", label: "Mini Turbo portable", src: PRODUCT_IMAGES.miniTurbo, href: "/produit/duo" },
-  { key: "towel", label: "Serviette rafraîchissante", src: PRODUCT_IMAGES.towel, href: "/produit/trio" },
+  { key: "heatedGloves", label: "Gants chauffants", src: PRODUCT_IMAGES.heatedGloves, href: "/produit/solo" },
+  { key: "heatedScarf", label: "Écharpe chauffante", src: PRODUCT_IMAGES.heatedScarf, href: "/produit/duo" },
+  { key: "thermalSocks", label: "Chaussettes thermiques", src: PRODUCT_IMAGES.thermalSocks, href: "/produit/trio" },
 ];
 
 export default function ProductGallery() {

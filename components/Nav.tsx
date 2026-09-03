@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ShoppingBag, ThermometerSun } from "lucide-react";
+import { ShoppingBag, Snowflake } from "lucide-react";
 
 export default function Nav({ cartCount }: { cartCount: number }) {
   const { scrollY } = useScroll();
@@ -19,7 +19,7 @@ export default function Nav({ cartCount }: { cartCount: number }) {
       />
       <div className="flex items-center justify-between px-6 md:px-12 py-5 max-w-7xl mx-auto">
         <a href="#top" className="font-display text-xl font-bold tracking-tight flex items-center gap-2">
-          <ThermometerSun size={22} className="text-orange" />
+          <Snowflake size={22} className="text-orange" />
           SWELTR
         </a>
         <div className="hidden md:flex gap-8 font-mono text-xs uppercase tracking-widest text-muted">

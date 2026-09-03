@@ -19,13 +19,13 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SWELTR — Kit anti-canicule qui tient vraiment la chaleur à distance",
+  title: "SWELTR — Kit chaleur qui tient vraiment le froid à distance",
   description:
-    "Ventilateur de cou, mini turbo et serviette rafraîchissante. Testés en conditions réelles de canicule. Expédié sous 48h, garantie 30 jours.",
+    "Gants chauffants, écharpe chauffante et chaussettes thermiques. Testés en conditions réelles de grand froid. Expédié sous 48h, garantie 30 jours.",
   openGraph: {
-    title: "SWELTR — Kit anti-canicule",
+    title: "SWELTR — Kit anti-froid",
     description:
-      "Le gear qui rend les journées à 38°C supportables. Livraison rapide, garantie 30 jours.",
+      "Le gear qui rend les journées à -5°C supportables. Livraison rapide, garantie 30 jours.",
     type: "website",
   },
 };

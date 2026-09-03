@@ -17,137 +17,134 @@ export type Tier = {
   specs: { label: string; value: string }[];
 };
 
-// Photos produit officielles CJ Dropshipping (une par article sourcé)
+// Photos produit officielles CJ Dropshipping (une par article sourcé) — gamme hiver, sourcée le 03/09/2026
 export const PRODUCT_IMAGES = {
-  neckFan:
-    "https://oss-cf.cjdropshipping.com/product/2024/04/29/02/b2768d80-0a18-4293-b578-8eb167e790c4_trans.jpeg",
-  miniTurbo:
-    "https://oss-cf.cjdropshipping.com/product/2024/01/23/08/c001fe12-35fa-4661-a4c3-3d98964d5124.jpg",
-  towel: "https://cf.cjdropshipping.com/bd5a2eec-3fe2-42ea-b08f-3c3e6ce4a737.jpg",
+  heatedGloves: "https://cf.cjdropshipping.com/20180920/2155711379153.jpg",
+  heatedScarf:
+    "https://oss-cf.cjdropshipping.com/product/2024/12/12/06/d2ed1c7d-9d9b-41e5-847d-001e7b0b186b.jpg",
+  thermalSocks: "https://cf.cjdropshipping.com/00978b38-af86-4a0e-8569-e9f40a644f72.jpg",
 };
 
-// Galerie complète du ventilateur de cou (plusieurs angles, via productImageSet CJ)
-export const NECK_FAN_GALLERY = [
-  "https://oss-cf.cjdropshipping.com/product/2024/04/29/02/b2768d80-0a18-4293-b578-8eb167e790c4_trans.jpeg",
-  "https://oss-cf.cjdropshipping.com/product/2024/04/29/02/c112dfaf-f4a4-4e37-b256-7fc00a112070_trans.jpeg",
-  "https://oss-cf.cjdropshipping.com/product/2024/04/29/02/d160686e-8da0-4e3b-a51c-8e28ddb519aa_trans.jpeg",
-  "https://oss-cf.cjdropshipping.com/product/2024/04/29/02/c3dd99bf-bdf7-4696-b8e2-afeda301240c_trans.jpeg",
-  "https://oss-cf.cjdropshipping.com/product/2024/04/29/02/a3a9b031-8f9d-4a29-afe7-28b00a80c3c8_trans.jpeg",
-  "https://oss-cf.cjdropshipping.com/product/2024/04/29/02/87d27502-cfbd-4fff-b8ba-5b12de2d0b64_trans.jpeg",
+// Galerie complète des gants chauffants (via productImageSet CJ)
+export const HEATED_GLOVES_GALLERY = [
+  "https://cf.cjdropshipping.com/20180920/28896142656039.jpg",
+  "https://cf.cjdropshipping.com/20180920/188040013818.jpg",
+  "https://cf.cjdropshipping.com/20180920/2155711379153.jpg",
 ];
 
-// Galerie complète du mini turbo (via productImageSet CJ)
-export const MINI_TURBO_GALLERY = [
-  "https://oss-cf.cjdropshipping.com/product/2024/01/23/08/c001fe12-35fa-4661-a4c3-3d98964d5124.jpg",
-  "https://oss-cf.cjdropshipping.com/product/2024/01/23/08/697ccbd2-3bdf-4949-b68d-637040bf8158_trans.jpeg",
-  "https://oss-cf.cjdropshipping.com/product/2024/01/23/08/79bafb39-2994-4479-90f0-efd12ca4f601.jpg",
-  "https://oss-cf.cjdropshipping.com/product/2024/01/23/08/cdd7504e-38e8-4aa6-b1d2-4178ef5eb946_trans.jpeg",
-  "https://oss-cf.cjdropshipping.com/product/2024/01/23/08/748741d1-e5d2-4a5b-b7aa-72c0c834da92.jpg",
+// Galerie complète de l'écharpe chauffante (via productImageSet CJ)
+export const HEATED_SCARF_GALLERY = [
+  "https://cf.cjdropshipping.com/quick/product/72a24559-48af-49ce-b41c-0d3ceb7c9614.jpg",
+  "https://cf.cjdropshipping.com/quick/product/b0cfd092-bb3d-4cbb-8057-b6c84adfff2e.jpg",
+  "https://cf.cjdropshipping.com/quick/product/da4bdaad-0ebc-4bee-ab3e-a951afe847d7.jpg",
+  "https://oss-cf.cjdropshipping.com/product/2024/12/12/06/d2ed1c7d-9d9b-41e5-847d-001e7b0b186b.jpg",
+  "https://cf.cjdropshipping.com/quick/product/ed3b69ac-e870-4b82-8fe2-406f45894e00.jpg",
+  "https://cf.cjdropshipping.com/quick/product/8b28030b-d38f-4db3-ac4e-f81174e83a3c.jpg",
 ];
 
-// Galerie complète de la serviette rafraîchissante (via productImageSet CJ)
-export const TOWEL_GALLERY = [
-  "https://cf.cjdropshipping.com/bd5a2eec-3fe2-42ea-b08f-3c3e6ce4a737.jpg",
-  "https://cf.cjdropshipping.com/72a9ad11-f639-43ae-aa9f-4ae49ef46cfe.jpg",
-  "https://cf.cjdropshipping.com/2e6a13c1-28e5-4976-9293-a7e9cc37e2ab.jpg",
-  "https://cf.cjdropshipping.com/90e4d32f-70a1-4f26-991d-4eddb284edfd.jpg",
-  "https://cf.cjdropshipping.com/437b10e6-cd18-47b7-b9b1-83d95dded06e.jpg",
+// Galerie complète des chaussettes thermiques (via productImageSet CJ)
+export const THERMAL_SOCKS_GALLERY = [
+  "https://cf.cjdropshipping.com/528d7e19-3a89-40fd-a47c-fc3137747bee.jpg",
+  "https://cf.cjdropshipping.com/bd43baeb-209b-4279-9c3c-56e605366c25.jpg",
+  "https://cf.cjdropshipping.com/c0692fef-0c89-4659-986e-06a268ff2df1.jpg",
+  "https://cf.cjdropshipping.com/284c047b-9da8-4a3c-b900-db5a8d290d6a.jpg",
+  "https://cf.cjdropshipping.com/00978b38-af86-4a0e-8569-e9f40a644f72.jpg",
 ];
 
 export const TIERS: Tier[] = [
   {
     id: "solo",
-    name: "Solo Fraîcheur",
-    tagline: "1x Ventilateur de cou",
-    price: 24.9,
-    compare: 39.9,
-    items: ["1× Ventilateur de cou SWELTR"],
-    cjItems: [{ vid: "1784774077022998528", quantity: 1 }],
-    images: NECK_FAN_GALLERY,
-    cardImages: [PRODUCT_IMAGES.neckFan],
+    name: "Solo Chaleur Mains",
+    tagline: "1x Gants chauffants",
+    price: 34.9,
+    compare: 54.9,
+    items: ["1× Gants chauffants SWELTR"],
+    cjItems: [{ vid: "42BD9CA6-6D95-4B26-8F20-A52375663923", quantity: 1 }],
+    images: HEATED_GLOVES_GALLERY,
+    cardImages: [PRODUCT_IMAGES.heatedGloves],
     description:
-      "Le ventilateur de cou SWELTR t'accompagne partout : trajet, bureau, sport, festival. Il se porte comme un casque léger autour du cou et souffle un air frais en continu sur ton visage et ta nuque, sans bouger, sans qu'on ait besoin de le tenir. Rechargeable en USB-C, il tient une journée entière sur une seule charge.",
+      "Les gants chauffants SWELTR gardent tes mains à température constante pendant environ 4h, où que tu sois : vélo, chantier, montagne, simple trajet du matin. Rechargeables en USB, ils tiennent chaud sans fil ni prise électrique — glisse-les, allume, c'est parti.",
     specs: [
-      { label: "Autonomie", value: "Jusqu'à 16h en mode léger, 6h en turbo" },
-      { label: "Recharge", value: "USB-C, complète en moins de 2h" },
-      { label: "Niveaux de vitesse", value: "3 vitesses réglables" },
-      { label: "Poids", value: "Environ 230g" },
-      { label: "Bruit", value: "< 45dB en mode turbo" },
+      { label: "Autonomie", value: "Jusqu'à 4h de chaleur constante" },
+      { label: "Recharge", value: "USB, complète en environ 2h" },
+      { label: "Coloris", value: "Gris, kaki ou rouge" },
+      { label: "Poids", value: "Environ 314g la paire" },
+      { label: "Matière", value: "Tissu isolant, doublure chaude" },
     ],
   },
   {
     id: "duo",
-    name: "Duo Anti-Canicule",
-    tagline: "Ventilateur de cou + Mini Turbo",
-    price: 38.9,
-    compare: 64.8,
-    items: ["1× Ventilateur de cou SWELTR", "1× Mini Turbo portable"],
+    name: "Duo Chaleur Totale",
+    tagline: "Gants chauffants + Écharpe chauffante",
+    price: 49.9,
+    compare: 79.9,
+    items: ["1× Gants chauffants SWELTR", "1× Écharpe chauffante USB"],
     best: true,
     cjItems: [
-      { vid: "1784774077022998528", quantity: 1 }, // ventilateur de cou
-      { vid: "1749714889599361024", quantity: 1 }, // mini turbo
+      { vid: "42BD9CA6-6D95-4B26-8F20-A52375663923", quantity: 1 }, // gants chauffants
+      { vid: "2410090540221610300", quantity: 1 }, // écharpe chauffante
     ],
-    images: [...NECK_FAN_GALLERY.slice(0, 3), ...MINI_TURBO_GALLERY.slice(0, 3)],
-    cardImages: [PRODUCT_IMAGES.neckFan, PRODUCT_IMAGES.miniTurbo],
+    images: [...HEATED_GLOVES_GALLERY.slice(0, 3), ...HEATED_SCARF_GALLERY.slice(0, 3)],
+    cardImages: [PRODUCT_IMAGES.heatedGloves, PRODUCT_IMAGES.heatedScarf],
     description:
-      "Le duo complet pour ne plus jamais subir la chaleur : le ventilateur de cou pour un flux d'air continu en mains libres, et le Mini Turbo à sortir de la poche pour un coup de frais instantané et puissant où que tu sois. Les deux se rechargent en USB-C et se glissent facilement dans un sac.",
+      "Le duo complet pour ne plus jamais subir le froid : les gants chauffants pour les mains, et l'écharpe chauffante à 3 paliers de température pour le cou et les épaules. Les deux se rechargent en USB et tiennent plusieurs heures de chaleur constante.",
     specs: [
-      { label: "Contenu", value: "1 ventilateur de cou + 1 mini turbo portable" },
-      { label: "Autonomie ventilateur de cou", value: "Jusqu'à 16h" },
-      { label: "Autonomie mini turbo", value: "Jusqu'à 10h" },
-      { label: "Recharge", value: "USB-C pour les deux appareils" },
-      { label: "Bruit", value: "< 45dB en mode turbo" },
+      { label: "Contenu", value: "1 gants chauffants + 1 écharpe chauffante" },
+      { label: "Autonomie gants", value: "Jusqu'à 4h" },
+      { label: "Paliers écharpe", value: "3 réglages : 42°C, 48°C, 55°C" },
+      { label: "Recharge", value: "USB pour les deux accessoires" },
+      { label: "Entretien écharpe", value: "Lavable, sans démontage" },
     ],
   },
   {
     id: "trio",
-    name: "Kit Fraîcheur Totale",
-    tagline: "Ventilateur de cou + Mini Turbo + Serviette rafraîchissante",
-    price: 49.9,
-    compare: 84.7,
+    name: "Kit Grand Froid",
+    tagline: "Gants chauffants + Écharpe chauffante + Chaussettes thermiques",
+    price: 59.9,
+    compare: 99.9,
     items: [
-      "1× Ventilateur de cou SWELTR",
-      "1× Mini Turbo portable",
-      "1× Serviette rafraîchissante",
+      "1× Gants chauffants SWELTR",
+      "1× Écharpe chauffante USB",
+      "1× Chaussettes thermiques",
     ],
     cjItems: [
-      { vid: "1784774077022998528", quantity: 1 }, // ventilateur de cou
-      { vid: "1749714889599361024", quantity: 1 }, // mini turbo
-      { vid: "1428274664739835904", quantity: 1 }, // serviette rafraîchissante
+      { vid: "42BD9CA6-6D95-4B26-8F20-A52375663923", quantity: 1 }, // gants chauffants
+      { vid: "2410090540221610300", quantity: 1 }, // écharpe chauffante
+      { vid: "1573872746495488003", quantity: 1 }, // chaussettes thermiques
     ],
     images: [
-      ...NECK_FAN_GALLERY.slice(0, 2),
-      ...MINI_TURBO_GALLERY.slice(0, 2),
-      ...TOWEL_GALLERY.slice(0, 2),
+      ...HEATED_GLOVES_GALLERY.slice(0, 2),
+      ...HEATED_SCARF_GALLERY.slice(0, 2),
+      ...THERMAL_SOCKS_GALLERY.slice(0, 2),
     ],
-    cardImages: [PRODUCT_IMAGES.neckFan, PRODUCT_IMAGES.miniTurbo, PRODUCT_IMAGES.towel],
+    cardImages: [PRODUCT_IMAGES.heatedGloves, PRODUCT_IMAGES.heatedScarf, PRODUCT_IMAGES.thermalSocks],
     description:
-      "Le kit complet pour ne plus jamais subir une seule journée de canicule : le ventilateur de cou pour un flux d'air continu, le Mini Turbo pour un coup de frais instantané, et la serviette rafraîchissante en microfibre pour un soulagement immédiat sur la peau après l'avoir humidifiée. Le trio parfait pour le trajet, le sport et les longues journées d'été.",
+      "Le kit complet pour ne plus jamais subir une seule journée de grand froid : les gants chauffants pour les mains, l'écharpe chauffante pour le cou, et les chaussettes thermiques en molleton épais pour les pieds. Le trio parfait pour l'hiver, du trajet du matin aux longues journées dehors.",
     specs: [
-      { label: "Contenu", value: "1 ventilateur de cou + 1 mini turbo + 1 serviette rafraîchissante" },
-      { label: "Autonomie ventilateur de cou", value: "Jusqu'à 16h" },
-      { label: "Autonomie mini turbo", value: "Jusqu'à 10h" },
-      { label: "Serviette", value: "Microfibre à séchage rapide, effet rafraîchissant immédiat une fois humidifiée" },
-      { label: "Recharge", value: "USB-C pour les appareils électroniques" },
+      { label: "Contenu", value: "1 gants chauffants + 1 écharpe chauffante + 1 paire de chaussettes thermiques" },
+      { label: "Autonomie gants", value: "Jusqu'à 4h" },
+      { label: "Paliers écharpe", value: "3 réglages : 42°C, 48°C, 55°C" },
+      { label: "Chaussettes", value: "Molleton épais, isolation thermique passive (sans batterie)" },
+      { label: "Recharge", value: "USB pour gants et écharpe" },
     ],
   },
 ];
 
 export const FAQS = [
   {
-    q: "Combien de temps dure la batterie ?",
-    a: "Le ventilateur de cou tient jusqu'à 16h en mode léger et 6h en turbo. Le Mini Turbo tient jusqu'à 10h. Les deux se rechargent complètement en USB-C en moins de 2h.",
+    q: "Combien de temps dure la chaleur ?",
+    a: "Les gants chauffants tiennent jusqu'à 4h de chaleur constante par charge. L'écharpe chauffante tient environ 3 à 4h selon le palier choisi (42°C à 55°C). Les deux se rechargent en USB en environ 2h. Les chaussettes thermiques n'ont pas de batterie : elles isolent naturellement, sans limite d'autonomie.",
   },
   {
     q: "En combien de temps je suis livré ?",
     a: "Ta commande est expédiée sous 48h après paiement. Le délai de livraison est en moyenne de 7 à 15 jours ouvrés selon ta localisation.",
   },
   {
-    q: "Est-ce que c'est vraiment silencieux ?",
-    a: "Oui. Le moteur brushless reste sous les 45 décibels en mode turbo, à peine plus qu'un chuchotement à un mètre — tu peux le porter en réunion ou au bureau sans gêner personne.",
+    q: "Est-ce que ça tient vraiment chaud ?",
+    a: "Oui. Les gants et l'écharpe chauffent activement (jusqu'à 55°C pour l'écharpe, sur 3 paliers réglables) — tu sens la différence dès l'allumage, même par grand froid. Les chaussettes thermiques épaisses complètent avec une isolation passive.",
   },
   {
-    q: "Et si ça ne me rafraîchit pas assez ?",
+    q: "Et si ça ne me réchauffe pas assez ?",
     a: "Tu as 30 jours pour l'essayer. Si tu ne sens pas la différence, on te rembourse intégralement, sans justification à donner.",
   },
 ];
@@ -155,49 +152,49 @@ export const FAQS = [
 export const REPORTS = [
   {
     name: "Léa, Lyon",
-    temp: "38°C",
+    temp: "-4°C",
     quote:
-      "Porté sur le quai du métro en pleine canicule, ça a littéralement sauvé mon trajet.",
+      "Portés sur le quai du métro en plein pic de froid, les gants ont littéralement sauvé mon trajet.",
     stars: 5,
   },
   {
     name: "Marcus, Bruxelles",
-    temp: "36°C",
+    temp: "-8°C",
     quote:
       "Tient toute une journée de chantier en extérieur sur une seule charge, je ne m'y attendais pas.",
     stars: 5,
   },
   {
-    name: "Amina, Douala",
-    temp: "35°C",
+    name: "Amina, Genève",
+    temp: "-2°C",
     quote:
-      "Assez silencieux pour le porter en appel, assez puissant pour vraiment sentir l'air.",
+      "L'écharpe chauffante est devenue mon réflexe dès que le thermomètre passe sous zéro.",
     stars: 5,
   },
 ];
 
 export function heatCopy(t: number) {
-  if (t < 26)
+  if (t > 10)
     return {
       label: "DOUX",
-      desc: "Confortable pour l'instant, mais la météo annonce autre chose.",
+      desc: "Confortable pour l'instant, mais la météo va vite changer.",
       color: "#4FE3C1",
     };
-  if (t < 32)
+  if (t > 0)
     return {
-      label: "TIÈDE",
-      desc: "C'est le moment où un ventilateur de cou commence à se justifier.",
+      label: "FRAIS",
+      desc: "C'est le moment où des gants chauffants commencent à se justifier.",
       color: "#FFD23F",
     };
-  if (t < 38)
+  if (t > -8)
     return {
-      label: "CHAUD",
-      desc: "Zone SWELTR par excellence. Ton trajet va devenir pénible sans lui.",
+      label: "FROID",
+      desc: "Zone SWELTR par excellence. Tes mains vont morfler sans eux.",
       color: "#FF7A3C",
     };
   return {
-    label: "EXTRÊME",
-    desc: "Alerte indice de chaleur. C'est exactement le jour où tu regretteras de ne pas avoir commandé plus tôt.",
+    label: "GLACIAL",
+    desc: "Alerte grand froid. C'est exactement le jour où tu regretteras de ne pas avoir commandé plus tôt.",
     color: "#FF2E63",
   };
 }

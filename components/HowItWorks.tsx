@@ -5,7 +5,7 @@ import Reveal from "@/components/Reveal";
 const STEPS = [
   { n: "01", t: "Commande", d: "Choisis ton kit. Le paiement prend moins d'une minute." },
   { n: "02", t: "Expédition", d: "Envoyé depuis notre entrepôt UE/US sous 24h." },
-  { n: "03", t: "Fraîcheur", d: "Charge une fois, porte-le toute la journée, sens la différence dès réception." },
+  { n: "03", t: "Chaleur", d: "Charge une fois, reste au chaud toute la journée, sens la différence dès réception." },
 ];
 
 export default function HowItWorks() {

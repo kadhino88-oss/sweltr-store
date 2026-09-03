@@ -28,7 +28,7 @@ export default function SuccesPage() {
         transition={{ delay: 0.25 }}
         className="text-soft max-w-md mb-8"
       >
-        Ton kit anti-canicule part de l'entrepôt sous 24h. Un e-mail de confirmation
+        Ton kit SWELTR part de l'entrepôt sous 24h. Un e-mail de confirmation
         avec le suivi de livraison arrive dans quelques minutes.
       </motion.p>
       <Link

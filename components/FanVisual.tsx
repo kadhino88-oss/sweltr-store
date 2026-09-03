@@ -2,11 +2,11 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
-import { Battery, Volume2 } from "lucide-react";
+import { Battery, Flame } from "lucide-react";
 import { PRODUCT_IMAGES } from "@/lib/data";
 
 /**
- * Visuel produit animé : vraie photo du ventilateur de cou (fournie par CJ
+ * Visuel produit animé : vraie photo des gants chauffants (fournie par CJ
  * Dropshipping), avec flottement, glow pulsé et légère inclinaison 3D au
  * survol de la souris pour garder la page vivante.
  */
@@ -45,8 +45,8 @@ export default function FanVisual({ heat, color }: { heat: number; color: string
         className="relative w-full h-full rounded-[2.5rem] bg-panel border border-line overflow-hidden"
       >
         <Image
-          src={PRODUCT_IMAGES.neckFan}
-          alt="Ventilateur de cou SWELTR"
+          src={PRODUCT_IMAGES.heatedGloves}
+          alt="Gants chauffants SWELTR"
           fill
           sizes="(max-width: 768px) 90vw, 400px"
           className="object-cover"
@@ -60,14 +60,14 @@ export default function FanVisual({ heat, color }: { heat: number; color: string
           transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
           className="absolute top-6 left-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink/80 border border-line font-mono text-[10px] uppercase tracking-widest text-soft backdrop-blur-sm"
         >
-          <Battery size={12} className="text-cyan" /> 16h
+          <Battery size={12} className="text-cyan" /> 4h
         </motion.div>
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
           className="absolute bottom-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink/80 border border-line font-mono text-[10px] uppercase tracking-widest text-soft backdrop-blur-sm"
         >
-          <Volume2 size={12} className="text-cyan" /> 45dB
+          <Flame size={12} className="text-cyan" /> 3 paliers
         </motion.div>
       </motion.div>
     </div>

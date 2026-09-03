@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, ThermometerSun } from "lucide-react";
+import { ArrowLeft, Snowflake } from "lucide-react";
 import Footer from "@/components/Footer";
 
 export default function LegalPage({
@@ -15,7 +15,7 @@ export default function LegalPage({
     <main className="min-h-screen bg-ink text-cream">
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-line">
         <Link href="/" className="font-display text-xl font-bold tracking-tight flex items-center gap-2">
-          <ThermometerSun size={22} className="text-orange" />
+          <Snowflake size={22} className="text-orange" />
           SWELTR
         </Link>
         <Link href="/" className="flex items-center gap-2 text-sm text-muted hover:text-cream transition-colors">

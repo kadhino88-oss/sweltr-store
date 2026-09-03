@@ -47,7 +47,7 @@ export default function ProductTiers({
           Choisis ton kit
         </span>
         <h2 className="font-display font-bold text-3xl md:text-4xl mt-3">
-          Compose ton kit fraîcheur
+          Compose ton kit chaleur
         </h2>
       </Reveal>
 
