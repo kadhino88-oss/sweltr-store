@@ -83,6 +83,16 @@ export default function GuideFroidHiver() {
           ça ne convient pas.
         </p>
       </section>
+
+      <section>
+        <h2>Aller plus loin</h2>
+        <p>
+          Pour le détail des critères de choix des gants chauffants, voir notre{" "}
+          <Link href="/guide/gants-chauffants-avis">guide d'achat des gants chauffants</Link>. Si tu
+          cherches plutôt une idée cadeau pour quelqu'un de frileux, voir notre{" "}
+          <Link href="/guide/cadeaux-hiver-chauffants">guide cadeau hiver chauffant</Link>.
+        </p>
+      </section>
     </LegalPage>
   );
 }

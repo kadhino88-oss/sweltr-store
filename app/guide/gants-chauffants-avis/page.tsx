@@ -80,6 +80,8 @@ export default function GuideGantsChauffants() {
           Ce guide se concentre sur les mains. Pour une vue d'ensemble (mains, cou, pieds) et les
           erreurs courantes qui font qu'on a froid malgré un bon équipement, voir{" "}
           <Link href="/guide/ne-plus-avoir-froid-hiver">notre guide complet contre le froid</Link>.
+          Envie d'offrir plutôt que d'acheter pour toi ? Voir notre{" "}
+          <Link href="/guide/cadeaux-hiver-chauffants">guide cadeau hiver chauffant</Link>.
         </p>
       </section>
 
