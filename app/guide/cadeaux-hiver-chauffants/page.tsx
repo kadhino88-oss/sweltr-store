@@ -105,6 +105,8 @@ export default function GuideCadeauxHiver() {
           comprendre pourquoi le corps perd la chaleur par zones et comment prioriser un équipement
           complet, voir{" "}
           <Link href="/guide/ne-plus-avoir-froid-hiver">notre guide contre le froid en hiver</Link>.
+          Pour un cadeau centré sur les pieds, voir notre{" "}
+          <Link href="/guide/chaussettes-thermiques-pieds-froids">guide des chaussettes thermiques</Link>.
         </p>
       </section>
 

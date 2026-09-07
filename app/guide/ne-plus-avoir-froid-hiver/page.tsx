@@ -90,7 +90,9 @@ export default function GuideFroidHiver() {
           Pour le détail des critères de choix des gants chauffants, voir notre{" "}
           <Link href="/guide/gants-chauffants-avis">guide d'achat des gants chauffants</Link>. Si tu
           cherches plutôt une idée cadeau pour quelqu'un de frileux, voir notre{" "}
-          <Link href="/guide/cadeaux-hiver-chauffants">guide cadeau hiver chauffant</Link>.
+          <Link href="/guide/cadeaux-hiver-chauffants">guide cadeau hiver chauffant</Link>. Pour les
+          pieds froids en particulier, voir notre{" "}
+          <Link href="/guide/chaussettes-thermiques-pieds-froids">guide des chaussettes thermiques</Link>.
         </p>
       </section>
     </LegalPage>

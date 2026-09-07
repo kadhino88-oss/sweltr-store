@@ -81,7 +81,9 @@ export default function GuideGantsChauffants() {
           erreurs courantes qui font qu'on a froid malgré un bon équipement, voir{" "}
           <Link href="/guide/ne-plus-avoir-froid-hiver">notre guide complet contre le froid</Link>.
           Envie d'offrir plutôt que d'acheter pour toi ? Voir notre{" "}
-          <Link href="/guide/cadeaux-hiver-chauffants">guide cadeau hiver chauffant</Link>.
+          <Link href="/guide/cadeaux-hiver-chauffants">guide cadeau hiver chauffant</Link>. Pour les
+          pieds spécifiquement, voir notre{" "}
+          <Link href="/guide/chaussettes-thermiques-pieds-froids">guide des chaussettes thermiques</Link>.
         </p>
       </section>
 
