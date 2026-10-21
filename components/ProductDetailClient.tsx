@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Check, Star, Loader2, ShieldCheck, Truck } from "lucide-react";
-import { REPORTS, TIERS, type Tier } from "@/lib/data";
+import { ArrowLeft, Check, Loader2, ShieldCheck, Truck } from "lucide-react";
+import { TIERS, type Tier } from "@/lib/data";
 import { track } from "@vercel/analytics/react";
-import AnimatedBackground from "@/components/AnimatedBackground";
 import Reveal from "@/components/Reveal";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
+import ProductCard from "@/components/ProductCard";
 import { formatPrice } from "@/lib/format";
 
 export default function ProductDetailClient({ tier }: { tier: Tier }) {
@@ -45,7 +45,6 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
 
   return (
     <main className="relative bg-ivory text-ink">
-      <AnimatedBackground />
       <SiteHeader />
 
       <div className="px-6 md:px-12 py-6 max-w-7xl mx-auto">
@@ -128,10 +127,10 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
 
             <div className="flex gap-6 mt-8 font-mono text-xs uppercase tracking-widest text-muted">
               <span className="flex items-center gap-1.5">
-                <Truck size={14} className="text-gold-deep" /> Expédié sous 48h
+                <Truck size={14} className="text-gold-deep" /> Délai selon destination
               </span>
               <span className="flex items-center gap-1.5">
-                <ShieldCheck size={14} className="text-gold-deep" /> Garantie 30 jours
+                <ShieldCheck size={14} className="text-gold-deep" /> Paiement sécurisé
               </span>
             </div>
           </Reveal>
@@ -157,67 +156,11 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
         </Reveal>
       </section>
 
-      {/* Reviews */}
-      <section className="px-6 md:px-12 py-16 border-t border-line max-w-5xl mx-auto">
-        <Reveal className="mb-10">
-          <h2 className="font-display font-bold text-2xl">Avis clients</h2>
-        </Reveal>
-        <div className="grid md:grid-cols-3 gap-6">
-          {REPORTS.map((r, i) => (
-            <Reveal key={i} delay={i * 0.1}>
-              <div className="p-6 rounded-2xl bg-panel border border-line h-full">
-                <div className="flex gap-1 mb-4">
-                  {Array.from({ length: r.stars }).map((_, j) => (
-                    <Star key={j} size={14} fill="#D6A84F" color="#D6A84F" />
-                  ))}
-                </div>
-                <p className="text-sm mb-5 text-soft">« {r.quote} »</p>
-                <div className="flex justify-between items-center font-mono text-xs text-[#6B6B74]">
-                  <span>{r.name}</span>
-                  <span className="text-gold-deep">{r.temp} relevés</span>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
       <section className="px-6 md:px-12 py-16 border-t border-line max-w-7xl mx-auto">
-        <Reveal className="mb-8">
-          <span className="font-mono text-xs uppercase tracking-widest text-gold-deep">
-            La gamme SWELTR
-          </span>
-          <h2 className="font-display font-bold text-2xl md:text-3xl mt-3">
-            Comparer avec les autres kits
-          </h2>
-          <p className="mt-3 max-w-2xl text-soft">
-            Le bon choix dépend des zones que tu souhaites protéger et de ton usage. Compare aussi
-            les autres compositions avant de décider.
-          </p>
-        </Reveal>
-        <div className="grid gap-5 md:grid-cols-2">
+        <h2 className="mb-8 font-display text-2xl font-bold md:text-3xl">Autres kits SWELTR</h2>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {relatedTiers.map((relatedTier) => (
-            <article
-              key={relatedTier.id}
-              className="flex flex-col justify-between gap-5 rounded-2xl border border-line bg-panel p-6 md:flex-row md:items-center"
-            >
-              <div>
-                <p className="font-mono text-xs uppercase tracking-widest text-gold-deep">
-                  {relatedTier.tagline}
-                </p>
-                <h3 className="mt-2 font-display text-xl font-semibold">{relatedTier.name}</h3>
-                <p className="mt-2 text-sm text-soft">{relatedTier.items.join(" · ")}</p>
-              </div>
-              <div className="flex shrink-0 items-center justify-between gap-4 md:flex-col md:items-end">
-                <span className="font-display text-xl font-bold">{formatPrice(relatedTier.price)}</span>
-                <Link
-                  href={`/produit/${relatedTier.id}`}
-                  className="inline-flex items-center justify-center rounded-full border border-gold-deep px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gold-deep transition-colors hover:bg-gold-strong hover:text-ink"
-                >
-                  Comparer
-                </Link>
-              </div>
-            </article>
+            <ProductCard key={relatedTier.id} tier={relatedTier} />
           ))}
         </div>
         <p className="mt-8 text-sm text-soft">
