@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { TIERS } from "@/lib/data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
+  const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
 
   const productPages: MetadataRoute.Sitemap = TIERS.map((tier) => ({
     url: `${siteUrl}/produit/${tier.id}`,

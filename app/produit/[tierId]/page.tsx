@@ -9,7 +9,7 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: { params: { tierId: string } }) {
   const tier = TIERS.find((t) => t.id === params.tierId);
   if (!tier) return {};
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
+  const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
   return {
     title: `${tier.name} — SWELTR`,
     description: tier.description,
@@ -29,7 +29,7 @@ export default function ProductPage({ params }: { params: { tierId: string } }) 
   const tier = TIERS.find((t) => t.id === params.tierId);
   if (!tier) notFound();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
+  const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
 
   const jsonLd = {
     "@context": "https://schema.org",

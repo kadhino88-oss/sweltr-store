@@ -4,7 +4,7 @@ import ContentPage from "@/components/ContentPage";
 import ProductCard from "@/components/ProductCard";
 import { TIERS } from "@/lib/data";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
+const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
 
 export const metadata: Metadata = {
   title: "Boutique — Kits chauffants et accessoires anti-froid | SWELTR",
