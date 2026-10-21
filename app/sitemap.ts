@@ -11,6 +11,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const staticPages: MetadataRoute.Sitemap = [
+    { path: "/boutique", priority: 0.9 },
+    { path: "/guides", priority: 0.7 },
+    { path: "/faq", priority: 0.6 },
+    { path: "/contact", priority: 0.5 },
+    { path: "/cgv", priority: 0.2 },
+    { path: "/confidentialite", priority: 0.2 },
+    { path: "/mentions-legales", priority: 0.2 },
+  ].map(({ path, priority }) => ({
+    url: `${siteUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority,
+  }));
+
+  const guidePages: MetadataRoute.Sitemap = [
+    "gants-chauffants-avis",
+    "ne-plus-avoir-froid-hiver",
+    "cadeaux-hiver-chauffants",
+    "chaussettes-thermiques-pieds-froids",
+  ].map((slug) => ({
+    url: `${siteUrl}/guide/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
   return [
     {
       url: siteUrl,
@@ -19,47 +46,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     ...productPages,
-    {
-      url: `${siteUrl}/guide/gants-chauffants-avis`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/guide/ne-plus-avoir-froid-hiver`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/guide/cadeaux-hiver-chauffants`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/guide/chaussettes-thermiques-pieds-froids`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/cgv`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.2,
-    },
-    {
-      url: `${siteUrl}/confidentialite`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.2,
-    },
-    {
-      url: `${siteUrl}/mentions-legales`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.2,
-    },
+    ...guidePages,
+    ...staticPages,
   ];
 }

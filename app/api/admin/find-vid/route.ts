@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { CJ_API_BASE_URL, getCjAccessToken } from "@/lib/cj";
 
 /**
  * Petit outil d'admin : cherche un produit déjà ajouté à "Mes produits" sur CJ
@@ -12,22 +13,6 @@ import { NextRequest, NextResponse } from "next/server";
  * interrogeable par n'importe qui.
  */
 
-const CJ_BASE = "https://developers.cjdropshipping.com/api2.0/v1";
-
-async function getAccessToken(): Promise<string> {
-  const apiKey = process.env.CJ_API_KEY;
-  if (!apiKey) throw new Error("CJ_API_KEY manquante.");
-
-  const res = await fetch(`${CJ_BASE}/authentication/getAccessToken`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ apiKey }),
-  });
-  const data = await res.json();
-  if (!data.result) throw new Error(data.message);
-  return data.data.accessToken;
-}
-
 export async function GET(req: NextRequest) {
   const sku = req.nextUrl.searchParams.get("sku");
   const secret = req.nextUrl.searchParams.get("secret");
@@ -40,9 +25,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const token = await getAccessToken();
+    const { accessToken: token } = await getCjAccessToken();
     const res = await fetch(
-      `${CJ_BASE}/product/myProduct/query?keyword=${encodeURIComponent(sku)}`,
+      `${CJ_API_BASE_URL}/product/myProduct/query?keyword=${encodeURIComponent(sku)}`,
       { headers: { "CJ-Access-Token": token } }
     );
     const data = await res.json();

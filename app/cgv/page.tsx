@@ -1,6 +1,11 @@
 import LegalPage from "@/components/LegalPage";
 
-export const metadata = { title: "Conditions Générales de Vente — SWELTR" };
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
+
+export const metadata = {
+  title: "Conditions Générales de Vente — SWELTR",
+  alternates: { canonical: `${siteUrl}/cgv` },
+};
 
 export default function CGV() {
   return (

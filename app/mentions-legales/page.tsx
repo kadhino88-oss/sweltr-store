@@ -1,6 +1,11 @@
 import LegalPage from "@/components/LegalPage";
 
-export const metadata = { title: "Mentions légales — SWELTR" };
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
+
+export const metadata = {
+  title: "Mentions légales — SWELTR",
+  alternates: { canonical: `${siteUrl}/mentions-legales` },
+};
 
 export default function MentionsLegales() {
   return (
