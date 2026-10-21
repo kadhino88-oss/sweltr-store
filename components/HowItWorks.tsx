@@ -1,23 +1,19 @@
-"use client";
-
-import Reveal from "@/components/Reveal";
-
 const STEPS = [
-  { n: "01", t: "Commande", d: "Choisis ton kit. Le paiement prend moins d'une minute." },
-  { n: "02", t: "Expédition", d: "Envoyé depuis notre entrepôt UE/US sous 24h." },
-  { n: "03", t: "Chaleur", d: "Charge une fois, reste au chaud toute la journée, sens la différence dès réception." },
+  { number: "01", title: "Choisis", detail: "Compare les kits et leurs photos." },
+  { number: "02", title: "Commande", detail: "Paie de façon sécurisée avec Stripe." },
+  { number: "03", title: "Reçois", detail: "Consulte les délais selon ta destination." },
 ];
 
 export default function HowItWorks() {
   return (
-    <section className="px-6 md:px-12 py-20 border-t border-line bg-panel2/40">
-      <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-10">
-        {STEPS.map((s, i) => (
-          <Reveal key={i} delay={i * 0.12}>
-            <span className="font-mono text-sm text-orange">{s.n}</span>
-            <h3 className="font-display font-semibold text-lg mt-2 mb-1">{s.t}</h3>
-            <p className="text-sm text-muted">{s.d}</p>
-          </Reveal>
+    <section className="border-t border-line bg-panel2/40 px-6 py-12 md:px-12">
+      <div className="mx-auto grid max-w-7xl gap-4 sm:grid-cols-3">
+        {STEPS.map((step) => (
+          <div key={step.number} className="rounded-xl border border-line bg-panel p-5">
+            <p className="font-mono text-xs tracking-widest text-gold-deep">{step.number}</p>
+            <h2 className="mt-2 font-display text-lg font-semibold text-ink">{step.title}</h2>
+            <p className="mt-1 text-sm text-muted">{step.detail}</p>
+          </div>
         ))}
       </div>
     </section>

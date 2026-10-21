@@ -5,13 +5,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0B0B0F",
-        panel: "#111114",
-        panel2: "#141418",
-        line: "#24242C",
-        muted: "#9A9AA4",
-        soft: "#D4D4DC",
-        cream: "#F5F1EA",
+        ivory: "#FBF8F1",
+        ink: "#0B0F17",
+        panel: "#FFFFFF",
+        panel2: "#F5F0E5",
+        line: "#E4DED2",
+        muted: "#5B616B",
+        soft: "#343A45",
+        cream: "#F5F0E5",
+        gold: "#D6A84F",
+        "gold-strong": "#F3C86A",
+        "gold-deep": "#A87F2C",
         magenta: "#FF2E63",
         orange: "#FF7A3C",
         yellow: "#FFD23F",
@@ -21,6 +25,7 @@ const config: Config = {
         display: ["var(--font-display)", "sans-serif"],
         body: ["var(--font-body)", "sans-serif"],
         mono: ["var(--font-mono)", "monospace"],
+        serif: ["var(--font-serif)", "Georgia", "serif"],
       },
       keyframes: {
         drift: {

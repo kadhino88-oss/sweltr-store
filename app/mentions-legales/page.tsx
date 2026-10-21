@@ -1,10 +1,15 @@
 import LegalPage from "@/components/LegalPage";
 
-export const metadata = { title: "Mentions légales — SWELTR" };
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
+
+export const metadata = {
+  title: "Mentions légales — SWELTR",
+  alternates: { canonical: `${siteUrl}/mentions-legales` },
+};
 
 export default function MentionsLegales() {
   return (
-    <LegalPage title="Mentions légales" updated="Juillet 2026">
+    <LegalPage title="Mentions légales" updated="Octobre 2026">
       <section>
         <h2>Éditeur du site</h2>
         <p>
@@ -13,7 +18,7 @@ export default function MentionsLegales() {
           <strong>122 rue des Lauriers, 74380 Cranves-Sales, France</strong>.
         </p>
         <p>
-          Contact : <strong>contact@bkentreprise.com</strong> — <strong>+33 7 74 55 53 70</strong>
+          Contact : <strong>contact@bkentreprise.com</strong> — <strong>+41 79 934 99 46</strong>
         </p>
         <p>Directeur de la publication : BK Entreprise.</p>
       </section>
@@ -58,7 +63,7 @@ export default function MentionsLegales() {
         <p>
           Pour toute question relative au site ou à une commande, tu peux nous contacter à l'adresse{" "}
           <strong>contact@bkentreprise.com</strong> ou par téléphone au{" "}
-          <strong>+33 7 74 55 53 70</strong>.
+          <strong>+41 79 934 99 46</strong>.
         </p>
       </section>
     </LegalPage>

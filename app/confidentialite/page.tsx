@@ -1,10 +1,15 @@
 import LegalPage from "@/components/LegalPage";
 
-export const metadata = { title: "Politique de confidentialité — SWELTR" };
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
+
+export const metadata = {
+  title: "Politique de confidentialité — SWELTR",
+  alternates: { canonical: `${siteUrl}/confidentialite` },
+};
 
 export default function Confidentialite() {
   return (
-    <LegalPage title="Politique de confidentialité" updated="Juillet 2026">
+    <LegalPage title="Politique de confidentialité" updated="Octobre 2026">
       <section>
         <h2>1. Données collectées</h2>
         <p>Lors d'une commande, nous collectons les données suivantes :</p>

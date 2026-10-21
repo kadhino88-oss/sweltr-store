@@ -62,7 +62,7 @@ export const TIERS: Tier[] = [
     images: HEATED_GLOVES_GALLERY,
     cardImages: [PRODUCT_IMAGES.heatedGloves],
     description:
-      "Les gants chauffants SWELTR gardent tes mains à température constante pendant environ 4h, où que tu sois : vélo, chantier, montagne, simple trajet du matin. Rechargeables en USB, ils tiennent chaud sans fil ni prise électrique — glisse-les, allume, c'est parti.",
+      "Des gants chauffants rechargeables par USB pour protéger tes mains pendant les trajets et les activités par temps froid.",
     specs: [
       { label: "Autonomie", value: "Jusqu'à 4h de chaleur constante" },
       { label: "Recharge", value: "USB, complète en environ 2h" },
@@ -86,7 +86,7 @@ export const TIERS: Tier[] = [
     images: [...HEATED_GLOVES_GALLERY.slice(0, 3), ...HEATED_SCARF_GALLERY.slice(0, 3)],
     cardImages: [PRODUCT_IMAGES.heatedGloves, PRODUCT_IMAGES.heatedScarf],
     description:
-      "Le duo complet pour ne plus jamais subir le froid : les gants chauffants pour les mains, et l'écharpe chauffante à 3 paliers de température pour le cou et les épaules. Les deux se rechargent en USB et tiennent plusieurs heures de chaleur constante.",
+      "Des gants chauffants et une écharpe USB à trois niveaux pour protéger les mains et le cou du froid.",
     specs: [
       { label: "Contenu", value: "1 gants chauffants + 1 écharpe chauffante" },
       { label: "Autonomie gants", value: "Jusqu'à 4h" },
@@ -118,7 +118,7 @@ export const TIERS: Tier[] = [
     ],
     cardImages: [PRODUCT_IMAGES.heatedGloves, PRODUCT_IMAGES.heatedScarf, PRODUCT_IMAGES.thermalSocks],
     description:
-      "Le kit complet pour ne plus jamais subir une seule journée de grand froid : les gants chauffants pour les mains, l'écharpe chauffante pour le cou, et les chaussettes thermiques en molleton épais pour les pieds. Le trio parfait pour l'hiver, du trajet du matin aux longues journées dehors.",
+      "Le kit qui réunit gants chauffants, écharpe USB et chaussettes thermiques pour équiper plusieurs zones.",
     specs: [
       { label: "Contenu", value: "1 gants chauffants + 1 écharpe chauffante + 1 paire de chaussettes thermiques" },
       { label: "Autonomie gants", value: "Jusqu'à 4h" },

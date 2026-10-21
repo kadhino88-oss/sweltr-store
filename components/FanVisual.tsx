@@ -58,16 +58,16 @@ export default function FanVisual({ heat, color }: { heat: number; color: string
         <motion.div
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-          className="absolute top-6 left-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink/80 border border-line font-mono text-[10px] uppercase tracking-widest text-soft backdrop-blur-sm"
+          className="absolute top-6 left-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink/85 border border-white/20 font-mono text-[10px] uppercase tracking-widest text-[#F5F7FB] backdrop-blur-sm"
         >
-          <Battery size={12} className="text-cyan" /> 4h
+          <Battery size={12} className="text-gold-strong" /> 4h
         </motion.div>
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-          className="absolute bottom-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink/80 border border-line font-mono text-[10px] uppercase tracking-widest text-soft backdrop-blur-sm"
+          className="absolute bottom-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink/85 border border-white/20 font-mono text-[10px] uppercase tracking-widest text-[#F5F7FB] backdrop-blur-sm"
         >
-          <Flame size={12} className="text-cyan" /> 3 paliers
+          <Flame size={12} className="text-gold-strong" /> 3 paliers
         </motion.div>
       </motion.div>
     </div>
