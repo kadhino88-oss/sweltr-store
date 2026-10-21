@@ -10,6 +10,7 @@ import { track } from "@vercel/analytics/react";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Reveal from "@/components/Reveal";
 import Footer from "@/components/Footer";
+import SiteHeader from "@/components/SiteHeader";
 
 export default function ProductDetailClient({ tier }: { tier: Tier }) {
   const [activeImage, setActiveImage] = useState(0);
@@ -41,13 +42,14 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
   }
 
   return (
-    <main className="relative">
+    <main className="relative bg-ivory text-ink">
       <AnimatedBackground />
+      <SiteHeader />
 
       <div className="px-6 md:px-12 py-6 max-w-7xl mx-auto">
         <Link
           href="/#gear"
-          className="inline-flex items-center gap-2 text-sm text-muted hover:text-cream transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-muted hover:text-gold-deep transition-colors"
         >
           <ArrowLeft size={16} /> Retour à la boutique
         </Link>
@@ -80,7 +82,7 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
                   key={i}
                   onClick={() => setActiveImage(i)}
                   className="relative w-20 h-20 rounded-xl overflow-hidden border transition-colors shrink-0"
-                  style={{ borderColor: activeImage === i ? "#FF7A3C" : "#24242C" }}
+                  style={{ borderColor: activeImage === i ? "#D6A84F" : "#E4DED2" }}
                 >
                   <Image src={img} alt={`${tier.name} ${i + 1}`} fill sizes="80px" className="object-cover" unoptimized />
                 </button>
@@ -92,7 +94,7 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
         {/* Details */}
         <div>
           <Reveal>
-            <span className="font-mono text-xs uppercase tracking-widest text-orange">
+            <span className="font-mono text-xs uppercase tracking-widest text-gold-deep">
               {tier.tagline}
             </span>
             <h1 className="font-display font-bold text-3xl md:text-4xl mt-2 mb-4">{tier.name}</h1>
@@ -105,7 +107,7 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
             <ul className="space-y-2 mb-8">
               {tier.items.map((it, i) => (
                 <li key={i} className="flex items-center gap-2 text-sm text-soft">
-                  <Check size={14} className="text-cyan" /> {it}
+                  <Check size={14} className="text-gold-deep" /> {it}
                 </li>
               ))}
             </ul>
@@ -115,7 +117,7 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
               disabled={loading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full md:w-auto px-8 py-4 rounded-full font-display font-semibold text-sm uppercase tracking-wide bg-cream text-ink flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full md:w-auto px-8 py-4 rounded-full font-display font-semibold text-sm uppercase tracking-wide bg-gold-strong text-ink flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {loading ? <Loader2 size={16} className="animate-spin" /> : null}
               {loading ? "Redirection..." : `Commander — ${tier.price}€`}
@@ -124,10 +126,10 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
 
             <div className="flex gap-6 mt-8 font-mono text-xs uppercase tracking-widest text-muted">
               <span className="flex items-center gap-1.5">
-                <Truck size={14} className="text-orange" /> Expédié sous 48h
+                <Truck size={14} className="text-gold-deep" /> Expédié sous 48h
               </span>
               <span className="flex items-center gap-1.5">
-                <ShieldCheck size={14} className="text-orange" /> Garantie 30 jours
+                <ShieldCheck size={14} className="text-gold-deep" /> Garantie 30 jours
               </span>
             </div>
           </Reveal>
@@ -143,7 +145,7 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
               <div
                 key={i}
                 className="flex justify-between px-6 py-4 text-sm"
-                style={{ background: i % 2 === 0 ? "#111114" : "transparent" }}
+                style={{ background: i % 2 === 0 ? "#F5F0E5" : "transparent" }}
               >
                 <span className="text-muted">{s.label}</span>
                 <span className="text-soft text-right">{s.value}</span>
@@ -164,13 +166,13 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
               <div className="p-6 rounded-2xl bg-panel border border-line h-full">
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: r.stars }).map((_, j) => (
-                    <Star key={j} size={14} fill="#FFD23F" color="#FFD23F" />
+                    <Star key={j} size={14} fill="#D6A84F" color="#D6A84F" />
                   ))}
                 </div>
                 <p className="text-sm mb-5 text-soft">« {r.quote} »</p>
                 <div className="flex justify-between items-center font-mono text-xs text-[#6B6B74]">
                   <span>{r.name}</span>
-                  <span className="text-orange">{r.temp} relevés</span>
+                  <span className="text-gold-deep">{r.temp} relevés</span>
                 </div>
               </div>
             </Reveal>

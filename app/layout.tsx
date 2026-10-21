@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
-const display = Space_Grotesk({
+const display = Inter({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
   variable: "--font-display",
 });
 const body = Inter({
@@ -17,6 +17,12 @@ const mono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   variable: "--font-mono",
+});
+const serif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-serif",
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
@@ -62,7 +68,7 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${display.variable} ${body.variable} ${mono.variable} font-body bg-ink text-cream antialiased`}
+        className={`${display.variable} ${body.variable} ${mono.variable} ${serif.variable} font-body bg-ivory text-ink antialiased`}
       >
         {children}
         <Analytics />

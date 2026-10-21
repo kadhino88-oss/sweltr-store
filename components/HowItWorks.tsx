@@ -14,7 +14,7 @@ export default function HowItWorks() {
       <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-10">
         {STEPS.map((s, i) => (
           <Reveal key={i} delay={i * 0.12}>
-            <span className="font-mono text-sm text-orange">{s.n}</span>
+            <span className="font-mono text-sm text-gold-deep">{s.n}</span>
             <h3 className="font-display font-semibold text-lg mt-2 mb-1">{s.t}</h3>
             <p className="text-sm text-muted">{s.d}</p>
           </Reveal>

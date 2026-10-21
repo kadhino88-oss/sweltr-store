@@ -16,7 +16,7 @@ export default function ProductGallery() {
   return (
     <section className="px-6 md:px-12 py-24 max-w-7xl mx-auto">
       <Reveal className="text-center mb-14">
-        <span className="font-mono text-xs uppercase tracking-widest text-orange">
+        <span className="font-mono text-xs uppercase tracking-widest text-gold-deep">
           Le matériel
         </span>
         <h2 className="font-display font-bold text-3xl md:text-4xl mt-3">
@@ -48,8 +48,8 @@ export default function ProductGallery() {
                 </motion.div>
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <p className="font-display font-semibold text-lg">{item.label}</p>
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-orange mt-1">
+                  <p className="font-display font-semibold text-lg text-[#F5F7FB]">{item.label}</p>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-gold-strong mt-1">
                     Voir la fiche →
                   </p>
                 </div>

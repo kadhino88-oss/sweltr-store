@@ -18,7 +18,7 @@ export default function MentionsLegales() {
           <strong>122 rue des Lauriers, 74380 Cranves-Sales, France</strong>.
         </p>
         <p>
-          Contact : <strong>contact@bkentreprise.com</strong> — <strong>+33 7 74 55 53 70</strong>
+          Contact : <strong>contact@bkentreprise.com</strong> — <strong>+41 79 934 99 46</strong>
         </p>
         <p>Directeur de la publication : BK Entreprise.</p>
       </section>
@@ -63,7 +63,7 @@ export default function MentionsLegales() {
         <p>
           Pour toute question relative au site ou à une commande, tu peux nous contacter à l'adresse{" "}
           <strong>contact@bkentreprise.com</strong> ou par téléphone au{" "}
-          <strong>+33 7 74 55 53 70</strong>.
+          <strong>+41 79 934 99 46</strong>.
         </p>
       </section>
     </LegalPage>

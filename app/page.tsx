@@ -17,7 +17,7 @@ export default function Home() {
   const [cartCount, setCartCount] = useState(0);
 
   return (
-    <main className="relative">
+    <main className="relative bg-ivory text-ink">
       <AnimatedBackground />
       <Ticker />
       <Nav cartCount={cartCount} />

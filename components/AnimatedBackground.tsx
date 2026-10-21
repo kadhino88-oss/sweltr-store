@@ -24,7 +24,7 @@ export default function AnimatedBackground() {
           y: y1,
           rotate,
           background:
-            "radial-gradient(circle, #FF2E63 0%, #FF7A3C 45%, transparent 70%)",
+            "radial-gradient(circle, rgba(243,200,106,.55) 0%, rgba(214,168,79,.22) 45%, transparent 70%)",
         }}
         className="absolute -top-40 -left-40 w-[38rem] h-[38rem] rounded-full blur-[110px] opacity-30 animate-drift"
       />
@@ -36,7 +36,7 @@ export default function AnimatedBackground() {
           className="w-full h-full rounded-full"
           style={{
             background:
-              "radial-gradient(circle, #FFD23F 0%, #FF7A3C 50%, transparent 70%)",
+              "radial-gradient(circle, rgba(243,200,106,.42) 0%, rgba(214,168,79,.18) 50%, transparent 70%)",
           }}
         />
       </motion.div>
@@ -48,7 +48,7 @@ export default function AnimatedBackground() {
           className="w-full h-full rounded-full"
           style={{
             background:
-              "radial-gradient(circle, #4FE3C1 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(26,44,86,.24) 0%, transparent 70%)",
           }}
         />
       </motion.div>

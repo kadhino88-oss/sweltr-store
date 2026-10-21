@@ -8,7 +8,7 @@ export default function FieldReports() {
   return (
     <section id="avis" className="px-6 md:px-12 py-24 max-w-7xl mx-auto">
       <Reveal className="text-center mb-14">
-        <span className="font-mono text-xs uppercase tracking-widest text-orange">
+        <span className="font-mono text-xs uppercase tracking-widest text-gold-deep">
           Avis terrain
         </span>
         <h2 className="font-display font-bold text-3xl md:text-4xl mt-3">
@@ -21,13 +21,13 @@ export default function FieldReports() {
             <div className="p-6 rounded-2xl bg-panel border border-line h-full">
               <div className="flex gap-1 mb-4">
                 {Array.from({ length: r.stars }).map((_, j) => (
-                  <Star key={j} size={14} fill="#FFD23F" color="#FFD23F" />
+                  <Star key={j} size={14} fill="#D6A84F" color="#D6A84F" />
                 ))}
               </div>
               <p className="text-sm mb-5 text-soft">« {r.quote} »</p>
               <div className="flex justify-between items-center font-mono text-xs text-[#6B6B74]">
                 <span>{r.name}</span>
-                <span className="text-orange">{r.temp} relevés</span>
+                <span className="text-gold-deep">{r.temp} relevés</span>
               </div>
             </div>
           </Reveal>

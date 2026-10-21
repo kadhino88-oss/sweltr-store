@@ -17,7 +17,7 @@ export default function TrustBar() {
         {STATS.map((s, i) => (
           <Reveal key={i} delay={i * 0.08}>
             <div className="flex flex-col items-center gap-2 py-8 px-4 text-center">
-              <s.icon size={20} className="text-orange" />
+              <s.icon size={20} className="text-gold-deep" />
               <span className="font-mono text-xs uppercase tracking-wide text-soft">
                 {s.label}
               </span>

@@ -49,7 +49,7 @@ export default function ProductTiers({
   return (
     <section id="gear" className="px-6 md:px-12 py-24 max-w-7xl mx-auto">
       <Reveal className="text-center mb-14">
-        <span className="font-mono text-xs uppercase tracking-widest text-orange">
+        <span className="font-mono text-xs uppercase tracking-widest text-gold-deep">
           Choisis ton kit
         </span>
         <h2 className="font-display font-bold text-3xl md:text-4xl mt-3">
@@ -68,12 +68,12 @@ export default function ProductTiers({
               tabIndex={0}
               className="text-left p-7 rounded-2xl relative w-full h-full transition-colors cursor-pointer"
               style={{
-                background: tier === t.id ? "#1A1A20" : "#111114",
-                border: tier === t.id ? "1px solid #FF7A3C" : "1px solid #24242C",
+                background: tier === t.id ? "#F5F0E5" : "#FFFFFF",
+                border: tier === t.id ? "1px solid #D6A84F" : "1px solid #E4DED2",
               }}
             >
               {t.best && (
-                <span className="absolute -top-3 left-6 px-3 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest bg-magenta text-white">
+                <span className="absolute -top-3 left-6 px-3 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest bg-gold-strong text-ink">
                   Le plus choisi
                 </span>
               )}
@@ -81,7 +81,7 @@ export default function ProductTiers({
                 {t.cardImages.map((img, k) => (
                   <div
                     key={k}
-                    className="relative w-16 h-16 rounded-xl overflow-hidden border border-line bg-ink/40 shrink-0"
+                    className="relative w-16 h-16 rounded-xl overflow-hidden border border-line bg-panel2 shrink-0"
                   >
                     <Image
                       src={img}
@@ -105,20 +105,20 @@ export default function ProductTiers({
               <ul className="space-y-2">
                 {t.items.map((it, j) => (
                   <li key={j} className="flex items-center gap-2 text-sm text-soft">
-                    <Check size={14} className="text-cyan" /> {it}
+                    <Check size={14} className="text-gold-deep" /> {it}
                   </li>
                 ))}
               </ul>
               <motion.div
                 animate={{
-                  backgroundColor: tier === t.id ? "#FF7A3C" : "transparent",
+                  backgroundColor: tier === t.id ? "#D6A84F" : "transparent",
                 }}
-                className="mt-6 w-4 h-4 rounded-full mx-auto border border-orange"
+                className="mt-6 w-4 h-4 rounded-full mx-auto border border-gold-deep"
               />
               <Link
                 href={`/produit/${t.id}`}
                 onClick={(e) => e.stopPropagation()}
-                className="mt-4 flex items-center justify-center gap-1.5 text-xs font-mono uppercase tracking-widest text-muted hover:text-cream transition-colors"
+                className="mt-4 flex items-center justify-center gap-1.5 text-xs font-mono uppercase tracking-widest text-muted hover:text-gold-deep transition-colors"
               >
                 Voir le détail <ArrowRight size={12} />
               </Link>
@@ -148,7 +148,7 @@ export default function ProductTiers({
             disabled={loading}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
-            className="px-6 py-3 rounded-full font-display font-semibold text-sm uppercase tracking-wide bg-cream text-ink flex items-center gap-2 disabled:opacity-60"
+            className="px-6 py-3 rounded-full font-display font-semibold text-sm uppercase tracking-wide bg-gold-strong text-ink flex items-center gap-2 disabled:opacity-60"
           >
             {loading ? <Loader2 size={16} className="animate-spin" /> : null}
             {loading ? "Redirection..." : "Payer avec Stripe"}
@@ -157,7 +157,7 @@ export default function ProductTiers({
         {error && <p className="text-magenta text-xs mt-3 text-center">{error}</p>}
       </Reveal>
 
-      <div className="mt-6 flex items-center justify-center gap-3 font-mono text-xs uppercase tracking-widest text-orange">
+      <div className="mt-6 flex items-center justify-center gap-3 font-mono text-xs uppercase tracking-widest text-gold-deep">
         <Clock size={14} />
         <CountdownTimer initialSeconds={3 * 3600 + 47 * 60 + 12} />
       </div>

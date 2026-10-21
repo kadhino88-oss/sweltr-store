@@ -5,7 +5,7 @@ const MSG =
 
 export default function Ticker() {
   return (
-    <div className="font-mono text-[11px] tracking-widest uppercase py-2 overflow-hidden whitespace-nowrap bg-[linear-gradient(90deg,#FF2E63,#FF7A3C,#FFD23F)] text-ink">
+    <div className="font-mono text-[11px] tracking-widest uppercase py-2 overflow-hidden whitespace-nowrap bg-[linear-gradient(90deg,#F3C86A,#D6A84F,#A87F2C)] text-ink">
       <div className="inline-block animate-[scroll_22s_linear_infinite]">
         {MSG.repeat(2)}
       </div>
