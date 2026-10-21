@@ -15,6 +15,8 @@ export default function SiteHeader() {
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[10px] uppercase tracking-widest text-muted md:gap-7 md:text-xs">
           <Link href="/boutique" className="transition-colors hover:text-gold-deep">Boutique</Link>
           <Link href="/guides" className="transition-colors hover:text-gold-deep">Guides</Link>
+          <Link href="/a-propos" className="transition-colors hover:text-gold-deep">À propos</Link>
+          <Link href="/livraison-retours" className="transition-colors hover:text-gold-deep">Livraison</Link>
           <Link href="/faq" className="transition-colors hover:text-gold-deep">FAQ</Link>
           <Link href="/contact" className="transition-colors hover:text-gold-deep">Contact</Link>
           <Link

@@ -3,9 +3,17 @@
 import Reveal from "@/components/Reveal";
 
 const STEPS = [
-  { n: "01", t: "Commande", d: "Choisis ton kit. Le paiement prend moins d'une minute." },
-  { n: "02", t: "Expédition", d: "Envoyé depuis notre entrepôt UE/US sous 24h." },
-  { n: "03", t: "Chaleur", d: "Charge une fois, reste au chaud toute la journée, sens la différence dès réception." },
+  { n: "01", t: "Commande", d: "Choisis ton kit et règle ta commande via le paiement sécurisé Stripe." },
+  {
+    n: "02",
+    t: "Préparation",
+    d: "Après confirmation du paiement, les informations de commande sont transmises à notre partenaire logistique.",
+  },
+  {
+    n: "03",
+    t: "Livraison",
+    d: "Le délai moyen indiqué est de 7 à 15 jours ouvrés selon la destination. Consulte les CGV pour les détails.",
+  },
 ];
 
 export default function HowItWorks() {

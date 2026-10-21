@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function Confidentialite() {
   return (
-    <LegalPage title="Politique de confidentialité" updated="Juillet 2026">
+    <LegalPage title="Politique de confidentialité" updated="Octobre 2026">
       <section>
         <h2>1. Données collectées</h2>
         <p>Lors d'une commande, nous collectons les données suivantes :</p>

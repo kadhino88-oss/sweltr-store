@@ -9,12 +9,12 @@ export const metadata = {
 
 export default function CGV() {
   return (
-    <LegalPage title="Conditions Générales de Vente" updated="Juillet 2026">
+    <LegalPage title="Conditions Générales de Vente" updated="Octobre 2026">
       <section>
         <h2>1. Objet</h2>
         <p>
           Les présentes conditions générales de vente régissent les ventes de produits réalisées
-          sur le site SWELTR entre <strong>[NOM / RAISON SOCIALE]</strong> et tout client
+          sur le site SWELTR entre <strong>BK ENTREPRISE</strong> et tout client
           effectuant un achat sur ce site.
         </p>
       </section>

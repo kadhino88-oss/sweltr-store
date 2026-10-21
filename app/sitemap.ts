@@ -14,6 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     { path: "/boutique", priority: 0.9 },
     { path: "/guides", priority: 0.7 },
+    { path: "/a-propos", priority: 0.5 },
+    { path: "/livraison-retours", priority: 0.5 },
     { path: "/faq", priority: 0.6 },
     { path: "/contact", priority: 0.5 },
     { path: "/cgv", priority: 0.2 },

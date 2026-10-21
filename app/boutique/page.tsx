@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Check, ShieldCheck, Truck } from "lucide-react";
 import ContentPage from "@/components/ContentPage";
 import { TIERS } from "@/lib/data";
+import { formatPrice } from "@/lib/format";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
 
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
 export default function BoutiquePage() {
   return (
     <ContentPage
+      eyebrow="BOUTIQUE · ÉQUIPEMENT ANTI-FROID"
       title="La boutique SWELTR"
       description="Compare les kits SWELTR et choisis un équipement adapté à tes sorties, à tes trajets ou à tes journées de travail par temps froid."
     >
@@ -84,8 +86,8 @@ export default function BoutiquePage() {
               <p className="font-mono text-xs uppercase tracking-widest text-gold-deep">{tier.tagline}</p>
               <h2 className="font-display text-xl font-semibold text-ink mt-2">{tier.name}</h2>
               <div className="mt-4 flex items-baseline gap-3">
-                <p className="font-display text-2xl font-bold text-ink">{tier.price.toFixed(2).replace(".", ",")} €</p>
-                <p className="font-mono text-sm text-muted line-through">{tier.compare.toFixed(2).replace(".", ",")} €</p>
+                <p className="font-display text-2xl font-bold text-ink">{formatPrice(tier.price)}</p>
+                <p className="font-mono text-sm text-muted line-through">{formatPrice(tier.compare)}</p>
               </div>
               <p className="mt-3">{tier.description}</p>
               <ul className="mt-5 space-y-2">

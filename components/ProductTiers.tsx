@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Check, Clock, Loader2, ArrowRight } from "lucide-react";
 import { track } from "@vercel/analytics/react";
 import { TIERS } from "@/lib/data";
+import { formatPrice } from "@/lib/format";
 import Reveal from "@/components/Reveal";
 import CountdownTimer from "@/components/CountdownTimer";
 
@@ -62,9 +63,16 @@ export default function ProductTiers({
           <Reveal key={t.id} delay={i * 0.1}>
             <motion.div
               onClick={() => setTier(t.id)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  setTier(t.id);
+                }
+              }}
               whileHover={{ y: -4 }}
               whileTap={{ scale: 0.98 }}
               role="button"
+              aria-pressed={tier === t.id}
               tabIndex={0}
               className="text-left p-7 rounded-2xl relative w-full h-full transition-colors cursor-pointer"
               style={{
@@ -97,9 +105,9 @@ export default function ProductTiers({
               <h3 className="font-display font-semibold text-xl mb-1">{t.name}</h3>
               <p className="text-sm mb-5 text-muted">{t.tagline}</p>
               <div className="flex items-baseline gap-2 mb-5">
-                <span className="font-display font-bold text-3xl">{t.price}€</span>
+                <span className="font-display font-bold text-3xl">{formatPrice(t.price)}</span>
                 <span className="font-mono text-sm line-through text-[#6B6B74]">
-                  {t.compare}€
+                  {formatPrice(t.compare)}
                 </span>
               </div>
               <ul className="space-y-2">
@@ -140,7 +148,7 @@ export default function ProductTiers({
               <p className="font-mono text-xs uppercase tracking-widest text-muted">
                 {selected.name}
               </p>
-              <p className="font-display font-bold text-2xl">{selected.price}€</p>
+              <p className="font-display font-bold text-2xl">{formatPrice(selected.price)}</p>
             </motion.div>
           </AnimatePresence>
           <motion.button

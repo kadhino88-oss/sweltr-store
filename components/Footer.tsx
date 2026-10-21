@@ -7,6 +7,8 @@ export default function Footer() {
       <div className="flex flex-wrap justify-center gap-x-5 gap-y-3">
         <Link href="/boutique" className="hover:text-gold-deep transition-colors">Boutique</Link>
         <Link href="/guides" className="hover:text-gold-deep transition-colors">Guides</Link>
+        <Link href="/a-propos" className="hover:text-gold-deep transition-colors">À propos</Link>
+        <Link href="/livraison-retours" className="hover:text-gold-deep transition-colors">Livraison et retours</Link>
         <Link href="/faq" className="hover:text-gold-deep transition-colors">FAQ</Link>
         <Link href="/contact" className="hover:text-gold-deep transition-colors">Contact</Link>
         <Link href="/cgv" className="hover:text-gold-deep transition-colors">CGV</Link>

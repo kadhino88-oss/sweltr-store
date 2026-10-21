@@ -5,14 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Check, Star, Loader2, ShieldCheck, Truck } from "lucide-react";
-import { Tier, REPORTS } from "@/lib/data";
+import { REPORTS, TIERS, type Tier } from "@/lib/data";
 import { track } from "@vercel/analytics/react";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Reveal from "@/components/Reveal";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
+import { formatPrice } from "@/lib/format";
 
 export default function ProductDetailClient({ tier }: { tier: Tier }) {
+  const relatedTiers = TIERS.filter((item) => item.id !== tier.id);
   const [activeImage, setActiveImage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -99,8 +101,8 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
             </span>
             <h1 className="font-display font-bold text-3xl md:text-4xl mt-2 mb-4">{tier.name}</h1>
             <div className="flex items-baseline gap-3 mb-6">
-              <span className="font-display font-bold text-3xl">{tier.price}€</span>
-              <span className="font-mono text-base line-through text-[#6B6B74]">{tier.compare}€</span>
+              <span className="font-display font-bold text-3xl">{formatPrice(tier.price)}</span>
+              <span className="font-mono text-base line-through text-[#6B6B74]">{formatPrice(tier.compare)}</span>
             </div>
             <p className="text-soft mb-8 leading-relaxed">{tier.description}</p>
 
@@ -120,7 +122,7 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
               className="w-full md:w-auto px-8 py-4 rounded-full font-display font-semibold text-sm uppercase tracking-wide bg-gold-strong text-ink flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {loading ? <Loader2 size={16} className="animate-spin" /> : null}
-              {loading ? "Redirection..." : `Commander — ${tier.price}€`}
+              {loading ? "Redirection..." : `Commander — ${formatPrice(tier.price)}`}
             </motion.button>
             {error && <p className="text-magenta text-xs mt-3">{error}</p>}
 
@@ -178,6 +180,51 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
             </Reveal>
           ))}
         </div>
+      </section>
+
+      <section className="px-6 md:px-12 py-16 border-t border-line max-w-7xl mx-auto">
+        <Reveal className="mb-8">
+          <span className="font-mono text-xs uppercase tracking-widest text-gold-deep">
+            La gamme SWELTR
+          </span>
+          <h2 className="font-display font-bold text-2xl md:text-3xl mt-3">
+            Comparer avec les autres kits
+          </h2>
+          <p className="mt-3 max-w-2xl text-soft">
+            Le bon choix dépend des zones que tu souhaites protéger et de ton usage. Compare aussi
+            les autres compositions avant de décider.
+          </p>
+        </Reveal>
+        <div className="grid gap-5 md:grid-cols-2">
+          {relatedTiers.map((relatedTier) => (
+            <article
+              key={relatedTier.id}
+              className="flex flex-col justify-between gap-5 rounded-2xl border border-line bg-panel p-6 md:flex-row md:items-center"
+            >
+              <div>
+                <p className="font-mono text-xs uppercase tracking-widest text-gold-deep">
+                  {relatedTier.tagline}
+                </p>
+                <h3 className="mt-2 font-display text-xl font-semibold">{relatedTier.name}</h3>
+                <p className="mt-2 text-sm text-soft">{relatedTier.items.join(" · ")}</p>
+              </div>
+              <div className="flex shrink-0 items-center justify-between gap-4 md:flex-col md:items-end">
+                <span className="font-display text-xl font-bold">{formatPrice(relatedTier.price)}</span>
+                <Link
+                  href={`/produit/${relatedTier.id}`}
+                  className="inline-flex items-center justify-center rounded-full border border-gold-deep px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gold-deep transition-colors hover:bg-gold-strong hover:text-ink"
+                >
+                  Comparer
+                </Link>
+              </div>
+            </article>
+          ))}
+        </div>
+        <p className="mt-8 text-sm text-soft">
+          Tu as une question sur le choix, la livraison ou les conditions de retour ? Consulte la{" "}
+          <Link href="/faq" className="text-gold-deep underline">FAQ</Link> ou{" "}
+          <Link href="/contact" className="text-gold-deep underline">contacte le service client</Link>.
+        </p>
       </section>
 
       <Footer />

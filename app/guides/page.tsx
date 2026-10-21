@@ -45,6 +45,7 @@ const guides = [
 export default function GuidesPage() {
   return (
     <ContentPage
+      eyebrow="CONSEILS · GUIDES PRATIQUES"
       title="Guides et conseils"
       description="Des ressources détaillées pour comprendre comment le froid agit, comparer les équipements thermiques et choisir une solution adaptée à ton quotidien."
     >

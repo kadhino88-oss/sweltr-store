@@ -32,14 +32,17 @@ export default function SuccessPageClient() {
           transition={{ delay: 0.25 }}
           className="text-soft max-w-md mb-8"
         >
-          Ton kit SWELTR part de l'entrepôt sous 24h. Un e-mail de confirmation
-          avec le suivi de livraison arrive dans quelques minutes.
+          Le paiement a été confirmé par Stripe. Pour toute question sur ta commande ou sa
+          livraison, notre service client est à ta disposition.
         </motion.p>
         <Link
-          href="/boutique"
+          href="/contact"
           className="px-6 py-3 rounded-full font-display font-semibold text-sm uppercase tracking-wide bg-gold-strong text-ink"
         >
-          Retour à la boutique
+          Contacter le service client
+        </Link>
+        <Link href="/boutique" className="mt-5 text-sm text-gold-deep underline">
+          Retourner à la boutique
         </Link>
       </section>
       <Footer />

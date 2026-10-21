@@ -57,6 +57,7 @@ export default function FaqPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema).replace(/</g, "\\u003c") }}
       />
       <ContentPage
+        eyebrow="AIDE · QUESTIONS FRÉQUENTES"
         title="Questions fréquentes"
         description="Les réponses aux questions les plus courantes sur les produits et les commandes SWELTR."
       >
