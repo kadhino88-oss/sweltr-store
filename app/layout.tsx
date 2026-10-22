@@ -31,14 +31,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "SWELTR — Kit chaleur qui tient vraiment le froid à distance",
   description:
-    "Gants chauffants, écharpe chauffante et chaussettes thermiques. Testés en conditions réelles de grand froid. Expédié sous 48h, garantie 30 jours.",
+    "Gants chauffants, écharpe chauffante et chaussettes thermiques pour vous équiper pendant les journées froides.",
   alternates: {
     canonical: siteUrl,
   },
   openGraph: {
     title: "SWELTR — Kit anti-froid",
-    description:
-      "Le gear qui rend les journées à -5°C supportables. Livraison rapide, garantie 30 jours.",
+    description: "Découvrez les kits chauffants et accessoires thermiques SWELTR.",
     type: "website",
     url: siteUrl,
     siteName: "SWELTR",
@@ -55,7 +54,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "SWELTR — Kit anti-froid",
-    description: "Le gear qui rend les journées à -5°C supportables.",
+    description: "Découvrez les kits chauffants et accessoires thermiques SWELTR.",
     images: ["https://cf.cjdropshipping.com/20180920/2155711379153.jpg"],
   },
 };

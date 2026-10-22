@@ -79,8 +79,9 @@ export default function GuideFroidHiver() {
           <Link href="/produit/solo">gants chauffants</Link> pour les mains, écharpe chauffante à 3
           paliers pour le cou (dans le <Link href="/produit/duo">Duo Chaleur Totale</Link>), et
           chaussettes thermiques pour les pieds (dans le{" "}
-          <Link href="/produit/trio">Kit Grand Froid</Link>). Livré sous 48h, garantie 30 jours si
-          ça ne convient pas.
+          <Link href="/produit/trio">Kit Grand Froid</Link>). Consulte les{" "}
+          <Link href="/livraison-retours">informations de livraison et de retour</Link> avant de
+          commander.
         </p>
       </section>
 

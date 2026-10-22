@@ -21,7 +21,7 @@ export default function FaqPage() {
     },
     {
       q: "Quel est le délai de livraison ?",
-      a: "Les commandes sont annoncées comme expédiées sous 48 heures. Le délai moyen de transport indiqué dans les conditions de vente est de 7 à 15 jours ouvrés selon la destination. Il s'agit d'une estimation qui peut varier selon les conditions logistiques.",
+      a: "Le délai indicatif mentionné dans les conditions générales de vente est de 7 à 15 jours ouvrés selon la destination. Il peut varier selon les conditions logistiques. Consulte les CGV pour les informations applicables à ta commande.",
     },
     {
       q: "Comment fonctionne le délai de rétractation ?",

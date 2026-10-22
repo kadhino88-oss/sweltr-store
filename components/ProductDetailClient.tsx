@@ -101,7 +101,6 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
             <h1 className="font-display font-bold text-3xl md:text-4xl mt-2 mb-4">{tier.name}</h1>
             <div className="flex items-baseline gap-3 mb-6">
               <span className="font-display font-bold text-3xl">{formatPrice(tier.price)}</span>
-              <span className="font-mono text-base line-through text-[#6B6B74]">{formatPrice(tier.compare)}</span>
             </div>
             <p className="text-soft mb-8 leading-relaxed">{tier.description}</p>
 

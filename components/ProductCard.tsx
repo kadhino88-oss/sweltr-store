@@ -52,7 +52,6 @@ export default function ProductCard({
         <h2 className="mt-2 font-display text-xl font-semibold text-ink">{tier.name}</h2>
         <div className="mt-3 flex items-baseline gap-3">
           <span className="font-display text-2xl font-bold text-ink">{formatPrice(tier.price)}</span>
-          <span className="font-mono text-sm text-muted line-through">{formatPrice(tier.compare)}</span>
         </div>
 
         <div className="mt-auto flex flex-wrap gap-2 pt-5">
