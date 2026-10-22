@@ -1,11 +1,33 @@
 import Stripe from "stripe";
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  console.warn(
-    "STRIPE_SECRET_KEY manquante. Ajoute-la dans .env.local pour activer le paiement Stripe."
-  );
+let stripeClient: Stripe | undefined;
+
+export function getStripeClient(): Stripe | null {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) return null;
+
+  stripeClient ??= new Stripe(secretKey, { apiVersion: "2024-06-20" });
+  return stripeClient;
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2024-06-20",
-});
+export function getStripeErrorDetails(error: unknown) {
+  if (!(error instanceof Error)) {
+    return { message: String(error) };
+  }
+
+  const stripeError = error as Error & {
+    type?: unknown;
+    code?: unknown;
+    statusCode?: unknown;
+    requestId?: unknown;
+  };
+
+  return {
+    name: stripeError.name,
+    message: stripeError.message,
+    type: stripeError.type,
+    code: stripeError.code,
+    statusCode: stripeError.statusCode,
+    requestId: stripeError.requestId,
+  };
+}

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { stripe } from "@/lib/stripe";
+import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { TIERS } from "@/lib/data";
 import { createCjOrder, payCjOrder } from "@/lib/cj";
 
@@ -10,9 +10,17 @@ export const runtime = "nodejs";
 export async function POST(req: NextRequest) {
   const sig = req.headers.get("stripe-signature");
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const stripe = getStripeClient();
 
-  if (!sig || !webhookSecret) {
-    return NextResponse.json({ error: "Webhook non configuré." }, { status: 400 });
+  if (!stripe || !webhookSecret) {
+    console.error(
+      `Webhook Stripe non configuré : ${!stripe ? "STRIPE_SECRET_KEY manquante" : "STRIPE_WEBHOOK_SECRET manquante"}.`,
+    );
+    return NextResponse.json({ error: "Webhook Stripe non configuré." }, { status: 503 });
+  }
+
+  if (!sig) {
+    return NextResponse.json({ error: "Signature Stripe manquante." }, { status: 400 });
   }
 
   const body = await req.text();
@@ -20,8 +28,8 @@ export async function POST(req: NextRequest) {
 
   try {
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
-  } catch (err: any) {
-    console.error("Signature webhook invalide :", err.message);
+  } catch (err) {
+    console.error("Signature webhook Stripe invalide :", getStripeErrorDetails(err));
     return NextResponse.json({ error: "Signature invalide." }, { status: 400 });
   }
 
