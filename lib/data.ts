@@ -3,7 +3,6 @@ export type Tier = {
   name: string;
   tagline: string;
   price: number;
-  compare: number;
   items: string[];
   best?: boolean;
   // À remplir une fois les vid récupérés via /api/admin/find-vid.
@@ -56,7 +55,6 @@ export const TIERS: Tier[] = [
     name: "Solo Chaleur Mains",
     tagline: "1x Gants chauffants",
     price: 34.9,
-    compare: 54.9,
     items: ["1× Gants chauffants SWELTR"],
     cjItems: [{ vid: "42BD9CA6-6D95-4B26-8F20-A52375663923", quantity: 1 }],
     images: HEATED_GLOVES_GALLERY,
@@ -76,7 +74,6 @@ export const TIERS: Tier[] = [
     name: "Duo Chaleur Totale",
     tagline: "Gants chauffants + Écharpe chauffante",
     price: 49.9,
-    compare: 79.9,
     items: ["1× Gants chauffants SWELTR", "1× Écharpe chauffante USB"],
     best: true,
     cjItems: [
@@ -100,7 +97,6 @@ export const TIERS: Tier[] = [
     name: "Kit Grand Froid",
     tagline: "Gants chauffants + Écharpe chauffante + Chaussettes thermiques",
     price: 59.9,
-    compare: 99.9,
     items: [
       "1× Gants chauffants SWELTR",
       "1× Écharpe chauffante USB",
@@ -132,43 +128,19 @@ export const TIERS: Tier[] = [
 export const FAQS = [
   {
     q: "Combien de temps dure la chaleur ?",
-    a: "Les gants chauffants tiennent jusqu'à 4h de chaleur constante par charge. L'écharpe chauffante tient environ 3 à 4h selon le palier choisi (42°C à 55°C). Les deux se rechargent en USB en environ 2h. Les chaussettes thermiques n'ont pas de batterie : elles isolent naturellement, sans limite d'autonomie.",
+    a: "Les caractéristiques d'autonomie et de recharge annoncées pour chaque accessoire figurent sur sa fiche produit. L'autonomie réelle dépend notamment du réglage, de l'environnement et de l'utilisation. Les chaussettes thermiques du kit Trio n'ont pas de batterie.",
   },
   {
     q: "En combien de temps je suis livré ?",
-    a: "Ta commande est expédiée sous 48h après paiement. Le délai de livraison est en moyenne de 7 à 15 jours ouvrés selon ta localisation.",
+    a: "Le délai indicatif de livraison est de 7 à 15 jours ouvrés selon la destination. Il peut varier selon les conditions logistiques ; consulte les conditions générales de vente.",
   },
   {
     q: "Est-ce que ça tient vraiment chaud ?",
-    a: "Oui. Les gants et l'écharpe chauffent activement (jusqu'à 55°C pour l'écharpe, sur 3 paliers réglables) — tu sens la différence dès l'allumage, même par grand froid. Les chaussettes thermiques épaisses complètent avec une isolation passive.",
+    a: "Les gants et l'écharpe sont des accessoires chauffants ; les chaussettes du kit Trio sont thermiques et sans batterie. Consulte les caractéristiques de chaque fiche produit pour choisir selon ton usage.",
   },
   {
     q: "Et si ça ne me réchauffe pas assez ?",
-    a: "Tu as 30 jours pour l'essayer. Si tu ne sens pas la différence, on te rembourse intégralement, sans justification à donner.",
-  },
-];
-
-export const REPORTS = [
-  {
-    name: "Léa, Lyon",
-    temp: "-4°C",
-    quote:
-      "Portés sur le quai du métro en plein pic de froid, les gants ont littéralement sauvé mon trajet.",
-    stars: 5,
-  },
-  {
-    name: "Marcus, Bruxelles",
-    temp: "-8°C",
-    quote:
-      "Tient toute une journée de chantier en extérieur sur une seule charge, je ne m'y attendais pas.",
-    stars: 5,
-  },
-  {
-    name: "Amina, Genève",
-    temp: "-2°C",
-    quote:
-      "L'écharpe chauffante est devenue mon réflexe dès que le thermomètre passe sous zéro.",
-    stars: 5,
+    a: "Les modalités de retour et les éventuelles garanties commerciales sont détaillées dans les conditions générales de vente. Consulte-les avant de commander ou contacte notre service client.",
   },
 ];
 

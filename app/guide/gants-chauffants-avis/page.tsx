@@ -52,25 +52,22 @@ export default function GuideGantsChauffants() {
       <section>
         <h2>Sécurité et entretien</h2>
         <p>
-          Les gants chauffants USB fonctionnent en basse tension (généralement 3,7V à 7,4V selon la
-          batterie), ce qui les rend sûrs pour un usage normal, contrairement à certains modèles
-          filaires bas de gamme. Évite de les faire tremper entièrement ou de les passer en machine
-          avec la batterie encore en place — vérifie toujours les instructions du fabricant avant
-          lavage. En cas de forte humidité prolongée (pluie battante, neige fondante), privilégie un
-          séchage à l'air libre plutôt qu'une source de chaleur directe.
+          Les caractéristiques électriques, les consignes de lavage et la résistance à l'eau
+          dépendent du modèle. Avant toute utilisation ou tout nettoyage, vérifie la notice du
+          fabricant. Ne mouille pas les batteries et ne lave pas les gants avec les batteries en
+          place, sauf indication explicite du fabricant.
         </p>
       </section>
 
       <section>
         <h2>Ce que propose SWELTR</h2>
         <p>
-          Les <Link href="/produit/solo">gants chauffants SWELTR</Link> tiennent jusqu'à 4h de
-          chaleur constante par charge, se rechargent en USB en environ 2h, et existent en trois
-          coloris (gris, kaki, rouge). Ils sont pensés pour un usage quotidien — vélo, chantier,
-          trajets à pied — plutôt que pour l'alpinisme extrême. Si tu veux couvrir aussi le cou et
-          les pieds, le <Link href="/produit/duo">Duo Chaleur Totale</Link> et le{" "}
-          <Link href="/produit/trio">Kit Grand Froid</Link> ajoutent une écharpe chauffante et des
-          chaussettes thermiques au même prix par article que la vente à l'unité.
+          Consulte la fiche des{" "}
+          <Link href="/produit/solo">gants chauffants SWELTR</Link> pour connaître les
+          caractéristiques annoncées pour ce modèle. Le{" "}
+          <Link href="/produit/duo">Duo Chaleur Totale</Link> et le{" "}
+          <Link href="/produit/trio">Kit Grand Froid</Link> proposent d'autres compositions ;
+          vérifie leur contenu et leur prix avant de choisir.
         </p>
       </section>
 
@@ -90,19 +87,18 @@ export default function GuideGantsChauffants() {
       <section>
         <h2>Questions fréquentes</h2>
         <p>
-          <strong>Les gants chauffants marchent-ils sous la pluie ?</strong> Oui pour une exposition
-          courte, mais évite l'immersion complète — ce sont des produits résistants aux intempéries
-          usuelles, pas étanches à 100%.
+          <strong>Les gants chauffants sont-ils résistants à l'eau ?</strong> Consulte la fiche et
+          les instructions du fabricant du modèle choisi ; n'utilise pas un accessoire électrique
+          mouillé ou endommagé.
         </p>
         <p>
           <strong>Peut-on recharger en roulant, avec une batterie externe ?</strong> Oui, tant que la
           batterie externe fournit une sortie USB standard.
         </p>
         <p>
-          <strong>Combien de temps dure la batterie avant de devoir la remplacer ?</strong> Comme
-          toute batterie lithium rechargeable, l'autonomie diminue progressivement après plusieurs
-          centaines de cycles de charge — un usage quotidien en hiver, avec une pause en été, donne
-          généralement plusieurs saisons d'usage normal.
+          <strong>Combien de temps dure la batterie avant de devoir la remplacer ?</strong> La
+          durée de vie varie selon la batterie et les conditions d'utilisation. Consulte les
+          consignes du fabricant pour l'entretien et le remplacement.
         </p>
       </section>
     </LegalPage>

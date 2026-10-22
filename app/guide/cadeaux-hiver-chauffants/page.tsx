@@ -69,22 +69,20 @@ export default function GuideCadeauxHiver() {
       <section>
         <h2>Anticiper les délais avant de l'offrir</h2>
         <p>
-          Les commandes sont expédiées sous 48h, mais prévoir une marge de quelques jours
-          supplémentaires reste raisonnable avant une date fixe (anniversaire, fêtes de fin
-          d'année) pour absorber un éventuel imprévu de livraison. Autre point souvent oublié :
-          charge complètement la batterie avant d'offrir le cadeau — une recharge USB prend environ
-          2h — pour que la personne puisse l'utiliser dès la première sortie au froid sans attendre.
+          Le délai indicatif de livraison est précisé dans les{" "}
+          <Link href="/livraison-retours">informations de livraison</Link>. Pour une date fixe
+          (anniversaire ou fête), prévois une marge suffisante, car le délai peut varier selon la
+          destination et les conditions logistiques. Vérifie également les caractéristiques du kit
+          choisi avant de commander.
         </p>
       </section>
 
       <section>
         <h2>Un cadeau qui reste utile après les fêtes</h2>
         <p>
-          Contrairement à un accessoire décoratif porté une saison puis oublié dans un tiroir, un
-          équipement chauffant garde son utilité tant que la batterie tient — soit plusieurs
-          hivers avec un entretien basique. C'est un argument à garder en tête si tu hésites entre
-          un gadget ponctuel et un objet que la personne ressortira chaque année dès les premiers
-          froids, sans avoir besoin de racheter quoi que ce soit.
+          Pour choisir un équipement adapté, compare les caractéristiques et les consignes
+          d'entretien indiquées sur chaque fiche produit. L'autonomie et la durée de vie peuvent
+          dépendre de l'utilisation et de l'entretien.
         </p>
         <p>
           Pense aussi au profil de la personne au-delà du froid ressenti : quelqu'un qui travaille
@@ -113,19 +111,18 @@ export default function GuideCadeauxHiver() {
       <section>
         <h2>Questions fréquentes</h2>
         <p>
-          <strong>Et si je ne connais pas la taille de la personne ?</strong> Les gants et
-          chaussettes chauffantes SWELTR suivent des tailles standards assez larges ; en cas de
-          doute, le kit avec écharpe (taille unique) limite le risque d'erreur.
+          <strong>Et si je ne connais pas la taille de la personne ?</strong> Consulte les
+          caractéristiques de taille indiquées sur la fiche du produit avant de choisir.
         </p>
         <p>
-          <strong>Peut-on échanger le cadeau si la taille ne convient pas ?</strong> La garantie de
-          30 jours s'applique aussi aux cadeaux : la personne qui reçoit le produit peut faire une
-          demande si besoin, à condition de conserver la commande d'origine.
+          <strong>Peut-on retourner le cadeau si la taille ne convient pas ?</strong> Consulte les
+          modalités et délais indiqués dans les{" "}
+          <Link href="/livraison-retours">informations de retour</Link> et conserve les références
+          de la commande.
         </p>
         <p>
-          <strong>Faut-il un cadeau différent chaque année ?</strong> Non — la batterie d'un
-          équipement chauffant tient plusieurs saisons d'usage normal avec un entretien correct
-          (recharge régulière, pas de stockage humide), ce n'est donc pas un cadeau à usage unique.
+          <strong>Comment entretenir le produit ?</strong> Suis les consignes d'entretien propres
+          au produit, indiquées sur sa fiche et dans sa documentation.
         </p>
       </section>
     </LegalPage>
