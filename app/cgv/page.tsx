@@ -22,9 +22,9 @@ export default function CGV() {
       <section>
         <h2>2. Produits et prix</h2>
         <p>
-          Les prix affichés sont en euros, toutes taxes comprises. SWELTR se réserve le droit de
-          modifier ses prix à tout moment, les produits étant facturés sur la base des tarifs en
-          vigueur au moment de la validation de la commande.
+          Les prix affichés sont en francs suisses (CHF). SWELTR se réserve le droit de modifier ses
+          prix à tout moment ; les produits sont facturés sur la base des tarifs affichés au moment
+          de la validation de la commande.
         </p>
       </section>
 

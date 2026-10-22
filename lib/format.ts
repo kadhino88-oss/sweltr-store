@@ -1,8 +1,8 @@
-const euroFormatter = new Intl.NumberFormat("fr-FR", {
+const chfFormatter = new Intl.NumberFormat("fr-CH", {
   style: "currency",
-  currency: "EUR",
+  currency: "CHF",
 });
 
 export function formatPrice(price: number): string {
-  return euroFormatter.format(price);
+  return chfFormatter.format(price);
 }

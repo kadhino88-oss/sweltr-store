@@ -13,9 +13,9 @@ export default function MentionsLegales() {
       <section>
         <h2>Éditeur du site</h2>
         <p>
-          Le site SWELTR est édité par <strong>BK ENTREPRISE</strong>,
-          entreprise individuelle (auto-entrepreneur), dont le siège est situé au{" "}
-          <strong>122 rue des Lauriers, 74380 Cranves-Sales, France</strong>.
+          Le site SWELTR est édité par <strong>BK ENTREPRISE</strong>, entrepreneur indépendant,
+          dont le siège est situé au{" "}
+          <strong>Rue Joseph-Pasquier 1, 1203 Genève, Suisse</strong>.
         </p>
         <p>
           Contact : <strong>contact@bkentreprise.com</strong> — <strong>+41 79 934 99 46</strong>
