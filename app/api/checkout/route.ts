@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       line_items: [
         {
           price_data: {
-            currency: "eur",
+            currency: "chf",
             product_data: {
               name: `SWELTR — ${tier.name}`,
               description: tier.items.join(", "),

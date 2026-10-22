@@ -44,26 +44,9 @@ export default function ProductPage({ params }: { params: { tierId: string } }) 
     offers: {
       "@type": "Offer",
       url: `${siteUrl}/produit/${tier.id}`,
-      priceCurrency: "EUR",
+      priceCurrency: "CHF",
       price: tier.price,
       availability: "https://schema.org/InStock",
-      shippingDetails: {
-        "@type": "OfferShippingDetails",
-        shippingRate: {
-          "@type": "MonetaryAmount",
-          value: "0",
-          currency: "EUR",
-        },
-        deliveryTime: {
-          "@type": "ShippingDeliveryTime",
-          handlingTime: {
-            "@type": "QuantitativeValue",
-            minValue: 0,
-            maxValue: 2,
-            unitCode: "DAY",
-          },
-        },
-      },
     },
   };
 

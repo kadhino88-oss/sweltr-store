@@ -54,7 +54,7 @@ export const TIERS: Tier[] = [
     id: "solo",
     name: "Solo Chaleur Mains",
     tagline: "1x Gants chauffants",
-    price: 34.9,
+    price: 36.99,
     items: ["1× Gants chauffants SWELTR"],
     cjItems: [{ vid: "42BD9CA6-6D95-4B26-8F20-A52375663923", quantity: 1 }],
     images: HEATED_GLOVES_GALLERY,
@@ -73,7 +73,7 @@ export const TIERS: Tier[] = [
     id: "duo",
     name: "Duo Chaleur Totale",
     tagline: "Gants chauffants + Écharpe chauffante",
-    price: 49.9,
+    price: 52.99,
     items: ["1× Gants chauffants SWELTR", "1× Écharpe chauffante USB"],
     best: true,
     cjItems: [
@@ -96,7 +96,7 @@ export const TIERS: Tier[] = [
     id: "trio",
     name: "Kit Grand Froid",
     tagline: "Gants chauffants + Écharpe chauffante + Chaussettes thermiques",
-    price: 59.9,
+    price: 62.99,
     items: [
       "1× Gants chauffants SWELTR",
       "1× Écharpe chauffante USB",
