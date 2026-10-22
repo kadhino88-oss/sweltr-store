@@ -29,7 +29,7 @@ Pour tester un vrai paiement en mode test, utilise la carte Stripe de test
 2. Va sur vercel.com → "Add New Project" → importe le dépôt.
 3. Dans les "Environment Variables" du projet Vercel, ajoute :
    - `STRIPE_SECRET_KEY` = ta clé Stripe (test puis, plus tard, live `sk_live_...`)
-   - `NEXT_PUBLIC_SITE_URL` = l'URL Vercel de ton site (ex: `https://sweltr.vercel.app`)
+   - `SITE_URL` = l'URL Vercel de ton site (ex: `https://sweltr.vercel.app`)
 4. Déploie. C'est en ligne.
 
 Quand tu es prêt à encaisser en vrai : dans Stripe, active ton compte (infos
@@ -126,4 +126,3 @@ Quand tu passes `CJ_AUTO_PAY=true` :
   quantités et produits sont corrects, avant de basculer en automatique complet.
 - Surveille les logs Vercel (`Deployments → ton déploiement → Functions →
   /api/webhooks/stripe`) pour repérer toute erreur de commande.
-

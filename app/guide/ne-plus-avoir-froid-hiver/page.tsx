@@ -1,7 +1,7 @@
 import Link from "next/link";
 import LegalPage from "@/components/LegalPage";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
+const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
 
 export const metadata = {
   title: "Ne plus avoir froid cet hiver : 5 conseils concrets — SWELTR",

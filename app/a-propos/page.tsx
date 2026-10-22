@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Battery, Hand, Layers3 } from "lucide-react";
 import ContentPage from "@/components/ContentPage";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sweltr-store-five.vercel.app";
+const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
 
 export const metadata: Metadata = {
   title: "À propos de SWELTR — Des équipements pensés pour le froid",
