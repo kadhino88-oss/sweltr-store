@@ -15,7 +15,7 @@ export default function WinterShowcase() {
       <section className="relative isolate overflow-hidden bg-[#10151D] text-white">
         <div className="absolute inset-0 -z-20">
           <Image
-            src={WINTER_PRODUCTS[0].image}
+            src={WINTER_PRODUCTS[3].image}
             alt=""
             fill
             priority
@@ -57,10 +57,10 @@ export default function WinterShowcase() {
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Link
-                href="/produits/couverture-chauffante"
+                href="/produits/gants-chauffants"
                 className="inline-flex min-h-12 items-center gap-2 rounded-full bg-amber-300 px-6 py-3 text-sm font-bold text-slate-950 transition hover:bg-amber-200"
               >
-                Découvrir notre produit phare <ArrowRight size={16} />
+                Découvrir les gants chauffants <ArrowRight size={16} />
               </Link>
               <Link
                 href="#collection"
@@ -89,21 +89,27 @@ export default function WinterShowcase() {
               transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
               className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-white/15 bg-white/5 shadow-2xl shadow-black/30"
             >
-              <Image
-                src={WINTER_PRODUCTS[0].image}
-                alt="Ambiance chaleureuse et plaid dans un intérieur confortable"
-                fill
-                sizes="(max-width: 768px) 90vw, 42vw"
-                unoptimized
-                className="object-cover"
-              />
+              {WINTER_PRODUCTS[3].image ? (
+                <Image
+                  src={WINTER_PRODUCTS[3].image}
+                  alt="Gants chauffants — photo du produit du catalogue actuel"
+                  fill
+                  sizes="(max-width: 768px) 90vw, 42vw"
+                  unoptimized
+                  className="object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-800 via-slate-900 to-amber-950 p-8 text-center">
+                  <span className="font-mono text-xs uppercase tracking-[.2em] text-amber-100/70">Photo réelle du produit à intégrer</span>
+                </div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-[#10151D]/90 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                <span className="font-mono text-[10px] uppercase tracking-[.24em] text-amber-200">La pièce maîtresse</span>
-                <h2 className="mt-2 font-display text-3xl font-bold md:text-4xl">La couverture chauffante</h2>
-                <p className="mt-2 text-sm text-white/75">Le confort à la maison, au cœur de notre sélection.</p>
-                <Link href="/produits/couverture-chauffante" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-amber-200">
-                  Explorer la fiche <ArrowRight size={15} />
+                <span className="font-mono text-[10px] uppercase tracking-[.24em] text-amber-200">Le produit disponible</span>
+                <h2 className="mt-2 font-display text-3xl font-bold md:text-4xl">Les gants chauffants</h2>
+                <p className="mt-2 text-sm text-white/75">La chaleur qui vous accompagne dans vos déplacements.</p>
+                <Link href="/produits/gants-chauffants" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-amber-200">
+                  Voir le produit <ArrowRight size={15} />
                 </Link>
               </div>
               <div className="absolute right-4 top-4 rounded-full border border-white/20 bg-black/35 px-3 py-2 text-[10px] uppercase tracking-widest backdrop-blur-md">
@@ -157,14 +163,20 @@ export default function WinterShowcase() {
             >
               <Link href={`/produits/${product.slug}`} className="block">
                 <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
-                  <Image
-                    src={product.image}
-                    alt={product.alt}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    unoptimized
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+                  {product.image ? (
+                    <Image
+                      src={product.image}
+                      alt={product.alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      unoptimized
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 via-slate-200 to-amber-100 p-6 text-center">
+                      <span className="font-mono text-[10px] uppercase tracking-[.18em] text-slate-500">Photo réelle à intégrer</span>
+                    </div>
+                  )}
                   <span className="absolute left-3 top-3 rounded-full border border-white/50 bg-black/45 px-3 py-1.5 font-mono text-[9px] uppercase tracking-widest text-white backdrop-blur">
                     {product.availability === "existing" ? "Dans les kits" : "Sélection en cours"}
                   </span>
