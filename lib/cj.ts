@@ -89,6 +89,67 @@ export type CjLineItem = {
   quantity: number;
 };
 
+/**
+ * Retrouve une commande déjà créée avec notre référence partenaire stable.
+ * CJ documente getOrderDetailBatch comme acceptant l'identifiant de commande
+ * ou le numéro de commande de la boutique. En cas d'erreur de lookup, on échoue
+ * fermé : mieux vaut retenter que risquer de créer un doublon.
+ */
+export async function findCjOrderByOrderNumber(
+  orderNumber: string,
+): Promise<{ orderId: string; orderCode?: string } | null> {
+  const token = await getAccessToken();
+  const res = await fetch(`${CJ_API_BASE_URL}/shopping/order/getOrderDetailBatch`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "CJ-Access-Token": token,
+    },
+    body: JSON.stringify({ orderIds: [orderNumber] }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Échec de recherche de commande CJ (HTTP ${res.status}).`);
+  }
+
+  const data = (await res.json()) as {
+    result?: boolean;
+    message?: string;
+    data?: unknown;
+  };
+
+  if (!data.result) {
+    throw new Error(`Échec de recherche de commande CJ : ${data.message || "réponse invalide"}`);
+  }
+
+  const orders = Array.isArray(data.data)
+    ? data.data as Array<Record<string, unknown>>
+    : [];
+
+  const existing = orders.find((item) =>
+    item.orderNum === orderNumber || item.orderNumber === orderNumber
+  );
+
+  if (!existing) return null;
+
+  const orderId =
+    typeof existing.orderId === "string"
+      ? existing.orderId
+      : typeof existing.cjOrderId === "string"
+        ? existing.cjOrderId
+        : "";
+
+  if (!orderId) {
+    throw new Error("CJ a retrouvé la référence mais n'a retourné aucun identifiant de commande.");
+  }
+
+  return {
+    orderId,
+    ...(typeof existing.orderCode === "string" ? { orderCode: existing.orderCode } : {}),
+    ...(typeof existing.cjOrderCode === "string" ? { orderCode: existing.cjOrderCode } : {}),
+  };
+}
+
 export async function createCjOrder(shipping: CjShippingInfo, products: CjLineItem[]) {
   const token = await getAccessToken();
 
