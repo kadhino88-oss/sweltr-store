@@ -14,6 +14,15 @@ function webhookResponse(status = 200) {
   );
 }
 
+function webhookRetryResponse(error: string) {
+  // Ne pas acquitter un paiement si la commande fournisseur n'a pas pu être préparée.
+  // Stripe pourra retenter après correction de la configuration.
+  return NextResponse.json(
+    { error },
+    { status: 503, headers: { "Cache-Control": "no-store" } },
+  );
+}
+
 export async function POST(req: NextRequest) {
   const signature = req.headers.get("stripe-signature");
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -68,16 +77,15 @@ export async function POST(req: NextRequest) {
 
     const tier = TIERS.find((item) => item.id === session.metadata?.tierId);
     if (!tier) {
-      console.error(`Kit inconnu pour la session Stripe ${session.id}.`);
-      // Erreur de configuration non transitoire : alerte dans les logs, pas de boucle de retry.
-      return webhookResponse();
+      console.error(`Kit inconnu pour la session Stripe ${session.id}. Traitement requis.`);
+      return webhookRetryResponse("Kit inconnu : traitement de commande en attente de correction.");
     }
 
     if (!tier.cjItems?.length) {
       console.error(
-        `Aucun produit CJ configuré pour le kit "${tier.name}". Commande Stripe ${session.id} à traiter manuellement.`,
+        `Aucun produit CJ configuré pour le kit "${tier.name}". Commande Stripe ${session.id} à traiter.`,
       );
-      return webhookResponse();
+      return webhookRetryResponse("Produits fournisseur non configurés pour ce kit.");
     }
 
     const shipping = session.shipping_details;
@@ -86,7 +94,7 @@ export async function POST(req: NextRequest) {
       console.error(
         `Adresse de livraison incomplète pour la session Stripe ${session.id}. Traitement manuel requis.`,
       );
-      return webhookResponse();
+      return webhookRetryResponse("Adresse de livraison incomplète : commande fournisseur en attente.");
     }
 
     // Une erreur transitoire CJ doit recevoir un 5xx : Stripe réessaiera le webhook.
