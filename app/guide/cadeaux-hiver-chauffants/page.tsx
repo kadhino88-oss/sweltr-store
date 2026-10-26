@@ -1,7 +1,7 @@
 import Link from "next/link";
 import LegalPage from "@/components/LegalPage";
 
-const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
+const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
 
 export const metadata = {
   title: "Idée cadeau hiver chauffant : que choisir et pour qui en 2026 — SWELTR",
