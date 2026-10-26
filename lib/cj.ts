@@ -228,7 +228,7 @@ export async function payCjOrder(orderId: string) {
       "Content-Type": "application/json",
       "CJ-Access-Token": token,
     },
-    body: JSON.stringify({ orderId }),
+    body: JSON.stringify({ shipmentOrderId: orderId }),
   });
 
   if (!res.ok) {
