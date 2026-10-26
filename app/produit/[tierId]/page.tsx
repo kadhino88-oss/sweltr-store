@@ -46,7 +46,6 @@ export default function ProductPage({ params }: { params: { tierId: string } }) 
       url: `${siteUrl}/produit/${tier.id}`,
       priceCurrency: "CHF",
       price: tier.price,
-      availability: "https://schema.org/InStock",
     },
   };
 
@@ -54,7 +53,7 @@ export default function ProductPage({ params }: { params: { tierId: string } }) 
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
       <ProductDetailClient tier={tier} />
     </>
