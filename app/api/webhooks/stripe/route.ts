@@ -137,7 +137,13 @@ export async function POST(req: NextRequest) {
     console.log(`${existingOrder ? "Commande CJ existante retrouvée" : "Commande CJ créée"} pour la session Stripe ${session.id} (référence fournisseur ${cjOrderNumber}) : ${order.orderId}`);
 
     // Le paiement CJ dépense le solde réel. Il reste désactivé sauf opt-in explicite.
-    if (process.env.CJ_AUTO_PAY === "true") {
+    // Une commande retrouvée après retry n'est jamais payée automatiquement : son état
+    // de paiement peut être inconnu, donc on évite tout risque de second débit.
+    if (process.env.CJ_AUTO_PAY === "true" && existingOrder) {
+      console.warn(
+        `Commande CJ ${order.orderId} retrouvée après une nouvelle tentative. Paiement automatique ignoré par sécurité ; vérifier son statut dans MyCJ.`,
+      );
+    } else if (process.env.CJ_AUTO_PAY === "true") {
       try {
         await payCjOrder(order.orderId);
         console.log(`Commande CJ ${order.orderId} payée automatiquement.`);
