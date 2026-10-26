@@ -72,11 +72,9 @@ export default function WinterProductPage({ params }: { params: { slug: string }
                 <div>
                   <p className="font-semibold">{product.availability === "existing" ? "Disponible dans nos kits" : "Sélection en cours"}</p>
                   <p className="mt-1 text-sm leading-6 text-slate-600">
-                    {product.slug === "radiateur-ceramique"
-                      ? "Ce chauffage d’appoint restera indisponible tant que la sécurité et les documents de conformité du modèle exact ne seront pas validés."
-                      : product.availability === "existing"
-                        ? "Consulte les kits disponibles pour connaître le prix et le contenu exact avant de commander."
-                        : "Nous finalisons la sélection du fournisseur, la qualité, les délais et le prix avant toute mise en vente."}
+                    {product.availability === "existing"
+                      ? "Consulte les kits disponibles pour connaître le prix et le contenu exact avant de commander."
+                      : "Ce produit est encore en sélection : le modèle exact, les photos, le stock, les frais de livraison et le prix final doivent être confirmés avant toute mise en vente."}
                   </p>
                 </div>
               </div>
@@ -90,7 +88,7 @@ export default function WinterProductPage({ params }: { params: { slug: string }
                 Contacter SWELTR pour ce produit <ArrowRight size={16} />
               </Link>
             )}
-            <p className="mt-4 text-xs leading-5 text-slate-500">Aucune image illustrative n’est utilisée. Les produits sans photo réelle restent sans visuel jusqu’à réception de la photo exacte du modèle.</p>
+            <p className="mt-4 text-xs leading-5 text-slate-500">Les produits en sélection ne sont pas encore commandables. Nous confirmerons la variante exacte, les photos du fournisseur, le stock et le coût livré avant leur mise en vente.</p>
           </div>
         </div>
         <section className="mt-10 grid gap-4 sm:grid-cols-3">
