@@ -6,10 +6,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowRight, Sparkles } from "lucide-react";
 import { WINTER_PRODUCTS } from "@/lib/winter-products";
 
-const FEATURED = WINTER_PRODUCTS.slice(0, 5);
-
 export default function WinterShowcase() {
   const reduceMotion = useReducedMotion();
+  const campaignVideo = process.env.NEXT_PUBLIC_WINTER_CAMPAIGN_VIDEO_URL;
 
   return (
     <>
@@ -200,21 +199,35 @@ export default function WinterShowcase() {
                 Le lecteur est prêt à accueillir le film publicitaire de la collection. La vidéo finale sera intégrée dès que le fichier de campagne validé sera disponible.
               </p>
             </div>
-            <div className="relative flex aspect-video w-full max-w-sm items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-amber-300/20 via-white/5 to-sky-300/10">
-              <motion.div
-                className="absolute h-40 w-40 rounded-full border border-amber-100/30"
-                animate={reduceMotion ? undefined : { scale: [1, 1.45], opacity: [0.65, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
+            {campaignVideo ? (
+              <video
+                className="aspect-video w-full max-w-sm rounded-2xl border border-white/15 bg-black object-cover shadow-xl"
+                src={campaignVideo}
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls
+                preload="metadata"
+                aria-label="Film publicitaire de la collection hiver SWELTR"
               />
-              <motion.div
-                className="absolute h-28 w-28 rounded-full border border-amber-100/40"
-                animate={reduceMotion ? undefined : { scale: [1, 1.45], opacity: [0.65, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeOut", delay: 1 }}
-              />
-              <div className="relative rounded-full border border-white/25 bg-white/10 px-5 py-3 text-xs font-semibold uppercase tracking-widest backdrop-blur">
-                Film SWELTR · à intégrer
+            ) : (
+              <div className="relative flex aspect-video w-full max-w-sm items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-amber-300/20 via-white/5 to-sky-300/10">
+                <motion.div
+                  className="absolute h-40 w-40 rounded-full border border-amber-100/30"
+                  animate={reduceMotion ? undefined : { scale: [1, 1.45], opacity: [0.65, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
+                />
+                <motion.div
+                  className="absolute h-28 w-28 rounded-full border border-amber-100/40"
+                  animate={reduceMotion ? undefined : { scale: [1, 1.45], opacity: [0.65, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeOut", delay: 1 }}
+                />
+                <div className="relative rounded-full border border-white/25 bg-white/10 px-5 py-3 text-xs font-semibold uppercase tracking-widest backdrop-blur">
+                  Film SWELTR · prêt à intégrer
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
