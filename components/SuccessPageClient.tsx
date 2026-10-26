@@ -1,12 +1,43 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, CircleHelp, Clock3 } from "lucide-react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
 
-export default function SuccessPageClient() {
+type SuccessPageClientProps = {
+  status: "confirmed" | "pending" | "unverified";
+};
+
+const statusCopy = {
+  confirmed: {
+    title: "Commande confirmée",
+    message:
+      "Ton paiement a été confirmé par Stripe. Pour toute question sur ta commande ou sa livraison, notre service client est à ta disposition.",
+    Icon: CheckCircle2,
+    iconClass: "text-gold-deep",
+  },
+  pending: {
+    title: "Paiement en cours",
+    message:
+      "Stripe n'a pas encore confirmé le paiement de cette session. Si tu viens de terminer le paiement, patiente un instant avant de réessayer afin d'éviter un doublon.",
+    Icon: Clock3,
+    iconClass: "text-gold-deep",
+  },
+  unverified: {
+    title: "Confirmation indisponible",
+    message:
+      "Nous ne pouvons pas encore vérifier ton paiement. Si tu as été débité, ne repasse pas commande : contacte notre service client pour que nous vérifiions la transaction.",
+    Icon: CircleHelp,
+    iconClass: "text-gold-deep",
+  },
+};
+
+export default function SuccessPageClient({ status }: SuccessPageClientProps) {
+  const copy = statusCopy[status];
+  const StatusIcon = copy.Icon;
+
   return (
     <main className="min-h-screen flex flex-col bg-ivory text-ink">
       <SiteHeader />
@@ -16,7 +47,7 @@ export default function SuccessPageClient() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <CheckCircle2 size={56} className="text-gold-deep mx-auto mb-6" />
+          <StatusIcon size={56} className={`${copy.iconClass} mx-auto mb-6`} />
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 10 }}
@@ -24,7 +55,7 @@ export default function SuccessPageClient() {
           transition={{ delay: 0.15 }}
           className="font-display font-bold text-3xl mb-4"
         >
-          Commande confirmée
+          {copy.title}
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 10 }}
@@ -32,8 +63,7 @@ export default function SuccessPageClient() {
           transition={{ delay: 0.25 }}
           className="text-soft max-w-md mb-8"
         >
-          Le paiement a été confirmé par Stripe. Pour toute question sur ta commande ou sa
-          livraison, notre service client est à ta disposition.
+          {copy.message}
         </motion.p>
         <Link
           href="/contact"
