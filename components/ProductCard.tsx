@@ -18,6 +18,7 @@ export default function ProductCard({
 
   return (
     <article
+      id={tier.id}
       className={`flex h-full flex-col overflow-hidden rounded-2xl border bg-panel transition-all ${
         selected ? "border-gold-deep ring-2 ring-gold/30" : "border-line hover:border-gold/70"
       }`}
@@ -70,7 +71,7 @@ export default function ProductCard({
             </button>
           )}
           <Link
-            href={`/produit/${tier.id}`}
+            href={`/kits/${tier.id}`}
             className="inline-flex min-h-11 flex-1 items-center justify-center rounded-full border border-line px-4 py-2 text-center font-display text-xs font-semibold uppercase tracking-wide text-ink transition-colors hover:border-gold-deep hover:bg-panel2"
           >
             Voir la fiche

@@ -220,6 +220,15 @@ export async function createCjOrder(shipping: CjShippingInfo, products: CjLineIt
 }
 
 export async function payCjOrder(orderId: string) {
+  // Safety gate: createOrderV2 alone is not the complete CJ fulfillment/payment flow.
+  // Do not allow a real balance debit until the full CJ flow has been implemented
+  // and verified against a real test order and the returned parent/payment IDs.
+  if (process.env.CJ_PAYMENT_FLOW_VALIDATED !== "true") {
+    throw new Error(
+      "Paiement automatique CJ bloqué : définir CJ_PAYMENT_FLOW_VALIDATED=true uniquement après validation complète du flux CJ."
+    );
+  }
+
   const token = await getAccessToken();
 
   const res = await fetch(`${CJ_API_BASE_URL}/shopping/pay/payBalanceV2`, {
@@ -228,7 +237,7 @@ export async function payCjOrder(orderId: string) {
       "Content-Type": "application/json",
       "CJ-Access-Token": token,
     },
-    body: JSON.stringify({ orderId }),
+    body: JSON.stringify({ shipmentOrderId: orderId }),
   });
 
   if (!res.ok) {
