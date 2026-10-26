@@ -1,12 +1,44 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Clock3, CircleHelp } from "lucide-react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
 
-export default function SuccessPageClient() {
+type PaymentStatus = "paid" | "pending" | "unverified";
+
+export default function SuccessPageClient({
+  paymentStatus,
+}: {
+  paymentStatus: PaymentStatus;
+}) {
+  const content = {
+    paid: {
+      icon: CheckCircle2,
+      title: "Paiement confirmé",
+      message:
+        "Stripe confirme que ton paiement a été effectué. La préparation et la validation de la commande fournisseur peuvent encore nécessiter un délai.",
+      iconClass: "text-gold-deep",
+    },
+    pending: {
+      icon: Clock3,
+      title: "Paiement en attente",
+      message:
+        "Stripe n'indique pas encore un paiement confirmé. Si tu viens de terminer le paiement, patiente un instant avant de vérifier à nouveau. Ne repasse pas commande si un débit apparaît sur ton compte.",
+      iconClass: "text-gold-deep",
+    },
+    unverified: {
+      icon: CircleHelp,
+      title: "Statut à vérifier",
+      message:
+        "Nous n'avons pas pu vérifier le paiement auprès de Stripe. Consulte ton compte ou ton e-mail de confirmation, puis contacte le service client si nécessaire. Si tu vois un débit, ne repasse pas commande.",
+      iconClass: "text-gold-deep",
+    },
+  }[paymentStatus];
+
+  const StatusIcon = content.icon;
+
   return (
     <main className="min-h-screen flex flex-col bg-ivory text-ink">
       <SiteHeader />
@@ -16,7 +48,7 @@ export default function SuccessPageClient() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <CheckCircle2 size={56} className="text-gold-deep mx-auto mb-6" />
+          <StatusIcon size={56} className={`${content.iconClass} mx-auto mb-6`} />
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 10 }}
@@ -24,7 +56,7 @@ export default function SuccessPageClient() {
           transition={{ delay: 0.15 }}
           className="font-display font-bold text-3xl mb-4"
         >
-          Commande confirmée
+          {content.title}
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 10 }}
@@ -32,8 +64,7 @@ export default function SuccessPageClient() {
           transition={{ delay: 0.25 }}
           className="text-soft max-w-md mb-8"
         >
-          Le paiement a été confirmé par Stripe. Pour toute question sur ta commande ou sa
-          livraison, notre service client est à ta disposition.
+          {content.message}
         </motion.p>
         <Link
           href="/contact"
