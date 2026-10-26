@@ -3,6 +3,34 @@ import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { TIERS } from "@/lib/data";
 
 export async function POST(req: NextRequest) {
+  let body: unknown;
+
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json(
+      { error: "Requête invalide. Sélectionne un kit puis réessaie." },
+      { status: 400 },
+    );
+  }
+
+  if (
+    typeof body !== "object" ||
+    body === null ||
+    !("tierId" in body) ||
+    typeof body.tierId !== "string"
+  ) {
+    return NextResponse.json(
+      { error: "Sélection de kit invalide." },
+      { status: 400 },
+    );
+  }
+
+  const tier = TIERS.find((item) => item.id === body.tierId);
+  if (!tier) {
+    return NextResponse.json({ error: "Kit introuvable." }, { status: 400 });
+  }
+
   const stripe = getStripeClient();
   if (!stripe) {
     console.error("Stripe checkout indisponible : STRIPE_SECRET_KEY n'est pas configurée.");
@@ -13,13 +41,6 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { tierId } = await req.json();
-    const tier = TIERS.find((t) => t.id === tierId);
-
-    if (!tier) {
-      return NextResponse.json({ error: "Kit introuvable." }, { status: 400 });
-    }
-
     const siteUrl = (
       process.env.SITE_URL || "https://sweltr-store-five.vercel.app"
     ).replace(/\/+$/, "");
@@ -49,8 +70,19 @@ export async function POST(req: NextRequest) {
       cancel_url: `${siteUrl}/annulation`,
     });
 
-    return NextResponse.json({ url: session.url });
-  } catch (err: any) {
+    if (!session.url) {
+      console.error("Stripe Checkout n'a retourné aucune URL de paiement.");
+      return NextResponse.json(
+        { error: "Impossible d'ouvrir la page de paiement. Réessaie plus tard." },
+        { status: 502 },
+      );
+    }
+
+    return NextResponse.json(
+      { url: session.url },
+      { headers: { "Cache-Control": "no-store" } },
+    );
+  } catch (err: unknown) {
     console.error("Erreur Stripe Checkout:", getStripeErrorDetails(err));
     return NextResponse.json(
       { error: "Impossible de démarrer le paiement. Réessaie ou contacte le service client." },
