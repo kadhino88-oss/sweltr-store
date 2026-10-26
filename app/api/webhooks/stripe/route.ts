@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { createHash } from "node:crypto";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { TIERS } from "@/lib/data";
 import { createCjOrder, payCjOrder } from "@/lib/cj";
@@ -12,6 +13,12 @@ function webhookResponse(status = 200) {
     { received: status === 200 },
     { status, headers: { "Cache-Control": "no-store" } },
   );
+}
+
+// CJ limite orderNumber à 50 caractères. Un hash déterministe reste stable entre les retries.
+function getCjOrderNumber(stripeSessionId: string) {
+  const digest = createHash("sha256").update(stripeSessionId).digest("hex").slice(0, 40);
+  return `SWELTR-${digest}`;
 }
 
 function webhookRetryResponse(error: string) {
@@ -98,10 +105,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Une erreur transitoire CJ doit recevoir un 5xx : Stripe réessaiera le webhook.
-    // Le numéro de commande CJ reste la session Stripe pour faciliter le rapprochement.
+    // La référence CJ est un hash déterministe de la session Stripe, compatible avec la limite CJ de 50 caractères.
     const order = await createCjOrder(
       {
-        orderNumber: session.id,
+        orderNumber: getCjOrderNumber(session.id),
         shippingCustomerName:
           shipping?.name || session.customer_details?.name || "Client SWELTR",
         shippingCountryCode: address.country,
@@ -124,7 +131,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log(`Commande CJ créée pour la session Stripe ${session.id} : ${order.orderId}`);
+    console.log(`Commande CJ créée pour la session Stripe ${session.id} (référence fournisseur ${getCjOrderNumber(session.id)}) : ${order.orderId}`);
 
     // Le paiement CJ dépense le solde réel. Il reste désactivé sauf opt-in explicite.
     if (process.env.CJ_AUTO_PAY === "true") {
