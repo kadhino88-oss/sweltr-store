@@ -38,20 +38,34 @@ export default function WinterProductPage({ params }: { params: { slug: string }
           <ArrowLeft size={16} /> Retour à la collection
         </Link>
         <div className="mt-6 grid overflow-hidden rounded-[2rem] bg-white shadow-sm lg:grid-cols-2">
-          <div className="relative min-h-[340px] bg-slate-100 md:min-h-[560px]">
-            {product.image ? (
-              <>
-                <Image src={product.image} alt={product.alt} fill priority sizes="(max-width: 1024px) 100vw, 50vw" unoptimized className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
-              </>
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 via-slate-200 to-amber-100 p-8 text-center">
-                <span className="max-w-xs font-mono text-xs uppercase tracking-[.2em] text-slate-500">Photo réelle du produit à intégrer</span>
+          <div className="bg-slate-100 p-3 md:p-5">
+            <div className="relative min-h-[340px] overflow-hidden rounded-2xl bg-slate-200 md:min-h-[480px]">
+              {product.image ? (
+                <>
+                  <Image src={product.image} alt={product.alt} fill priority sizes="(max-width: 1024px) 100vw, 50vw" unoptimized className="object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
+                </>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 via-slate-200 to-amber-100 p-8 text-center">
+                  <span className="max-w-xs font-mono text-xs uppercase tracking-[.2em] text-slate-500">Photo réelle du produit à intégrer</span>
+                </div>
+              )}
+              <span className="absolute bottom-5 left-5 rounded-full border border-white/35 bg-black/35 px-4 py-2 font-mono text-[10px] uppercase tracking-[.2em] text-white backdrop-blur">
+                {product.category}
+              </span>
+            </div>
+            {(product.images?.length ?? 0) > 1 && (
+              <div className="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-4" aria-label="Galerie photos du produit">
+                {product.images?.slice(0, 8).map((image, index) => (
+                  <div key={image} className="relative aspect-square overflow-hidden rounded-xl border border-white bg-white">
+                    <Image src={image} alt={`${product.name} — photo ${index + 1}`} fill sizes="(max-width: 640px) 30vw, 120px" unoptimized className="object-cover" />
+                  </div>
+                ))}
               </div>
             )}
-            <span className="absolute bottom-5 left-5 rounded-full border border-white/35 bg-black/35 px-4 py-2 font-mono text-[10px] uppercase tracking-[.2em] text-white backdrop-blur">
-              {product.category}
-            </span>
+            <p className="mt-3 px-1 text-xs text-slate-500">
+              Photos issues des fiches fournisseur disponibles. Les variantes exactes seront confirmées avant la commande.
+            </p>
           </div>
           <div className="flex flex-col justify-center p-7 md:p-12 lg:p-14">
             <p className="font-mono text-xs uppercase tracking-[.22em] text-amber-700">{product.eyebrow}</p>
