@@ -43,9 +43,18 @@ export async function getCjAccessToken({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ apiKey }),
   });
-  const data = (await res.json()) as CjAccessTokenResponse;
+  if (!res.ok) {
+    throw new Error(`Échec HTTP de l'authentification CJ (HTTP ${res.status}).`);
+  }
 
-  if (!data.result) {
+  let data: CjAccessTokenResponse;
+  try {
+    data = (await res.json()) as CjAccessTokenResponse;
+  } catch {
+    throw new Error("Réponse d'authentification CJ invalide.");
+  }
+
+  if (!data.result || !data.data?.accessToken || !data.data?.accessTokenExpiryDate) {
     throw new Error(
       authenticationErrorPrefix ? `${authenticationErrorPrefix}${data.message}` : data.message
     );
@@ -112,11 +121,24 @@ export async function findCjOrderByOrderNumber(
     throw new Error(`Échec de recherche de commande CJ (HTTP ${res.status}).`);
   }
 
-  const data = (await res.json()) as {
+  if (!res.ok) {
+    throw new Error(`Échec HTTP de recherche de commande CJ (HTTP ${res.status}).`);
+  }
+
+  let data: {
     result?: boolean;
     message?: string;
     data?: unknown;
   };
+  try {
+    data = (await res.json()) as {
+      result?: boolean;
+      message?: string;
+      data?: unknown;
+    };
+  } catch {
+    throw new Error("Réponse de recherche de commande CJ invalide.");
+  }
 
   if (!data.result) {
     throw new Error(`Échec de recherche de commande CJ : ${data.message || "réponse invalide"}`);
@@ -179,9 +201,19 @@ export async function createCjOrder(shipping: CjShippingInfo, products: CjLineIt
     }),
   });
 
-  const data = await res.json();
-  if (!data.result) {
-    throw new Error(`Échec de création de commande CJ : ${data.message}`);
+  if (!res.ok) {
+    throw new Error(`Échec HTTP de création de commande CJ (HTTP ${res.status}).`);
+  }
+
+  let data: { result?: boolean; message?: string; data?: { orderId?: string; orderCode?: string } };
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error("Réponse de création de commande CJ invalide.");
+  }
+
+  if (!data.result || typeof data.data?.orderId !== "string" || !data.data.orderId) {
+    throw new Error(`Échec de création de commande CJ : ${data.message || "identifiant de commande absent"}`);
   }
   return data.data as { orderId: string; orderCode?: string };
 }
@@ -198,9 +230,19 @@ export async function payCjOrder(orderId: string) {
     body: JSON.stringify({ orderId }),
   });
 
-  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(`Échec HTTP de paiement CJ (HTTP ${res.status}).`);
+  }
+
+  let data: { result?: boolean; message?: string; data?: unknown };
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error("Réponse de paiement CJ invalide.");
+  }
+
   if (!data.result) {
-    throw new Error(`Échec de paiement CJ : ${data.message}`);
+    throw new Error(`Échec de paiement CJ : ${data.message || "réponse invalide"}`);
   }
   return data.data;
 }
