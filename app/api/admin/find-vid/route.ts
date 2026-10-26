@@ -2,42 +2,69 @@ import { NextRequest, NextResponse } from "next/server";
 import { CJ_API_BASE_URL, getCjAccessToken } from "@/lib/cj";
 
 /**
- * Petit outil d'admin : cherche un produit déjà ajouté à "Mes produits" sur CJ
- * à partir de son SKU, et retourne ses variantes avec leur "vid" (l'identifiant
- * dont on a besoin pour créer des commandes automatiquement).
- *
- * Utilisation une fois déployé :
- * https://TON-SITE.vercel.app/api/admin/find-vid?sku=CJYD202348102BY&secret=TON_ADMIN_SECRET
- *
- * Protégé par ADMIN_SECRET pour que cette route ne soit pas librement
- * interrogeable par n'importe qui.
+ * Outil d'administration : recherche les variantes d'un produit CJ par SKU.
+ * Le secret d'administration doit être envoyé dans l'en-tête x-admin-secret,
+ * jamais dans l'URL, afin d'éviter son exposition dans les journaux et historiques.
  */
-
 export async function GET(req: NextRequest) {
-  const sku = req.nextUrl.searchParams.get("sku");
-  const secret = req.nextUrl.searchParams.get("secret");
+  const sku = req.nextUrl.searchParams.get("sku")?.trim();
+  const providedSecret = req.headers.get("x-admin-secret");
+  const expectedSecret = process.env.ADMIN_SECRET;
 
-  if (!process.env.ADMIN_SECRET || secret !== process.env.ADMIN_SECRET) {
-    return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
+  if (!expectedSecret || !providedSecret || providedSecret !== expectedSecret) {
+    return NextResponse.json(
+      { error: "Non autorisé." },
+      { status: 401, headers: { "Cache-Control": "no-store" } },
+    );
   }
+
   if (!sku) {
-    return NextResponse.json({ error: "Ajoute ?sku=TON_SKU à l'URL." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Ajoute le paramètre sku à l'URL." },
+      { status: 400, headers: { "Cache-Control": "no-store" } },
+    );
   }
 
   try {
-    const { accessToken: token } = await getCjAccessToken();
-    const res = await fetch(
+    const { accessToken } = await getCjAccessToken();
+    const response = await fetch(
       `${CJ_API_BASE_URL}/product/myProduct/query?keyword=${encodeURIComponent(sku)}`,
-      { headers: { "CJ-Access-Token": token } }
+      {
+        headers: { "CJ-Access-Token": accessToken },
+        cache: "no-store",
+      },
     );
-    const data = await res.json();
 
-    if (!data.result) {
-      return NextResponse.json({ error: data.message }, { status: 400 });
+    if (!response.ok) {
+      console.error("Recherche de variante CJ échouée avec HTTP", response.status);
+      return NextResponse.json(
+        { error: "Le fournisseur n'a pas pu traiter la recherche. Réessaie plus tard." },
+        { status: 502, headers: { "Cache-Control": "no-store" } },
+      );
     }
 
-    return NextResponse.json({ result: data.data });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    const data = await response.json();
+
+    if (!data.result) {
+      console.error("Recherche de variante CJ refusée par le fournisseur.");
+      return NextResponse.json(
+        { error: "Recherche impossible. Vérifie le SKU et la configuration CJ." },
+        { status: 502, headers: { "Cache-Control": "no-store" } },
+      );
+    }
+
+    return NextResponse.json(
+      { result: data.data },
+      { headers: { "Cache-Control": "no-store" } },
+    );
+  } catch (error: unknown) {
+    console.error(
+      "Erreur de recherche de variante CJ :",
+      error instanceof Error ? error.message : String(error),
+    );
+    return NextResponse.json(
+      { error: "Erreur interne pendant la recherche. Consulte les journaux serveur." },
+      { status: 502, headers: { "Cache-Control": "no-store" } },
+    );
   }
 }
