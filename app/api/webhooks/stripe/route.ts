@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
       {
         orderNumber: session.id,
         shippingCustomerName:
-          shipping.name || session.customer_details?.name || "Client SWELTR",
+          shipping?.name || session.customer_details?.name || "Client SWELTR",
         shippingCountryCode: address.country,
         shippingProvince: address.state || address.city || "",
         shippingCity: address.city,
