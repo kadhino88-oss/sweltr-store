@@ -5,6 +5,7 @@ export type WinterProduct = {
   short: string;
   description: string;
   image: string;
+  images?: string[];
   alt: string;
   highlights: string[];
   category: string;
@@ -56,6 +57,11 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     short: "Un accessoire pour les déplacements par temps froid.",
     description: "Les gants chauffants figurent déjà dans les kits actuels SWELTR. Consulte leurs caractéristiques exactes et les éléments inclus sur la fiche du kit avant de commander.",
     image: "https://cf.cjdropshipping.com/20180920/2155711379153.jpg",
+    images: [
+      "https://cf.cjdropshipping.com/20180920/2155711379153.jpg",
+      "https://cf.cjdropshipping.com/20180920/28896142656039.jpg",
+      "https://cf.cjdropshipping.com/20180920/188040013818.jpg",
+    ],
     alt: "Gants chauffants",
     highlights: ["Présents dans les kits actuels", "Caractéristiques à vérifier selon le modèle", "Découvrir les kits SWELTR"],
     category: "Accessoires chauffants",
@@ -69,6 +75,12 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     short: "Un accessoire chauffant pour protéger le cou du froid.",
     description: "L’écharpe chauffante USB est proposée dans les kits SWELTR existants. Vérifie les caractéristiques, les modalités d’alimentation et d’entretien sur la fiche du kit.",
     image: "https://cf.cjdropshipping.com/quick/product/72a24559-48af-49ce-b41c-0d3ceb7c9614.jpg",
+    images: [
+      "https://cf.cjdropshipping.com/quick/product/72a24559-48af-49ce-b41c-0d3ceb7c9614.jpg",
+      "https://cf.cjdropshipping.com/quick/product/b0cfd092-bb3d-4cbb-8057-b6c84adfff2e.jpg",
+      "https://cf.cjdropshipping.com/quick/product/da4bdaad-0ebc-4bee-ab3e-a951afe847d7.jpg",
+      "https://cf.cjdropshipping.com/quick/product/ed3b69ac-e870-4b82-8fe2-406f45894e00.jpg",
+    ],
     alt: "Écharpe chauffante USB",
     highlights: ["Présente dans les kits actuels", "Alimentation USB selon le modèle", "Découvrir les kits SWELTR"],
     category: "Accessoires chauffants",
