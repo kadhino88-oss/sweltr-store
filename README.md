@@ -75,15 +75,19 @@ sans que tu touches à rien. Voici comment l'activer, étape par étape.
 ### 6.1 Récupérer les "vid" de tes produits
 
 Une fois un produit ajouté à "Mes produits" sur CJ, appelle cette route (déployée
-avec ton site) pour récupérer ses identifiants de variantes :
+avec ton site) pour récupérer ses identifiants de variantes. Le secret admin
+doit être envoyé dans l'en-tête HTTP `x-admin-secret` et non dans l'URL, pour
+éviter qu'il soit enregistré dans l'historique du navigateur ou les journaux.
 
-```
-https://TON-SITE.vercel.app/api/admin/find-vid?sku=TON_SKU&secret=TON_ADMIN_SECRET
+Avec curl (Windows : utilise `curl.exe`) :
+
+```bash
+curl.exe -H "x-admin-secret: TON_ADMIN_SECRET" "https://TON-SITE.vercel.app/api/admin/find-vid?sku=TON_SKU"
 ```
 
-Remplace `TON_SKU` (ex: `CJYD202348102BY`) et `TON_ADMIN_SECRET` (celui que tu as
-mis dans la variable d'environnement `ADMIN_SECRET`). La réponse JSON contient un
-`vid` par couleur/variante.
+Remplace `TON_SKU` (ex: `CJYD202348102BY`) par le SKU du produit et
+`TON_ADMIN_SECRET` par la valeur configurée dans la variable d'environnement
+`ADMIN_SECRET`. La réponse JSON contient les identifiants de variantes (`vid`).
 
 ### 6.2 Remplir `lib/data.ts`
 
