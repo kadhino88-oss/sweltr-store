@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      locale: "fr",
       payment_method_types: ["card"],
       phone_number_collection: { enabled: true },
       line_items: [
@@ -64,7 +65,8 @@ export async function POST(req: NextRequest) {
       ],
       metadata: { tierId: tier.id },
       shipping_address_collection: {
-        allowed_countries: ["FR", "BE", "CH", "LU", "DE", "ES", "IT", "US", "CA", "GB"],
+        // Lancement commercial limité aux deux marchés retenus : Suisse et France.
+        allowed_countries: ["CH", "FR"],
       },
       success_url: `${siteUrl}/succes?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/annulation`,
