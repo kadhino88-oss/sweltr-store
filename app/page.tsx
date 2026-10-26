@@ -1,5 +1,5 @@
 import SiteHeader from "@/components/SiteHeader";
-import Hero from "@/components/Hero";
+import WinterShowcase from "@/components/WinterShowcase";
 import ProductTiers from "@/components/ProductTiers";
 import TrustBar from "@/components/TrustBar";
 import HowItWorks from "@/components/HowItWorks";
@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-ivory text-ink">
       <SiteHeader />
-      <Hero />
+      <WinterShowcase />
       <ProductTiers />
       <TrustBar />
       <HowItWorks />
