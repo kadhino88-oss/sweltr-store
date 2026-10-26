@@ -3,7 +3,7 @@ import Link from "next/link";
 import ContentPage from "@/components/ContentPage";
 import { FAQS as PRODUCT_FAQS } from "@/lib/data";
 
-const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
+const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
 
 export const metadata: Metadata = {
   title: "Questions fréquentes — Livraison, produits et garantie | SWELTR",
