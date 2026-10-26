@@ -12,9 +12,9 @@ type SuccessPageClientProps = {
 
 const statusCopy = {
   confirmed: {
-    title: "Commande confirmée",
+    title: "Paiement confirmé",
     message:
-      "Ton paiement a été confirmé par Stripe. Pour toute question sur ta commande ou sa livraison, notre service client est à ta disposition.",
+      "Stripe confirme que ton paiement a été effectué. La création et la préparation de la commande fournisseur peuvent encore nécessiter un délai. Si tu as une question, contacte notre service client.",
     Icon: CheckCircle2,
     iconClass: "text-gold-deep",
   },
