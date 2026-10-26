@@ -1,6 +1,6 @@
 import LegalPage from "@/components/LegalPage";
 
-const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
+const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
 
 export const metadata = {
   title: "Politique de confidentialité — SWELTR",
