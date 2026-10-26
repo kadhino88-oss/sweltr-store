@@ -1,132 +1,65 @@
-# SWELTR — boutique anti-canicule (Next.js + Stripe)
+# SWELTR — boutique hiver (Suisse & France)
 
-Site vitrine + paiement animé, construit avec Next.js 14 (App Router), TypeScript,
-Tailwind CSS, Framer Motion et Stripe Checkout.
+SWELTR est une boutique saisonnière de produits pour l'hiver, construite avec Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion, Stripe Checkout et l'API CJ Dropshipping.
 
-## 1. Installer et lancer en local
+## Catalogue actuel
+
+Les prix de vente affichés sont en CHF :
+- **Solo Chaleur Mains** — gants chauffants — CHF 36.99
+- **Duo Chaleur Totale** — gants chauffants + écharpe chauffante USB — CHF 52.99
+- **Kit Grand Froid** — gants chauffants + écharpe chauffante USB + chaussettes thermiques — CHF 62.99
+
+Les prix de vente ne sont pas une confirmation de marge nette. Avant d'ouvrir les ventes, vérifier les prix fournisseur actuels, frais d'expédition, taxes/douane éventuelles, frais Stripe et coûts de retour pour la Suisse et la France.
+
+## Développement local
+
+Prérequis : Node.js compatible avec Next.js 14 et npm.
 
 ```bash
 npm install
 cp .env.local.example .env.local
-```
-
-Ouvre `.env.local` et colle ta **clé secrète Stripe** (mode test pour commencer) :
-Tableau de bord Stripe → Développeurs → Clés API → "Clé secrète" (`sk_test_...`).
-
-```bash
 npm run dev
 ```
 
-Le site tourne sur http://localhost:3000. Le slider de chaleur, les animations
-et le tunnel de paiement Stripe (mode test) fonctionnent directement.
+Le site démarre sur http://localhost:3000.
 
-Pour tester un vrai paiement en mode test, utilise la carte Stripe de test
-`4242 4242 4242 4242`, une date future, n'importe quel CVC.
+## Variables d'environnement
 
-## 2. Déployer sur Vercel (5 minutes)
+Configurer les valeurs dans Vercel (Production et Preview séparément selon les besoins) :
+- `STRIPE_SECRET_KEY` — clé Stripe du mode de test ou live utilisé.
+- `STRIPE_WEBHOOK_SECRET` — secret de signature de l'endpoint webhook Stripe.
+- `SITE_URL` — URL canonique du déploiement utilisé.
+- `CJ_API_KEY` — clé API CJ Dropshipping.
+- `ADMIN_SECRET` — secret long et aléatoire pour la route d'administration de recherche de variantes.
+- `CJ_AUTO_PAY` — laisser `false` tant que le flux fournisseur n'a pas été validé manuellement.
 
-1. Crée un dépôt GitHub avec ce dossier (`git init`, `git add .`, `git commit`, push).
-2. Va sur vercel.com → "Add New Project" → importe le dépôt.
-3. Dans les "Environment Variables" du projet Vercel, ajoute :
-   - `STRIPE_SECRET_KEY` = ta clé Stripe (test puis, plus tard, live `sk_live_...`)
-   - `SITE_URL` = l'URL Vercel de ton site (ex: `https://sweltr.vercel.app`)
-4. Déploie. C'est en ligne.
+Ne jamais committer de fichier `.env.local`, de clé Stripe, de clé CJ ou de secret administrateur.
 
-Quand tu es prêt à encaisser en vrai : dans Stripe, active ton compte (infos
-bancaires + société), remplace `sk_test_...` par `sk_live_...` dans Vercel, et
-redéploie.
+## Paiement et traitement des commandes
 
-## 3. Remplacer les placeholders par tes vrais visuels produit
+1. Le client choisit un kit et est redirigé vers Stripe Checkout.
+2. Le paiement est confirmé côté serveur à partir de Stripe.
+3. Le webhook `/api/webhooks/stripe` vérifie la signature et l'état payé avant de préparer la commande CJ.
+4. Par défaut, `CJ_AUTO_PAY` doit rester désactivé : la commande créée chez CJ est à vérifier et à payer manuellement dans MyCJ.
+5. N'activer le paiement automatique CJ qu'après des tests de bout en bout et une vérification des montants, variantes, adresse, livraison et mécanisme de reprise en cas d'erreur.
 
-- `components/FanVisual.tsx` : visuel animé provisoire (icône qui tourne).
-  Une fois le produit sourcé chez le fournisseur, remplace ce bloc par une
-  vraie vidéo produit en boucle :
-  ```jsx
-  <video autoPlay muted loop playsInline className="rounded-[2.5rem] w-full h-full object-cover" src="/product-loop.mp4" />
-  ```
-  Dépose le fichier vidéo dans `public/product-loop.mp4`.
-- Mets aussi à jour les prix, noms et descriptions dans `lib/data.ts` une fois
-  que ton coût fournisseur réel est confirmé (garde une marge d'au moins x2.5
-  sur le prix d'achat livré).
+Le webhook peut être rejoué par Stripe. Toute commande fournisseur doit être vérifiée dans MyCJ en cas d'erreur ou de réponse réseau ambiguë. Ne pas considérer une commande comme expédiée tant que son statut fournisseur n'a pas été vérifié.
 
-## 4. Ce qui est déjà branché
+## Marchés et devise
 
-- Paiement Stripe Checkout (montant dynamique selon le kit choisi, redirection
-  vers pages `/succes` et `/annulation`).
-- Frais de port et pays de livraison configurables dans
-  `app/api/checkout/route.ts` (`shipping_address_collection`).
-- Toutes les animations (fond qui dérive au scroll, apparitions au scroll,
-  slider de chaleur interactif, visuel produit flottant, FAQ animée,
-  compte à rebours) sont en Framer Motion, sans dépendance externe payante.
+Le paiement Checkout est configuré en CHF et la livraison est limitée à la Suisse (CH) et à la France (FR). Vérifier les obligations fiscales, douanières, d'information précontractuelle et de protection des consommateurs applicables dans les deux pays avant le lancement commercial.
 
-## 5. Ce qu'il te reste à faire côté business
+## Vérifications avant lancement
 
-- Ouvrir un compte Stripe (si pas déjà fait) et passer en mode live.
-- Sourcer le produit chez CJ Dropshipping (voir échange précédent) et
-  remplacer prix/visuels.
-- Configurer l'envoi d'email de confirmation (Stripe peut le faire nativement
-  dans ses paramètres "Emails de reçus").
+- [ ] Vérifier que les variables Stripe et CJ de Production sont configurées et valides sans afficher leurs valeurs dans les logs.
+- [ ] Vérifier le domaine canonique `SITE_URL` et les redirections de paiement.
+- [ ] Effectuer un paiement de test Stripe et vérifier les pages de succès/annulation.
+- [ ] Tester le webhook avec les événements Stripe de test.
+- [ ] Vérifier dans CJ les trois variantes et les coûts livrés vers la Suisse et la France.
+- [ ] Effectuer une commande test fournisseur sans activer le paiement automatique.
+- [ ] Vérifier les CGV, mentions légales, retours, garantie, identité juridique du vendeur et informations fiscales avec les données réelles de l'entreprise.
+- [ ] Vérifier le site sur mobile, les liens, les images, les pages produits, le sitemap et les métadonnées SEO.
 
-## 6. Automatisation CJ Dropshipping (Stripe → CJ automatique)
+## Déploiement
 
-Le site peut créer automatiquement la commande chez CJ dès qu'un client paie,
-sans que tu touches à rien. Voici comment l'activer, étape par étape.
-
-### 6.1 Récupérer les "vid" de tes produits
-
-Une fois un produit ajouté à "Mes produits" sur CJ, appelle cette route (déployée
-avec ton site) pour récupérer ses identifiants de variantes. Le secret admin
-doit être envoyé dans l'en-tête HTTP `x-admin-secret` et non dans l'URL, pour
-éviter qu'il soit enregistré dans l'historique du navigateur ou les journaux.
-
-Avec curl (Windows : utilise `curl.exe`) :
-
-```bash
-curl.exe -H "x-admin-secret: TON_ADMIN_SECRET" "https://TON-SITE.vercel.app/api/admin/find-vid?sku=TON_SKU"
-```
-
-Remplace `TON_SKU` (ex: `CJYD202348102BY`) par le SKU du produit et
-`TON_ADMIN_SECRET` par la valeur configurée dans la variable d'environnement
-`ADMIN_SECRET`. La réponse JSON contient les identifiants de variantes (`vid`).
-
-### 6.2 Remplir `lib/data.ts`
-
-Pour chaque kit (`solo`, `duo`, `trio`), remplis le champ `cjItems` avec les vid
-et quantités correspondants, par exemple :
-
-```ts
-cjItems: [{ vid: "92511400-c758-4474-93ca-66d442f5f787", quantity: 1 }],
-```
-
-Le kit "Trio" aura 3 entrées (une par produit inclus).
-
-### 6.3 Créer le webhook Stripe
-
-1. Dashboard Stripe → **Développeurs → Webhooks → Add endpoint**
-2. URL : `https://TON-SITE.vercel.app/api/webhooks/stripe`
-3. Événement à écouter : `checkout.session.completed`
-4. Une fois créé, Stripe affiche un **"Signing secret"** (`whsec_...`) → copie-le
-
-### 6.4 Variables d'environnement à ajouter dans Vercel
-
-- `STRIPE_WEBHOOK_SECRET` = le `whsec_...` de l'étape précédente
-- `CJ_API_KEY` = déjà fait
-- `ADMIN_SECRET` = une chaîne aléatoire de ton choix
-- `CJ_AUTO_PAY` = laisse `false` au début (voir avertissement ci-dessous)
-
-Redéploie après chaque ajout de variable.
-
-### 6.5 ⚠️ Avant d'activer `CJ_AUTO_PAY=true`
-
-Tant que `CJ_AUTO_PAY` n'est pas `true`, le webhook crée bien la commande chez
-CJ automatiquement, mais **ne la paie pas** — elle reste visible et modifiable
-dans MyCJ, à valider toi-même. C'est le mode recommandé les premières semaines.
-
-Quand tu passes `CJ_AUTO_PAY=true` :
-- Chaque commande payée sur ton site déclenche une **vraie dépense automatique**
-  sur le solde de ton compte CJ, sans validation humaine.
-- Assure-toi d'avoir **crédité ton wallet CJ** en amont (Mon Portefeuille sur CJ).
-- Teste d'abord plusieurs commandes en mode `false`, vérifie que les adresses,
-  quantités et produits sont corrects, avant de basculer en automatique complet.
-- Surveille les logs Vercel (`Deployments → ton déploiement → Functions →
-  /api/webhooks/stripe`) pour repérer toute erreur de commande.
+Le projet est relié à GitHub et Vercel. Les commits fusionnés sur `main` déclenchent le déploiement selon la configuration Vercel du projet.
