@@ -32,6 +32,7 @@ Configurer les valeurs dans Vercel (Production et Preview séparément selon les
 - `CJ_API_KEY` — clé API CJ Dropshipping.
 - `ADMIN_SECRET` — secret long et aléatoire pour la route d'administration de recherche de variantes.
 - `CJ_AUTO_PAY` — laisser `false` tant que le flux fournisseur n'a pas été validé manuellement.
+- `CJ_PAYMENT_FLOW_VALIDATED` — laisser absent ou `false`. Le paiement CJ reste bloqué par une garde de sécurité tant que le flux complet n'a pas été implémenté et testé de bout en bout.
 
 Ne jamais committer de fichier `.env.local`, de clé Stripe, de clé CJ ou de secret administrateur.
 
@@ -40,7 +41,7 @@ Ne jamais committer de fichier `.env.local`, de clé Stripe, de clé CJ ou de se
 1. Le client choisit un kit et est redirigé vers Stripe Checkout.
 2. Le paiement est confirmé côté serveur à partir de Stripe.
 3. Le webhook `/api/webhooks/stripe` vérifie la signature et l'état payé avant de préparer la commande CJ.
-4. **Ne pas activer `CJ_AUTO_PAY` pour l'instant.** Le code actuel ne doit pas être considéré comme une automatisation fournisseur validée de bout en bout.
+4. **Ne pas activer `CJ_AUTO_PAY` ni `CJ_PAYMENT_FLOW_VALIDATED` pour l'instant.** Le code actuel ne doit pas être considéré comme une automatisation fournisseur validée de bout en bout. Le code bloque désormais le paiement CJ tant que `CJ_PAYMENT_FLOW_VALIDATED=true` n'a pas été défini après validation complète.
 5. La documentation officielle CJ décrit un flux de synchronisation comprenant la création de commande, l'ajout au panier, la confirmation du panier, la génération de la commande parent / de l'identifiant de paiement, puis le paiement avec les identifiants retournés. Le code actuel ne démontre pas que toutes ces étapes sont effectuées correctement pour les kits SWELTR.
 6. Avant toute automatisation réelle, implémenter et tester le flux CJ complet en environnement contrôlé, confirmer le statut et les identifiants retournés à chaque étape, puis vérifier les coûts livrés et la disponibilité de chaque variante pour CH et FR.
 
