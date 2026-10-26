@@ -108,7 +108,7 @@ export default function WinterShowcase() {
                 <span className="font-mono text-[10px] uppercase tracking-[.24em] text-amber-200">Le produit disponible</span>
                 <h2 className="mt-2 font-display text-3xl font-bold md:text-4xl">Les gants chauffants</h2>
                 <p className="mt-2 text-sm text-white/75">La chaleur qui vous accompagne dans vos déplacements.</p>
-                <Link href="/produits/couverture-chauffante" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-amber-200">
+                <Link href="/produits/gants-chauffants" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-amber-200">
                   Voir le produit <ArrowRight size={15} />
                 </Link>
               </div>
