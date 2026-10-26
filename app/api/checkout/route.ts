@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const siteUrl = (
-      process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app"
+      process.env.SITE_URL || "https://sweltr-store-five.vercel.app"
     ).replace(/\/+$/, "");
 
     const session = await stripe.checkout.sessions.create({
