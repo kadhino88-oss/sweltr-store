@@ -197,6 +197,9 @@ export async function createCjOrder(shipping: CjShippingInfo, products: CjLineIt
       remark: "Commande SWELTR",
       fromCountryCode: "CN",
       platform: "api",
+      // Création uniquement : aucun paiement ni ajout au panier CJ à cette étape.
+      // Le flux complet (panier, confirmation, parent order/payId, paiement) doit être validé séparément.
+      payType: 3,
       orderFlow: 1,
       products,
     }),
