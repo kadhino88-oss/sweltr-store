@@ -73,9 +73,14 @@ async function getAccessToken(): Promise<string> {
     authenticationErrorPrefix: "Échec d'authentification CJ : ",
   });
 
+  const expiresAt = Date.parse(data.accessTokenExpiryDate);
+  if (!Number.isFinite(expiresAt) || expiresAt <= Date.now() + 60_000) {
+    throw new Error("CJ a retourné un jeton dont la date d'expiration est invalide ou trop proche.");
+  }
+
   cachedToken = {
     accessToken: data.accessToken,
-    expiresAt: new Date(data.accessTokenExpiryDate).getTime(),
+    expiresAt,
   };
   return cachedToken.accessToken;
 }
@@ -116,10 +121,6 @@ export async function findCjOrderByOrderNumber(
     },
     body: JSON.stringify({ orderIds: [orderNumber] }),
   });
-
-  if (!res.ok) {
-    throw new Error(`Échec de recherche de commande CJ (HTTP ${res.status}).`);
-  }
 
   if (!res.ok) {
     throw new Error(`Échec HTTP de recherche de commande CJ (HTTP ${res.status}).`);
