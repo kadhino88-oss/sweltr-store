@@ -40,10 +40,11 @@ Ne jamais committer de fichier `.env.local`, de clé Stripe, de clé CJ ou de se
 1. Le client choisit un kit et est redirigé vers Stripe Checkout.
 2. Le paiement est confirmé côté serveur à partir de Stripe.
 3. Le webhook `/api/webhooks/stripe` vérifie la signature et l'état payé avant de préparer la commande CJ.
-4. Par défaut, `CJ_AUTO_PAY` doit rester désactivé : la commande créée chez CJ est à vérifier et à payer manuellement dans MyCJ.
-5. N'activer le paiement automatique CJ qu'après des tests de bout en bout et une vérification des montants, variantes, adresse, livraison et mécanisme de reprise en cas d'erreur.
+4. **Ne pas activer `CJ_AUTO_PAY` pour l'instant.** Le code actuel ne doit pas être considéré comme une automatisation fournisseur validée de bout en bout.
+5. La documentation officielle CJ décrit un flux de synchronisation comprenant la création de commande, l'ajout au panier, la confirmation du panier, la génération de la commande parent / de l'identifiant de paiement, puis le paiement avec les identifiants retournés. Le code actuel ne démontre pas que toutes ces étapes sont effectuées correctement pour les kits SWELTR.
+6. Avant toute automatisation réelle, implémenter et tester le flux CJ complet en environnement contrôlé, confirmer le statut et les identifiants retournés à chaque étape, puis vérifier les coûts livrés et la disponibilité de chaque variante pour CH et FR.
 
-Le webhook peut être rejoué par Stripe. Toute commande fournisseur doit être vérifiée dans MyCJ en cas d'erreur ou de réponse réseau ambiguë. Ne pas considérer une commande comme expédiée tant que son statut fournisseur n'a pas été vérifié.
+Le webhook Stripe peut être rejoué. Une commande fournisseur doit être vérifiée dans MyCJ en cas d'erreur ou de réponse réseau ambiguë. Ne pas considérer une commande comme payée, expédiée ou livrée tant que son statut fournisseur n'a pas été vérifié.
 
 ## Marchés et devise
 
