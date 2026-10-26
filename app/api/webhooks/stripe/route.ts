@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { createHash } from "node:crypto";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { TIERS } from "@/lib/data";
 import { createCjOrder, payCjOrder } from "@/lib/cj";
@@ -11,6 +12,21 @@ function webhookResponse(status = 200) {
   return NextResponse.json(
     { received: status === 200 },
     { status, headers: { "Cache-Control": "no-store" } },
+  );
+}
+
+// CJ limite orderNumber à 50 caractères. Un hash déterministe reste stable entre les retries.
+function getCjOrderNumber(stripeSessionId: string) {
+  const digest = createHash("sha256").update(stripeSessionId).digest("hex").slice(0, 40);
+  return `SWELTR-${digest}`;
+}
+
+function webhookRetryResponse(error: string) {
+  // Ne pas acquitter un paiement si la commande fournisseur n'a pas pu être préparée.
+  // Stripe pourra retenter après correction de la configuration.
+  return NextResponse.json(
+    { error },
+    { status: 503, headers: { "Cache-Control": "no-store" } },
   );
 }
 
@@ -68,16 +84,15 @@ export async function POST(req: NextRequest) {
 
     const tier = TIERS.find((item) => item.id === session.metadata?.tierId);
     if (!tier) {
-      console.error(`Kit inconnu pour la session Stripe ${session.id}.`);
-      // Erreur de configuration non transitoire : alerte dans les logs, pas de boucle de retry.
-      return webhookResponse();
+      console.error(`Kit inconnu pour la session Stripe ${session.id}. Traitement requis.`);
+      return webhookRetryResponse("Kit inconnu : traitement de commande en attente de correction.");
     }
 
     if (!tier.cjItems?.length) {
       console.error(
-        `Aucun produit CJ configuré pour le kit "${tier.name}". Commande Stripe ${session.id} à traiter manuellement.`,
+        `Aucun produit CJ configuré pour le kit "${tier.name}". Commande Stripe ${session.id} à traiter.`,
       );
-      return webhookResponse();
+      return webhookRetryResponse("Produits fournisseur non configurés pour ce kit.");
     }
 
     const shipping = session.shipping_details;
@@ -86,14 +101,14 @@ export async function POST(req: NextRequest) {
       console.error(
         `Adresse de livraison incomplète pour la session Stripe ${session.id}. Traitement manuel requis.`,
       );
-      return webhookResponse();
+      return webhookRetryResponse("Adresse de livraison incomplète : commande fournisseur en attente.");
     }
 
     // Une erreur transitoire CJ doit recevoir un 5xx : Stripe réessaiera le webhook.
-    // Le numéro de commande CJ reste la session Stripe pour faciliter le rapprochement.
+    // La référence CJ est un hash déterministe de la session Stripe, compatible avec la limite CJ de 50 caractères.
     const order = await createCjOrder(
       {
-        orderNumber: session.id,
+        orderNumber: getCjOrderNumber(session.id),
         shippingCustomerName:
           shipping?.name || session.customer_details?.name || "Client SWELTR",
         shippingCountryCode: address.country,
@@ -116,7 +131,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log(`Commande CJ créée pour la session Stripe ${session.id} : ${order.orderId}`);
+    console.log(`Commande CJ créée pour la session Stripe ${session.id} (référence fournisseur ${getCjOrderNumber(session.id)}) : ${order.orderId}`);
 
     // Le paiement CJ dépense le solde réel. Il reste désactivé sauf opt-in explicite.
     if (process.env.CJ_AUTO_PAY === "true") {
