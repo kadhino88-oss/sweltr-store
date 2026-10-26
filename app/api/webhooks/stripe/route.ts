@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { createHash } from "node:crypto";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { TIERS } from "@/lib/data";
-import { createCjOrder, payCjOrder } from "@/lib/cj";
+import { createCjOrder, findCjOrderByOrderNumber, payCjOrder } from "@/lib/cj";
 
 // Stripe doit recevoir le corps brut pour vérifier la signature du webhook.
 export const runtime = "nodejs";
@@ -104,11 +104,14 @@ export async function POST(req: NextRequest) {
       return webhookRetryResponse("Adresse de livraison incomplète : commande fournisseur en attente.");
     }
 
-    // Une erreur transitoire CJ doit recevoir un 5xx : Stripe réessaiera le webhook.
-    // La référence CJ est un hash déterministe de la session Stripe, compatible avec la limite CJ de 50 caractères.
-    const order = await createCjOrder(
+    // La référence stable permet de retrouver une commande créée lors d'une tentative
+    // précédente dont la réponse réseau aurait été perdue. Si la recherche CJ échoue,
+    // on échoue fermé et Stripe retentera plutôt que de risquer un doublon.
+    const cjOrderNumber = getCjOrderNumber(session.id);
+    const existingOrder = await findCjOrderByOrderNumber(cjOrderNumber);
+    const order = existingOrder ?? await createCjOrder(
       {
-        orderNumber: getCjOrderNumber(session.id),
+        orderNumber: cjOrderNumber,
         shippingCustomerName:
           shipping?.name || session.customer_details?.name || "Client SWELTR",
         shippingCountryCode: address.country,
@@ -131,7 +134,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log(`Commande CJ créée pour la session Stripe ${session.id} (référence fournisseur ${getCjOrderNumber(session.id)}) : ${order.orderId}`);
+    console.log(`${existingOrder ? "Commande CJ existante retrouvée" : "Commande CJ créée"} pour la session Stripe ${session.id} (référence fournisseur ${cjOrderNumber}) : ${order.orderId}`);
 
     // Le paiement CJ dépense le solde réel. Il reste désactivé sauf opt-in explicite.
     if (process.env.CJ_AUTO_PAY === "true") {
