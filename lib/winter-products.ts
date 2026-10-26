@@ -14,14 +14,14 @@ export type WinterProduct = {
 
 export const WINTER_PRODUCTS: WinterProduct[] = [
   {
-    slug: "couverture-chauffante",
-    name: "Couverture chauffante électrique",
-    eyebrow: "LA PIÈCE MAÎTRESSE",
-    short: "La chaleur réconfortante pour les soirées fraîches.",
-    description: "Une couverture douce pensée pour les moments de détente à la maison. Le modèle final sera sélectionné après vérification du fournisseur, de la conformité et des caractéristiques réelles.",
-    image: "https://oss-cf.cjdropshipping.com/product/2024/11/08/07/a276c8c6-f97b-41dc-b536-2d154723dc57_trans.jpeg",
-    alt: "Couverture chauffante grise — photo fournisseur CJ Dropshipping",
-    highlights: ["Confort à la maison", "Version européenne à confirmer", "Conformité électrique à vérifier avant vente"],
+    slug: "plaid-velours-bulle",
+    name: "Couverture velours à bulles",
+    eyebrow: "DOUCEUR HIVERNALE",
+    short: "Une couverture épaisse et moelleuse pour les soirées froides.",
+    description: "Une couverture double face en velours à effet bulles, pensée pour les moments cocooning sur le canapé ou au lit. Les dimensions, coloris, matière exacte, stock et coût livré doivent être confirmés pour la variante retenue avant toute mise en vente.",
+    image: "https://cjdropshipping.com/product/soft-wind-bubble-velvet-blanket-warm-solid-rabbit-fur-blankets-double-sided-thickening-cover-throw-warm-fur-blanket-p-2410100547241617300.html",
+    alt: "Couverture velours à bulles — fiche fournisseur CJ Dropshipping",
+    highlights: ["Modèle non électrique", "Confort cocooning pour l’hiver", "Dimensions et coût livré à confirmer avant vente"],
     category: "Confort maison",
     availability: "planned",
   },
@@ -99,18 +99,7 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     category: "Vêtements thermiques",
     availability: "planned",
   },
-  {
-    slug: "radiateur-ceramique",
-    name: "Radiateur soufflant céramique",
-    eyebrow: "CHAUFFAGE D’APPOINT",
-    short: "Un candidat à la collection, sous réserve de contrôles stricts.",
-    description: "Ce produit ne sera pas commercialisé tant que le modèle précis, les essais de sécurité, les protections contre la surchauffe et le basculement, les documents de conformité et les conditions de livraison ne seront pas vérifiés.",
-    image: "https://oss-cf.cjdropshipping.com/product/2024/10/17/06/08df1f2e-0d76-4144-ba3c-2d8cdbbe62a5.jpg",
-    alt: "Radiateur soufflant céramique PTC 1500 W effet flamme 3D — photo fournisseur CJ Dropshipping",
-    highlights: ["Référence fournisseur CJYD214138802BY", "Prix fournisseur affiché : 13,25 $ hors livraison", "Non disponible à la vente avant vérification de conformité et sécurité"],
-    category: "Chauffage d’appoint",
-    availability: "planned",
-  },
+
 ];
 
 export function getWinterProduct(slug: string) {
