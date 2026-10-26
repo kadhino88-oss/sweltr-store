@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
+  const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
 
   return {
     rules: {
