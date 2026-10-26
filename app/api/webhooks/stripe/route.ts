@@ -88,6 +88,16 @@ export async function POST(req: NextRequest) {
       return webhookRetryResponse("Kit inconnu : traitement de commande en attente de correction.");
     }
 
+    // Défense en profondeur : ne jamais créer de commande fournisseur si le montant
+    // ou la devise de la session payée ne correspondent pas au kit configuré côté serveur.
+    const expectedAmount = Math.round(tier.price * 100);
+    if (session.currency !== "chf" || session.amount_total !== expectedAmount) {
+      console.error(
+        `Montant/devise incohérents pour la session Stripe ${session.id} : devise=${session.currency}, montant=${session.amount_total}. Traitement requis.`,
+      );
+      return webhookRetryResponse("Montant du paiement incohérent : commande fournisseur suspendue.");
+    }
+
     if (!tier.cjItems?.length) {
       console.error(
         `Aucun produit CJ configuré pour le kit "${tier.name}". Commande Stripe ${session.id} à traiter.`,
@@ -102,6 +112,15 @@ export async function POST(req: NextRequest) {
         `Adresse de livraison incomplète pour la session Stripe ${session.id}. Traitement manuel requis.`,
       );
       return webhookRetryResponse("Adresse de livraison incomplète : commande fournisseur en attente.");
+    }
+
+    // Le webhook applique aussi la limite CH/FR : une adresse inattendue ne part
+    // jamais chez le fournisseur, même si une session était créée hors du checkout normal.
+    if (address.country !== "CH" && address.country !== "FR") {
+      console.error(
+        `Pays de livraison non autorisé pour la session Stripe ${session.id} : ${address.country}.`,
+      );
+      return webhookRetryResponse("Pays de livraison non pris en charge : commande fournisseur suspendue.");
     }
 
     // La référence stable permet de retrouver une commande créée lors d'une tentative
