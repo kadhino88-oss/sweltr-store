@@ -19,7 +19,7 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     eyebrow: "DOUCEUR HIVERNALE",
     short: "Une couverture épaisse et moelleuse pour les soirées froides.",
     description: "Une couverture double face en velours à effet bulles, pensée pour les moments cocooning sur le canapé ou au lit. Les dimensions, coloris, matière exacte, stock et coût livré doivent être confirmés pour la variante retenue avant toute mise en vente.",
-    image: "https://cjdropshipping.com/product/soft-wind-bubble-velvet-blanket-warm-solid-rabbit-fur-blankets-double-sided-thickening-cover-throw-warm-fur-blanket-p-2410100547241617300.html",
+    image: "https://cf.cjdropshipping.com/17026848/1735911896785227776.jpg",
     alt: "Couverture velours à bulles — fiche fournisseur CJ Dropshipping",
     highlights: ["Modèle non électrique", "Confort cocooning pour l’hiver", "Dimensions et coût livré à confirmer avant vente"],
     category: "Confort maison",
