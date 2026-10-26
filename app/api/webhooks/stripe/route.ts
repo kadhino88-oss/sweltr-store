@@ -4,11 +4,18 @@ import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { TIERS } from "@/lib/data";
 import { createCjOrder, payCjOrder } from "@/lib/cj";
 
-// Nécessaire pour que Stripe puisse vérifier la signature du webhook
+// Stripe doit recevoir le corps brut pour vérifier la signature du webhook.
 export const runtime = "nodejs";
 
+function webhookResponse(status = 200) {
+  return NextResponse.json(
+    { received: status === 200 },
+    { status, headers: { "Cache-Control": "no-store" } },
+  );
+}
+
 export async function POST(req: NextRequest) {
-  const sig = req.headers.get("stripe-signature");
+  const signature = req.headers.get("stripe-signature");
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   const stripe = getStripeClient();
 
@@ -16,96 +23,131 @@ export async function POST(req: NextRequest) {
     console.error(
       `Webhook Stripe non configuré : ${!stripe ? "STRIPE_SECRET_KEY manquante" : "STRIPE_WEBHOOK_SECRET manquante"}.`,
     );
-    return NextResponse.json({ error: "Webhook Stripe non configuré." }, { status: 503 });
+    return NextResponse.json(
+      { error: "Webhook Stripe non configuré." },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
+    );
   }
 
-  if (!sig) {
-    return NextResponse.json({ error: "Signature Stripe manquante." }, { status: 400 });
+  if (!signature) {
+    return NextResponse.json(
+      { error: "Signature Stripe manquante." },
+      { status: 400, headers: { "Cache-Control": "no-store" } },
+    );
   }
 
-  const body = await req.text();
   let event: Stripe.Event;
-
   try {
-    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
-  } catch (err) {
-    console.error("Signature webhook Stripe invalide :", getStripeErrorDetails(err));
-    return NextResponse.json({ error: "Signature invalide." }, { status: 400 });
+    const rawBody = await req.text();
+    event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+  } catch (error: unknown) {
+    console.error("Signature webhook Stripe invalide :", getStripeErrorDetails(error));
+    return NextResponse.json(
+      { error: "Signature invalide." },
+      { status: 400, headers: { "Cache-Control": "no-store" } },
+    );
   }
 
   if (event.type !== "checkout.session.completed") {
-    return NextResponse.json({ received: true });
+    return webhookResponse();
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
+  const eventSession = event.data.object as Stripe.Checkout.Session;
 
   try {
-    // On récupère la session complète pour avoir l'adresse de livraison
-    const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
-      expand: ["customer_details"],
-    });
+    // Relire la session depuis Stripe permet de travailler avec l'état de paiement
+    // et les coordonnées de livraison actuels, plutôt qu'avec le seul événement.
+    const session = await stripe.checkout.sessions.retrieve(eventSession.id);
 
-    const tierId = fullSession.metadata?.tierId;
-    const tier = TIERS.find((t) => t.id === tierId);
-
-    if (!tier) {
-      console.error(`Kit inconnu pour la session ${session.id} (tierId: ${tierId})`);
-      return NextResponse.json({ received: true });
-    }
-
-    if (!tier.cjItems || tier.cjItems.length === 0) {
-      console.error(
-        `Aucun produit CJ configuré pour le kit "${tier.name}". Remplis cjItems dans lib/data.ts. Commande Stripe ${session.id} NON transmise à CJ — traite-la manuellement.`
+    if (session.payment_status !== "paid") {
+      console.warn(
+        `Session Stripe ${session.id} terminée mais non payée (statut : ${session.payment_status}). Aucune commande CJ créée.`,
       );
-      return NextResponse.json({ received: true });
+      return webhookResponse();
     }
 
-    const shipping = (fullSession as any).shipping_details || (fullSession as any).shipping;
+    const tier = TIERS.find((item) => item.id === session.metadata?.tierId);
+    if (!tier) {
+      console.error(`Kit inconnu pour la session Stripe ${session.id}.`);
+      // Erreur de configuration non transitoire : alerte dans les logs, pas de boucle de retry.
+      return webhookResponse();
+    }
+
+    if (!tier.cjItems?.length) {
+      console.error(
+        `Aucun produit CJ configuré pour le kit "${tier.name}". Commande Stripe ${session.id} à traiter manuellement.`,
+      );
+      return webhookResponse();
+    }
+
+    const shipping = session.shipping_details;
     const address = shipping?.address;
-    const customer = fullSession.customer_details;
-
-    if (!address) {
-      console.error(`Pas d'adresse de livraison pour la session ${session.id}.`);
-      return NextResponse.json({ received: true });
+    if (!address?.country || !address.line1 || !address.city || !address.postal_code) {
+      console.error(
+        `Adresse de livraison incomplète pour la session Stripe ${session.id}. Traitement manuel requis.`,
+      );
+      return webhookResponse();
     }
 
-    const countryCode = address.country as string;
-
+    // Une erreur transitoire CJ doit recevoir un 5xx : Stripe réessaiera le webhook.
+    // Le numéro de commande CJ reste la session Stripe pour faciliter le rapprochement.
     const order = await createCjOrder(
       {
         orderNumber: session.id,
-        shippingCustomerName: shipping?.name || customer?.name || "Client SWELTR",
-        shippingCountryCode: countryCode,
+        shippingCustomerName:
+          shipping.name || session.customer_details?.name || "Client SWELTR",
+        shippingCountryCode: address.country,
         shippingProvince: address.state || address.city || "",
-        shippingCity: address.city || "",
-        shippingAddress: address.line1 || "",
+        shippingCity: address.city,
+        shippingAddress: address.line1,
         shippingAddress2: address.line2 || "",
-        shippingZip: address.postal_code || "",
-        shippingPhone: customer?.phone || "",
-        email: customer?.email || "",
+        shippingZip: address.postal_code,
+        shippingPhone: session.customer_details?.phone || "",
+        email: session.customer_details?.email || "",
       },
-      tier.cjItems
+      tier.cjItems,
     );
 
-    console.log(`Commande CJ créée pour ${session.id} : ${order.orderId}`);
-
-    // Sécurité : le paiement automatique du solde CJ ne se déclenche que si
-    // CJ_AUTO_PAY=true. Sinon la commande reste "en attente" côté CJ, à
-    // valider manuellement dans MyCJ le temps que tu sois en confiance.
-    if (process.env.CJ_AUTO_PAY === "true") {
-      await payCjOrder(order.orderId);
-      console.log(`Commande CJ ${order.orderId} payée automatiquement.`);
-    } else {
-      console.log(
-        `CJ_AUTO_PAY désactivé — commande ${order.orderId} créée mais non payée. Valide-la manuellement dans MyCJ.`
+    if (!order?.orderId) {
+      console.error(`CJ n'a retourné aucun identifiant pour la session Stripe ${session.id}.`);
+      return NextResponse.json(
+        { error: "Commande fournisseur non confirmée." },
+        { status: 502, headers: { "Cache-Control": "no-store" } },
       );
     }
 
-    return NextResponse.json({ received: true });
-  } catch (err: any) {
-    console.error(`Erreur lors du traitement de la commande ${session.id} :`, err.message);
-    // On renvoie quand même 200 pour éviter que Stripe ne réessaie en boucle ;
-    // l'erreur est loguée pour un traitement manuel de rattrapage.
-    return NextResponse.json({ received: true, warning: err.message });
+    console.log(`Commande CJ créée pour la session Stripe ${session.id} : ${order.orderId}`);
+
+    // Le paiement CJ dépense le solde réel. Il reste désactivé sauf opt-in explicite.
+    if (process.env.CJ_AUTO_PAY === "true") {
+      try {
+        await payCjOrder(order.orderId);
+        console.log(`Commande CJ ${order.orderId} payée automatiquement.`);
+      } catch (error: unknown) {
+        // Ne pas demander à Stripe de rejouer la création : la commande CJ existe déjà.
+        // Le paiement doit être vérifié et repris manuellement dans MyCJ.
+        console.error(
+          `La commande CJ ${order.orderId} existe, mais son paiement automatique a échoué. Vérification manuelle requise :`,
+          getStripeErrorDetails(error),
+        );
+      }
+    } else {
+      console.log(
+        `CJ_AUTO_PAY désactivé — commande ${order.orderId} créée mais non payée. Valide-la manuellement dans MyCJ.`,
+      );
+    }
+
+    return webhookResponse();
+  } catch (error: unknown) {
+    console.error(
+      `Échec transitoire de traitement du webhook Stripe pour la session ${eventSession.id} :`,
+      getStripeErrorDetails(error),
+    );
+    // Stripe retentera sur une réponse 5xx. Vérifier la commande CJ par son orderNumber
+    // avant toute relance manuelle afin d'éviter une éventuelle création en double.
+    return NextResponse.json(
+      { error: "Traitement fournisseur temporairement indisponible." },
+      { status: 502, headers: { "Cache-Control": "no-store" } },
+    );
   }
 }
