@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ArrowUpRight, Mail, Phone, ShieldCheck } from "lucide-react";
 import ContentPage from "@/components/ContentPage";
 
-const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
+const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
 
 export const metadata: Metadata = {
   title: "Contact — Service client SWELTR",

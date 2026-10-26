@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Clock3, PackageCheck, RotateCcw } from "lucide-react";
 import ContentPage from "@/components/ContentPage";
 
-const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
+const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
 
 export const metadata: Metadata = {
   title: "Livraison, rétractation et retours — SWELTR",
