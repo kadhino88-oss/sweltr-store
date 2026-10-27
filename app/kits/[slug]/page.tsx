@@ -46,7 +46,7 @@ export default function KitPage({ params }: { params: { slug: string } }) {
                 <Image src={src} alt={`${tier.name} — photo ${index + 2}`} fill sizes="(max-width: 640px) 30vw, 120px" unoptimized className="object-cover" />
               </div>)}
             </div>}
-            <p className="mt-3 px-1 text-xs leading-5 text-slate-500">Les photos illustrent les articles composant le kit. Les variantes et disponibilités fournisseur doivent être confirmées avant l’expédition.</p>
+            <p className="mt-3 px-1 text-xs leading-5 text-slate-500">Photos issues du catalogue fournisseur CJ Dropshipping. La correspondance exacte de chaque image avec la variante commandée doit être vérifiée avant la mise en vente définitive ; aucune image générée ne remplace les photos des articles.</p>
           </div>
           <div className="flex flex-col justify-center p-7 md:p-12 lg:p-14">
             <p className="font-mono text-xs uppercase tracking-[.22em] text-amber-700">SWELTR · Collection hiver</p>
