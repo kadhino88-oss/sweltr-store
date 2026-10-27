@@ -142,7 +142,7 @@ export default function WinterShowcase() {
           <div>
             <p className="font-mono text-xs uppercase tracking-[.22em] text-amber-700">La sélection SWELTR</p>
             <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-slate-950 md:text-5xl">
-              Huit essentiels. Une seule obsession : le confort.
+              Sept essentiels. Une seule obsession : le confort.
             </h2>
           </div>
           <p className="max-w-md text-sm leading-6 text-slate-600">
