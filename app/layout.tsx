@@ -1,29 +1,6 @@
 import type { Metadata } from "next";
-import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
-
-const display = Inter({
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
-  variable: "--font-display",
-});
-const body = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-body",
-});
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-mono",
-});
-const serif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-serif",
-});
 
 const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
 
@@ -67,7 +44,13 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${display.variable} ${body.variable} ${mono.variable} ${serif.variable} font-body bg-ivory text-ink antialiased`}
+        className="font-body bg-ivory text-ink antialiased"
+        style={{
+          ["--font-display" as string]: "Arial, Helvetica, sans-serif",
+          ["--font-body" as string]: "Arial, Helvetica, sans-serif",
+          ["--font-mono" as string]: "ui-monospace, SFMono-Regular, monospace",
+          ["--font-serif" as string]: "Georgia, 'Times New Roman', serif",
+        } as React.CSSProperties}
       >
         {children}
         <Analytics />
