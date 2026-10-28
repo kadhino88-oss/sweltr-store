@@ -38,6 +38,8 @@ export default function ThermalUnderwearProduct() {
   const [selectedSize, setSelectedSize] = useState("");
   const [activeImage, setActiveImage] = useState(PRODUCT_IMAGE);
   const [country, setCountry] = useState<"FR" | "CH">("FR");
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
 
   useEffect(() => {
     let alive = true;
@@ -151,11 +153,33 @@ export default function ThermalUnderwearProduct() {
               <div className="flex items-start gap-3"><ShieldCheck size={18} className="mt-0.5 shrink-0 text-amber-700" /><span>Vérifie la composition et les mesures sur la fiche avant l'achat.</span></div>
             </div>
 
-            <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-5">
-              <p className="font-semibold">Mise en vente en préparation</p>
-              <p className="mt-1 text-sm leading-6 text-slate-600">La sélection de variantes est reliée au catalogue CJ. Le paiement et la transmission de la variante choisie doivent être connectés et testés avant d'ouvrir la commande en ligne.</p>
-            </div>
-            <Link href="/contact" className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800">Poser une question sur ce modèle</Link>
+            {checkoutError && <p role="alert" className="mt-5 rounded-xl bg-red-50 p-3 text-sm text-red-700">{checkoutError}</p>}
+            <button
+              type="button"
+              disabled={loading || !selectedVariant || checkoutLoading}
+              onClick={async () => {
+                if (!selectedVariant) return;
+                setCheckoutLoading(true);
+                setCheckoutError("");
+                try {
+                  const response = await fetch("/api/checkout", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ productType: "thermal-underwear", variantId: selectedVariant.vid, country }),
+                  });
+                  const data = await response.json();
+                  if (!response.ok || typeof data.url !== "string") throw new Error(data.error || "Le paiement est indisponible. Réessaie plus tard.");
+                  window.location.assign(data.url);
+                } catch (error) {
+                  setCheckoutError(error instanceof Error ? error.message : "Impossible de démarrer le paiement.");
+                  setCheckoutLoading(false);
+                }
+              }}
+              className="mt-8 inline-flex min-h-14 items-center justify-center rounded-full bg-slate-950 px-7 py-4 text-base font-bold text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {checkoutLoading ? <><Loader2 size={18} className="mr-2 animate-spin" /> Préparation du paiement…</> : "Commander et payer"}
+            </button>
+            <p className="mt-3 text-xs leading-5 text-slate-500">Paiement sécurisé via Stripe. La variante choisie est revérifiée auprès du fournisseur avant l'ouverture du paiement.</p>
           </div>
         </div>
       </div>
