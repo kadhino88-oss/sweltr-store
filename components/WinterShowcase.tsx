@@ -146,7 +146,7 @@ export default function WinterShowcase() {
             </h2>
           </div>
           <p className="max-w-md text-sm leading-6 text-slate-600">
-            Les nouvelles références sont en cours de sélection. Nous afficherons leur disponibilité après validation du fournisseur, du prix et des critères de qualité.
+            Découvrez les essentiels de la collection et consultez chaque fiche pour les caractéristiques disponibles.
           </p>
         </div>
 
@@ -178,7 +178,7 @@ export default function WinterShowcase() {
                     </div>
                   )}
                   <span className="absolute left-3 top-3 rounded-full border border-white/50 bg-black/45 px-3 py-1.5 font-mono text-[9px] uppercase tracking-widest text-white backdrop-blur">
-                    {product.availability === "existing" ? "Dans les kits" : "Sélection en cours"}
+                    {product.availability === "existing" ? "Dans les kits" : "À découvrir"}
                   </span>
                 </div>
                 <div className="p-5">
