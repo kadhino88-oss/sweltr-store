@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import { getWinterProduct, WINTER_PRODUCTS } from "@/lib/winter-products";
+import ThermalUnderwearProduct from "@/components/ThermalUnderwearProduct";
 
 const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
 
@@ -30,6 +31,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
 export default function WinterProductPage({ params }: { params: { slug: string } }) {
   const product = getWinterProduct(params.slug);
   if (!product) notFound();
+  if (product.slug === "sous-vetements-thermiques") return <ThermalUnderwearProduct />;
 
   return (
     <main className="min-h-screen bg-[#F8F6F0] text-slate-950">
