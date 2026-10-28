@@ -82,6 +82,44 @@ export async function POST(req: NextRequest) {
       return webhookResponse();
     }
 
+    if (session.metadata?.productType === "thermal-underwear") {
+      const destination = session.metadata.destinationCountry;
+      const variantId = session.metadata.thermalVariantId;
+      const expectedCurrency = destination === "FR" ? "eur" : destination === "CH" ? "chf" : "";
+      const expectedAmount = 3990;
+      if (!variantId || !expectedCurrency || session.currency !== expectedCurrency || session.amount_total !== expectedAmount) {
+        console.error("Montant, devise ou variante thermique incohérents pour la session " + session.id);
+        return webhookRetryResponse("Paiement thermique incohérent : commande fournisseur suspendue.");
+      }
+      const shipping = session.shipping_details;
+      const address = shipping?.address;
+      if (!address?.country || !address.line1 || !address.city || !address.postal_code) return webhookRetryResponse("Adresse de livraison incomplète : commande fournisseur en attente.");
+      if ((destination === "FR" && address.country !== "FR") || (destination === "CH" && address.country !== "CH")) return webhookRetryResponse("Le pays de livraison ne correspond pas au paiement. Vérification requise.");
+      const cjOrderNumber = getCjOrderNumber(session.id);
+      const existingOrder = await findCjOrderByOrderNumber(cjOrderNumber);
+      const order = existingOrder ?? await createCjOrder({
+        orderNumber: cjOrderNumber,
+        shippingCustomerName: shipping?.name || session.customer_details?.name || "Client SWELTR",
+        shippingCountryCode: address.country,
+        shippingProvince: address.state || address.city || "",
+        shippingCity: address.city,
+        shippingAddress: address.line1,
+        shippingAddress2: address.line2 || "",
+        shippingZip: address.postal_code,
+        shippingPhone: session.customer_details?.phone || "",
+        email: session.customer_details?.email || "",
+      }, [{ vid: variantId, quantity: 1 }]);
+      if (!order?.orderId) return webhookRetryResponse("Commande fournisseur non confirmée.");
+      console.log("Commande thermique CJ " + (existingOrder ? "retrouvée" : "créée") + " pour " + session.id + " : " + order.orderId);
+      if (process.env.CJ_AUTO_PAY === "true" && existingOrder) {
+        console.warn("Commande CJ " + order.orderId + " retrouvée après retry : paiement automatique ignoré pour éviter un double débit. Vérification MyCJ requise.");
+      } else if (process.env.CJ_AUTO_PAY === "true") {
+        try { await payCjOrder(order.orderId); console.log("Commande thermique CJ payée automatiquement : " + order.orderId); }
+        catch (error: unknown) { console.error("Paiement fournisseur non confirmé pour " + order.orderId + " :", getStripeErrorDetails(error)); }
+      } else { console.log("CJ_AUTO_PAY désactivé — commande thermique " + order.orderId + " créée mais non payée."); }
+      return webhookResponse();
+    }
+
     const tier = TIERS.find((item) => item.id === session.metadata?.tierId);
     if (!tier) {
       console.error(`Kit inconnu pour la session Stripe ${session.id}. Traitement requis.`);
