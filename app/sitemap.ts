@@ -1,11 +1,19 @@
 import type { MetadataRoute } from "next";
 import { TIERS } from "@/lib/data";
+import { WINTER_PRODUCTS } from "@/lib/winter-products";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
+  const siteUrl = (process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app").replace(/\/$/, "");
 
-  const productPages: MetadataRoute.Sitemap = TIERS.map((tier) => ({
-    url: `${siteUrl}/produit/${tier.id}`,
+  const kitPages: MetadataRoute.Sitemap = TIERS.map((tier) => ({
+    url: `${siteUrl}/kits/${tier.id}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.85,
+  }));
+
+  const productPages: MetadataRoute.Sitemap = WINTER_PRODUCTS.map((product) => ({
+    url: `${siteUrl}/produits/${product.slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly",
     priority: 0.8,
@@ -24,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ].map(({ path, priority }) => ({
     url: `${siteUrl}${path}`,
     lastModified: new Date(),
-    changeFrequency: "monthly",
+    changeFrequency: "monthly" as const,
     priority,
   }));
 
@@ -41,12 +49,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   return [
-    {
-      url: siteUrl,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1,
-    },
+    { url: siteUrl, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
+    ...kitPages,
     ...productPages,
     ...guidePages,
     ...staticPages,
