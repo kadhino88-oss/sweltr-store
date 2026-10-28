@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { getWinterProduct, WINTER_PRODUCTS } from "@/lib/winter-products";
 import ThermalUnderwearProduct from "@/components/ThermalUnderwearProduct";
 
-const siteUrl = (process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app").replace(/\/$/, "");
+const siteUrl = (process.env.SITE_URL || "https://sweltr-store-five.vercel.app").replace(/\/$/, "");
 
 export function generateStaticParams() {
   return WINTER_PRODUCTS.map((product) => ({ slug: product.slug }));
@@ -23,18 +23,12 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
     description,
     alternates: { canonical: productUrl },
     openGraph: {
-      title,
-      description,
-      url: productUrl,
-      siteName: "SWELTR",
-      locale: "fr_CH",
+      title, description, url: productUrl, siteName: "SWELTR", locale: "fr_CH",
       images: product.image ? [{ url: product.image, alt: product.alt }] : [],
       type: "website",
     },
     twitter: {
-      card: "summary_large_image",
-      title,
-      description,
+      card: "summary_large_image", title, description,
       images: product.image ? [product.image] : [],
     },
   };
@@ -64,9 +58,7 @@ export default function WinterProductPage({ params }: { params: { slug: string }
                   <span className="max-w-xs font-mono text-xs uppercase tracking-[.2em] text-slate-500">Photo du produit à venir</span>
                 </div>
               )}
-              <span className="absolute bottom-5 left-5 rounded-full border border-white/35 bg-black/35 px-4 py-2 font-mono text-[10px] uppercase tracking-[.2em] text-white backdrop-blur">
-                {product.category}
-              </span>
+              <span className="absolute bottom-5 left-5 rounded-full border border-white/35 bg-black/35 px-4 py-2 font-mono text-[10px] uppercase tracking-[.2em] text-white backdrop-blur">{product.category}</span>
             </div>
             {(product.images?.length ?? 0) > 1 && (
               <div className="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-4" aria-label="Galerie photos du produit">
@@ -86,20 +78,13 @@ export default function WinterProductPage({ params }: { params: { slug: string }
             <div className="mt-7 space-y-3">
               {product.highlights.map((highlight) => (
                 <div key={highlight} className="flex items-start gap-3 text-sm text-slate-700">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-amber-700" />
-                  <span>{highlight}</span>
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-amber-700" /><span>{highlight}</span>
                 </div>
               ))}
             </div>
-            {product.href ? (
-              <Link href={product.href} className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-                Découvrir les kits SWELTR <ArrowRight size={16} />
-              </Link>
-            ) : (
-              <Link href="/boutique" className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-                Voir les kits disponibles <ArrowRight size={16} />
-              </Link>
-            )}
+            <Link href={product.href || "/boutique"} className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
+              Découvrir les kits SWELTR <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
         <section className="mt-10 grid gap-4 sm:grid-cols-3">
