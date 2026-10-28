@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { getWinterProduct, WINTER_PRODUCTS } from "@/lib/winter-products";
 import ThermalUnderwearProduct from "@/components/ThermalUnderwearProduct";
 
-const siteUrl = (process.env.SITE_URL || "https://sweltr-store-five.vercel.app").replace(/\/$/, "");
+const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
 
 export function generateStaticParams() {
   return WINTER_PRODUCTS.map((product) => ({ slug: product.slug }));
