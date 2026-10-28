@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { getWinterProduct, WINTER_PRODUCTS } from "@/lib/winter-products";
 import ThermalUnderwearProduct from "@/components/ThermalUnderwearProduct";
 
-const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
+const siteUrl = (process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app").replace(/\/$/, "");
 
 export function generateStaticParams() {
   return WINTER_PRODUCTS.map((product) => ({ slug: product.slug }));
@@ -15,15 +15,27 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const product = getWinterProduct(params.slug);
   if (!product) return {};
+  const title = `${product.name} | SWELTR`;
+  const description = `${product.short} Découvrez la collection hiver SWELTR et ses accessoires pour le froid.`;
+  const productUrl = `${siteUrl}/produits/${product.slug}`;
   return {
-    title: `${product.name} | SWELTR`,
-    description: product.short,
-    alternates: { canonical: `${siteUrl}/produits/${product.slug}` },
+    title,
+    description,
+    alternates: { canonical: productUrl },
     openGraph: {
-      title: `${product.name} | SWELTR`,
-      description: product.short,
-      images: product.image ? [product.image] : [],
+      title,
+      description,
+      url: productUrl,
+      siteName: "SWELTR",
+      locale: "fr_CH",
+      images: product.image ? [{ url: product.image, alt: product.alt }] : [],
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: product.image ? [product.image] : [],
     },
   };
 }
@@ -49,7 +61,7 @@ export default function WinterProductPage({ params }: { params: { slug: string }
                 </>
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 via-slate-200 to-amber-100 p-8 text-center">
-                  <span className="max-w-xs font-mono text-xs uppercase tracking-[.2em] text-slate-500">Photo réelle du produit à intégrer</span>
+                  <span className="max-w-xs font-mono text-xs uppercase tracking-[.2em] text-slate-500">Photo du produit à venir</span>
                 </div>
               )}
               <span className="absolute bottom-5 left-5 rounded-full border border-white/35 bg-black/35 px-4 py-2 font-mono text-[10px] uppercase tracking-[.2em] text-white backdrop-blur">
@@ -65,9 +77,6 @@ export default function WinterProductPage({ params }: { params: { slug: string }
                 ))}
               </div>
             )}
-            <p className="mt-3 px-1 text-xs text-slate-500">
-              Photos issues des fiches fournisseur disponibles. Les variantes exactes seront confirmées avant la commande.
-            </p>
           </div>
           <div className="flex flex-col justify-center p-7 md:p-12 lg:p-14">
             <p className="font-mono text-xs uppercase tracking-[.22em] text-amber-700">{product.eyebrow}</p>
@@ -87,8 +96,8 @@ export default function WinterProductPage({ params }: { params: { slug: string }
                 Découvrir les kits SWELTR <ArrowRight size={16} />
               </Link>
             ) : (
-              <Link href="/contact" className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-                Demander la disponibilité <ArrowRight size={16} />
+              <Link href="/boutique" className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
+                Voir les kits disponibles <ArrowRight size={16} />
               </Link>
             )}
           </div>
