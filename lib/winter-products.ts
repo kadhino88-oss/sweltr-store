@@ -54,18 +54,23 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
   },
   {
     slug: "gants-chauffants",
-    name: "Gants chauffants",
+    name: "Gants chauffants USB noirs",
     eyebrow: "CHALEUR EN MOUVEMENT",
-    short: "Un accessoire pour les déplacements par temps froid.",
-    description: "Les gants chauffants figurent déjà dans les kits actuels SWELTR. Consulte leurs caractéristiques exactes et les éléments inclus sur la fiche du kit avant de commander.",
-    image: "https://cf.cjdropshipping.com/20180920/2155711379153.jpg",
+    short: "Une paire noire au style sobre, conçue pour les sorties par temps froid.",
+    description: "Nouveau modèle fournisseur repéré sur CJdropshipping : gants noirs chauffants par USB, tissu annoncé en flanelle, technologie de chauffe au graphène, puissance annoncée de 15 W et autonomie annoncée de 2 à 3 heures. La fiche indique une alimentation 5 V et inclut une paire de gants avec câble USB. Le prix public repéré est de 11,28 $ et le poids annoncé de 500 g. Le stock réel, le coût de livraison vers la Suisse et la France, la taille exacte et les exigences de conformité restent à vérifier avant commercialisation.",
+    image: "https://cf.cjdropshipping.com/quick/product/7b03a38d-908d-42db-8627-b14cb6f24e0f.jpg",
     images: [
-      "https://cf.cjdropshipping.com/20180920/2155711379153.jpg",
-      "https://cf.cjdropshipping.com/20180920/28896142656039.jpg",
-      "https://cf.cjdropshipping.com/20180920/188040013818.jpg",
+      "https://cf.cjdropshipping.com/quick/product/7b03a38d-908d-42db-8627-b14cb6f24e0f.jpg",
+      "https://oss-cf.cjdropshipping.com/product/2024/11/23/08/c1dd1e3a-1fa6-4ca1-b7ca-a15926125965_trans.jpeg",
+      "https://oss-cf.cjdropshipping.com/product/2024/11/23/08/3974bc84-dd2e-4a19-bb1c-6f6b37929dbd_trans.jpeg"
     ],
-    alt: "Gants chauffants",
-    highlights: ["Présents dans les kits actuels", "Caractéristiques à vérifier selon le modèle", "Découvrir les kits SWELTR"],
+    alt: "Gants chauffants USB noirs — images du catalogue CJdropshipping",
+    highlights: [
+      "Coloris noir",
+      "Chauffe au graphène annoncée ; alimentation USB 5 V",
+      "Autonomie annoncée de 2 à 3 heures",
+      "SKU fournisseur CJ : CJYD222200301AZ ; stock et livraison à confirmer"
+    ],
     category: "Accessoires chauffants",
     availability: "existing",
     href: "/boutique",
