@@ -8,14 +8,21 @@ const THERMAL_PRICE = { FR: { currency: "eur", amount: 3990 }, CH: { currency: "
 
 async function isValidThermalVariant(vid: string) {
   const { accessToken } = await getCjAccessToken();
-  const response = await fetch(`${CJ_API_BASE_URL}/product/variant/query?pid=${THERMAL_PRODUCT_ID}`, {
-    headers: { "CJ-Access-Token": accessToken },
+  const response = await fetch(`${CJ_API_BASE_URL}/product/productDetail/query`, {
+    method: "POST",
+    headers: {
+      "CJ-Access-Token": accessToken,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: THERMAL_PRODUCT_ID }),
     cache: "no-store",
   });
-  if (!response.ok) throw new Error("CJ variants lookup failed");
+  if (!response.ok) throw new Error("CJ product detail lookup failed");
   const payload = await response.json();
-  if (!payload?.result || !Array.isArray(payload.data)) throw new Error("Invalid CJ variants response");
-  return payload.data.some((variant: Record<string, unknown>) => String(variant.vid ?? "") === vid);
+  if (!payload?.result || !Array.isArray(payload?.data?.variants)) {
+    throw new Error("Invalid CJ product detail response");
+  }
+  return payload.data.variants.some((variant: Record<string, unknown>) => String(variant.vid ?? variant.id ?? "") === vid);
 }
 
 export async function POST(req: NextRequest) {
