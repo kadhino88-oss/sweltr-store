@@ -22,14 +22,22 @@ export async function GET() {
     }
 
     const payload = await response.json();
-    const rawVariants = Array.isArray(payload?.data)
-      ? payload.data
-      : Array.isArray(payload?.data?.variants)
-        ? payload.data.variants
-        : [];
+    const data = payload?.data;
+    // CJ has returned this endpoint in more than one envelope shape.
+    const candidates = [
+      data,
+      data?.variants,
+      data?.list,
+      data?.records,
+      data?.content,
+      data?.result,
+      data?.data,
+      data?.variantList,
+    ];
+    const rawVariants = candidates.find(Array.isArray) ?? [];
 
-    if (!payload?.result || rawVariants.length === 0) {
-      console.error("Réponse CJ sans variantes utilisables:", { result: payload?.result, message: payload?.message, dataType: typeof payload?.data });
+    if (rawVariants.length === 0) {
+      console.error("Réponse CJ sans variantes utilisables:", { result: payload?.result, message: payload?.message, dataType: typeof payload?.data, dataKeys: data && typeof data === "object" ? Object.keys(data) : [] });
       return NextResponse.json(
         { error: "Les options de ce produit sont temporairement indisponibles." },
         { status: 502, headers: { "Cache-Control": "no-store" } },
@@ -37,13 +45,13 @@ export async function GET() {
     }
 
     const variants = rawVariants.map((variant: Record<string, unknown>) => ({
-      vid: String(variant.vid ?? ""),
-      name: String(variant.variantNameEn ?? variant.variantName ?? ""),
-      key: String(variant.variantKey ?? variant.variantNameEn ?? variant.variantName ?? ""),
-      sku: String(variant.variantSku ?? ""),
-      image: typeof variant.variantImage === "string" ? variant.variantImage : "",
-      supplierPrice: Number(variant.variantSellPrice ?? 0),
-      weightGrams: Number(variant.variantWeight ?? 0),
+      vid: String(variant.vid ?? variant.variantId ?? variant.id ?? ""),
+      name: String(variant.variantNameEn ?? variant.variantName ?? variant.name ?? variant.variantKey ?? ""),
+      key: String(variant.variantKey ?? variant.variantNameEn ?? variant.variantName ?? variant.name ?? ""),
+      sku: String(variant.variantSku ?? variant.sku ?? ""),
+      image: String(variant.variantImage ?? variant.image ?? ""),
+      supplierPrice: Number(variant.variantSellPrice ?? variant.sellPrice ?? variant.price ?? 0),
+      weightGrams: Number(variant.variantWeight ?? variant.weight ?? 0),
     })).filter((variant: { vid: string; key: string }) => variant.vid && variant.key);
 
     return NextResponse.json(
