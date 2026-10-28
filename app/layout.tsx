@@ -2,45 +2,31 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
-const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
+const siteUrl = (process.env.SITE_URL || "https://sweltr-store-five.vercel.app").replace(/\/$/, "");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "SWELTR — Kit chaleur qui tient vraiment le froid à distance",
-  description:
-    "Gants chauffants, écharpe chauffante et chaussettes thermiques pour vous équiper pendant les journées froides.",
-  alternates: {
-    canonical: siteUrl,
-  },
+  title: "SWELTR — Kits et accessoires pour affronter le froid",
+  description: "Découvrez les kits d’hiver SWELTR, les accessoires chauffants et les vêtements thermiques pour rester au chaud pendant la saison froide.",
+  alternates: { canonical: siteUrl },
   openGraph: {
-    title: "SWELTR — Kit anti-froid",
-    description: "Découvrez les kits chauffants et accessoires thermiques SWELTR.",
+    title: "SWELTR — Kits et accessoires pour l’hiver",
+    description: "Explorez les kits et accessoires SWELTR pour les journées froides.",
     type: "website",
     url: siteUrl,
     siteName: "SWELTR",
-    locale: "fr_FR",
-    images: [
-      {
-        url: "https://cf.cjdropshipping.com/20180920/2155711379153.jpg",
-        width: 800,
-        height: 800,
-        alt: "Gants chauffants SWELTR",
-      },
-    ],
+    locale: "fr_CH",
+    images: [{ url: "https://cf.cjdropshipping.com/20180920/2155711379153.jpg", width: 800, height: 800, alt: "Accessoires d’hiver SWELTR" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SWELTR — Kit anti-froid",
-    description: "Découvrez les kits chauffants et accessoires thermiques SWELTR.",
+    title: "SWELTR — Kits et accessoires pour l’hiver",
+    description: "Explorez les kits et accessoires SWELTR pour les journées froides.",
     images: ["https://cf.cjdropshipping.com/20180920/2155711379153.jpg"],
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
       <body
