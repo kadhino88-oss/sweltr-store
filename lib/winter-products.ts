@@ -103,15 +103,18 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     slug: "sous-vetements-thermiques",
     name: "Ensemble thermique",
     eyebrow: "UNE COUCHE DE CHALEUR",
-    short: "Un haut et un legging pour mieux affronter le froid.",
-    description: "Un ensemble thermique sans alimentation électrique, envisagé pour les déplacements, les activités extérieures et les sports d’hiver. La composition textile et les tailles seront confirmées avant la mise en vente.",
-    image: "https://cf.cjdropshipping.com/quick/product/10202ba5-1cd6-4d5b-b118-2f59eb78726e.jpg",
-    alt: "Ensemble de sous-vêtements thermiques — photo fournisseur CJ Dropshipping",
-    highlights: ["Ensemble haut et pantalon", "Tailles M à XXL indiquées", "Composition et guide des tailles à vérifier"],
+    short: "Un haut à manches longues et un pantalon assorti pour les journées froides.",
+    description: "Ensemble thermique deux pièces du fournisseur retenu : haut à manches longues et pantalon. La composition annoncée est 100 % polyester. Les variantes affichées doivent correspondre aux coloris et tailles réellement disponibles chez le fournisseur.",
+    image: "https://cf.cjdropshipping.com/3a346e18-997c-4131-b81b-8c34c246b2b3.jpg",
+    images: [
+      "https://cf.cjdropshipping.com/3a346e18-997c-4131-b81b-8c34c246b2b3.jpg",
+      "https://cf.cjdropshipping.com/13946469-1346-43aa-a4b7-627c7084a6c3.jpg",
+    ],
+    alt: "Ensemble thermique deux pièces sélectionné chez CJ Dropshipping",
+    highlights: ["Ensemble composé d’un haut et d’un pantalon", "Matière annoncée : 100 % polyester", "Coloris et tailles selon les variantes disponibles du fournisseur"],
     category: "Vêtements thermiques",
     availability: "planned",
   },
-
 ];
 
 export function getWinterProduct(slug: string) {
