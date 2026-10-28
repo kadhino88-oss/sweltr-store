@@ -15,10 +15,16 @@ type SupplierVariant = {
   weightGrams: number;
 };
 
-const PRODUCT_IMAGE = "https://cf.cjdropshipping.com/3a346e18-997c-4131-b81b-8c34c246b2b3.jpg";
+const PRODUCT_IMAGE = "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/2380523575462.jpg";
 const GALLERY = [
-  PRODUCT_IMAGE,
-  "https://cf.cjdropshipping.com/13946469-1346-43aa-a4b7-627c7084a6c3.jpg",
+  "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/2380523575462.jpg",
+  "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/839569554813.jpg",
+  "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/7611432973773.jpg",
+  "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/15163317572484.jpg",
+  "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/2075896965584.jpg",
+  "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/1213570991083.jpg",
+  "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/2943572117001.jpg",
+  "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/5609032418762.jpg"
 ];
 const SALE_PRICE_EUR = 39.90;
 const SALE_PRICE_CHF = 39.90;
@@ -121,8 +127,8 @@ export default function ThermalUnderwearProduct() {
             <div className="mt-7">
               <label htmlFor="thermal-country" className="mb-2 block text-sm font-semibold">Destination de livraison</label>
               <select id="thermal-country" value={country} onChange={(event) => setCountry(event.target.value as "FR" | "CH")} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3">
-                <option value="FR">France — coût fournisseur annoncé : 15,20 €</option>
-                <option value="CH">Suisse — coût fournisseur annoncé : 18,07 CHF</option>
+                <option value="FR">France</option>
+                <option value="CH">Suisse</option>
               </select>
             </div>
 
