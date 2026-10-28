@@ -33,7 +33,6 @@ function parseVariant(key: string) {
 export default function ThermalUnderwearProduct() {
   const [variants, setVariants] = useState<SupplierVariant[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [selectedColor, setSelectedColor] = useState("Black");
   const [selectedSize, setSelectedSize] = useState("");
   const [activeImage, setActiveImage] = useState(PRODUCT_IMAGE);
@@ -61,7 +60,7 @@ export default function ThermalUnderwearProduct() {
         if (first?.item.image) setActiveImage(first.item.image);
       })
       .catch((e: unknown) => {
-        if (alive) setError(e instanceof Error ? e.message : "Erreur de chargement.");
+        // Supplier diagnostics stay out of the customer-facing page; checkout remains disabled without a verified variant.
       })
       .finally(() => {
         if (alive) setLoading(false);
@@ -118,7 +117,6 @@ export default function ThermalUnderwearProduct() {
             <h1 className="mt-4 font-display text-4xl font-bold leading-tight md:text-5xl">Ensemble thermique Winter Warm</h1>
             <p className="mt-4 text-lg leading-8 text-slate-600">Un ensemble deux pièces à porter comme couche supplémentaire lorsque les températures baissent.</p>
             <div className="mt-5 text-3xl font-bold">{money.format(price)}</div>
-            <p className="mt-1 text-xs text-slate-500">Prix de vente proposé, à confirmer avant activation du paiement.</p>
 
             <div className="mt-7">
               <label htmlFor="thermal-country" className="mb-2 block text-sm font-semibold">Destination de livraison</label>
@@ -130,9 +128,9 @@ export default function ThermalUnderwearProduct() {
 
             <div className="mt-6">
               <label htmlFor="thermal-color" className="mb-2 block text-sm font-semibold">Couleur</label>
-              {loading ? <div className="flex items-center gap-2 text-sm text-slate-500"><Loader2 size={16} className="animate-spin" /> Chargement des coloris CJ…</div> :
+              {loading ? <div className="flex items-center gap-2 text-sm text-slate-500"><Loader2 size={16} className="animate-spin" /> Chargement des options…</div> :
                 colors.length ? <select id="thermal-color" value={selectedColor} onChange={(event) => chooseColor(event.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3">{colors.map((color) => <option key={color} value={color}>{color}</option>)}</select> :
-                <p className="text-sm text-slate-500">Les coloris seront affichés dès que CJ sera joignable.</p>}
+                <p className="text-sm text-slate-500">Les options de ce produit sont momentanément indisponibles. Merci de réessayer un peu plus tard.</p>}
             </div>
 
             <div className="mt-5">
@@ -143,13 +141,11 @@ export default function ThermalUnderwearProduct() {
               <p className="mt-2 text-xs leading-5 text-slate-500">Les tailles asiatiques peuvent tailler petit. Consulte le guide des tailles et mesure-toi avant de choisir.</p>
             </div>
 
-            {error && <p role="alert" className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
-            {selectedVariant && <p className="mt-4 text-xs text-slate-500">Variante fournisseur sélectionnée : {selectedVariant.key}</p>}
 
             <div className="mt-7 space-y-3 text-sm text-slate-700">
               <div className="flex items-start gap-3"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-amber-700" /><span>Ensemble deux pièces : haut à enfiler et pantalon.</span></div>
               <div className="flex items-start gap-3"><CheckCircle2 size={18} className="mt-0.5 shrink-0 text-amber-700" /><span>Matière annoncée par le fournisseur : 100 % polyester.</span></div>
-              <div className="flex items-start gap-3"><Truck size={18} className="mt-0.5 shrink-0 text-amber-700" /><span>Coût livré fournisseur annoncé : {country === "FR" ? "15,20 € vers la France" : "18,07 CHF vers la Suisse"}.</span></div>
+              <div className="flex items-start gap-3"><Truck size={18} className="mt-0.5 shrink-0 text-amber-700" /><span>Les frais et délais de livraison sont confirmés lors de la commande.</span></div>
               <div className="flex items-start gap-3"><ShieldCheck size={18} className="mt-0.5 shrink-0 text-amber-700" /><span>Vérifie la composition et les mesures sur la fiche avant l'achat.</span></div>
             </div>
 
@@ -179,7 +175,7 @@ export default function ThermalUnderwearProduct() {
             >
               {checkoutLoading ? <><Loader2 size={18} className="mr-2 animate-spin" /> Préparation du paiement…</> : "Commander et payer"}
             </button>
-            <p className="mt-3 text-xs leading-5 text-slate-500">Paiement sécurisé via Stripe. La variante choisie est revérifiée auprès du fournisseur avant l'ouverture du paiement.</p>
+            <p className="mt-3 text-xs leading-5 text-slate-500">Paiement sécurisé via Stripe. Les options disponibles sont vérifiées avant la commande.</p>
           </div>
         </div>
       </div>
