@@ -21,9 +21,24 @@ function findVariantArray(payload: unknown): unknown[] {
     nested?.variants,
     nested?.variantList,
     data?.productList,
+    data?.stanProducts,
+    data?.variantInventory,
+    data?.variantInventories,
+    data?.thirdAttributeList,
     root?.variants,
   ];
   return candidates.find(Array.isArray) as unknown[] | undefined ?? [];
+}
+
+function firstText(record: Record<string, unknown>, keys: string[]): string {
+  for (const key of keys) {
+    const value = record[key];
+    if (typeof value === "string" || typeof value === "number") {
+      const text = String(value).trim();
+      if (text) return text;
+    }
+  }
+  return "";
 }
 
 export async function GET() {
@@ -64,23 +79,24 @@ export async function GET() {
     const rawVariants = findVariantArray(payload);
     const variants = rawVariants.map((value) => {
       const variant = asRecord(value) ?? {};
-      const key = String(
-        variant.variantKey ??
-        variant.variantNameEn ??
-        variant.variantName ??
-        variant.nameEn ??
-        variant.name ??
-        variant.variantNameKey ??
-        "",
-      ).trim();
+      const key = firstText(variant, [
+        "variantKey", "variantNameEn", "variantName", "nameEn", "name",
+        "variantNameKey", "variant", "key", "standard",
+      ]);
       return {
-        vid: String(variant.vid ?? variant.variantId ?? variant.id ?? "").trim(),
-        name: String(variant.variantNameEn ?? variant.variantName ?? variant.nameEn ?? variant.name ?? key).trim(),
+        vid: firstText(variant, [
+          "vid", "variantId", "variant_id", "id", "pid", "productId",
+        ]),
+        name: firstText(variant, [
+          "variantNameEn", "variantName", "nameEn", "name", "variant", "standard",
+        ]) || key,
         key,
-        sku: String(variant.variantSku ?? variant.sku ?? "").trim(),
-        image: String(variant.variantImage ?? variant.img ?? variant.image ?? "").trim(),
-        supplierPrice: Number(variant.variantSellPrice ?? variant.sellPrice ?? variant.price ?? 0),
-        weightGrams: Number(variant.variantWeight ?? variant.weight ?? 0),
+        sku: firstText(variant, ["variantSku", "sku", "productSku"]),
+        image: firstText(variant, ["variantImage", "img", "image", "productImage"]),
+        supplierPrice: Number(firstText(variant, [
+          "variantSellPrice", "sellPrice", "price", "variantPrice", "nowPrice",
+        ]) || 0),
+        weightGrams: Number(firstText(variant, ["variantWeight", "weight", "productWeight"]) || 0),
       };
     }).filter((variant) => variant.vid && variant.key);
 
@@ -90,6 +106,7 @@ export async function GET() {
         requestId: root?.requestId,
         dataKeys: data ? Object.keys(data) : [],
         variantArrayFound: rawVariants.length > 0,
+        variantArraySampleKeys: asRecord(rawVariants[0]) ? Object.keys(asRecord(rawVariants[0])!) : [],
       });
       return NextResponse.json(
         { error: "Les variantes de ce produit ne sont pas disponibles auprès du fournisseur pour le moment." },
