@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { getWinterProduct, WINTER_PRODUCTS } from "@/lib/winter-products";
 import ThermalUnderwearProduct from "@/components/ThermalUnderwearProduct";
 
@@ -82,29 +82,15 @@ export default function WinterProductPage({ params }: { params: { slug: string }
                 </div>
               ))}
             </div>
-            <div className="mt-9 rounded-2xl border border-amber-200 bg-amber-50 p-5">
-              <div className="flex items-start gap-3">
-                <ShieldCheck size={20} className="mt-0.5 shrink-0 text-amber-800" />
-                <div>
-                  <p className="font-semibold">{product.availability === "existing" ? "Disponible dans nos kits" : "Sélection en cours"}</p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    {product.availability === "existing"
-                      ? "Consulte les kits disponibles pour connaître le prix et le contenu exact avant de commander."
-                      : "Ce produit est encore en sélection : le modèle exact, les photos, le stock, les frais de livraison et le prix final doivent être confirmés avant toute mise en vente."}
-                  </p>
-                </div>
-              </div>
-            </div>
             {product.href ? (
               <Link href={product.href} className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
                 Découvrir les kits SWELTR <ArrowRight size={16} />
               </Link>
             ) : (
               <Link href="/contact" className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-                Contacter SWELTR pour ce produit <ArrowRight size={16} />
+                Demander la disponibilité <ArrowRight size={16} />
               </Link>
             )}
-            <p className="mt-4 text-xs leading-5 text-slate-500">Les produits en sélection ne sont pas encore commandables. Nous confirmerons la variante exacte, les photos du fournisseur, le stock et le coût livré avant leur mise en vente.</p>
           </div>
         </div>
         <section className="mt-10 grid gap-4 sm:grid-cols-3">
