@@ -22,14 +22,21 @@ export async function GET() {
     }
 
     const payload = await response.json();
-    if (!payload?.result || !Array.isArray(payload.data)) {
+    const rawVariants = Array.isArray(payload?.data)
+      ? payload.data
+      : Array.isArray(payload?.data?.variants)
+        ? payload.data.variants
+        : [];
+
+    if (!payload?.result || rawVariants.length === 0) {
+      console.error("Réponse CJ sans variantes utilisables:", { result: payload?.result, message: payload?.message, dataType: typeof payload?.data });
       return NextResponse.json(
-        { error: "CJ n'a pas retourné de variantes exploitables." },
+        { error: "Les options de ce produit sont temporairement indisponibles." },
         { status: 502, headers: { "Cache-Control": "no-store" } },
       );
     }
 
-    const variants = payload.data.map((variant: Record<string, unknown>) => ({
+    const variants = rawVariants.map((variant: Record<string, unknown>) => ({
       vid: String(variant.vid ?? ""),
       name: String(variant.variantNameEn ?? variant.variantName ?? ""),
       key: String(variant.variantKey ?? variant.variantNameEn ?? variant.variantName ?? ""),
