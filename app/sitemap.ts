@@ -3,7 +3,7 @@ import { TIERS } from "@/lib/data";
 import { WINTER_PRODUCTS } from "@/lib/winter-products";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = (process.env.SITE_URL || "https://sweltr-store-five.vercel.app").replace(/\/$/, "");
+  const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
   const now = new Date();
 
   const kitPages: MetadataRoute.Sitemap = TIERS.map((tier) => ({
