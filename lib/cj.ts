@@ -103,6 +103,41 @@ export type CjLineItem = {
   quantity: number;
 };
 
+type CjFreightOption = {
+  logisticName?: unknown;
+  logisticPrice?: unknown;
+};
+
+async function getCheapestAvailableLogistics(
+  destinationCountryCode: string,
+  products: CjLineItem[],
+): Promise<string> {
+  const token = await getAccessToken();
+  const res = await fetch(CJ_API_BASE_URL + "/logistic/freightCalculate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "CJ-Access-Token": token },
+    body: JSON.stringify({
+      startCountryCode: "CN",
+      endCountryCode: destinationCountryCode,
+      products: products.map(({ vid, quantity }) => ({ vid, quantity })),
+    }),
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error("Échec HTTP du calcul de transport CJ (HTTP " + res.status + ").");
+  let data: { result?: boolean; message?: string; data?: unknown };
+  try { data = await res.json(); } catch { throw new Error("Réponse de calcul de transport CJ invalide."); }
+  if (data.result !== true || !Array.isArray(data.data)) {
+    throw new Error("Aucun tarif de transport CJ confirmé : " + (data.message || "réponse invalide"));
+  }
+  const options = (data.data as CjFreightOption[])
+    .filter((option) => typeof option.logisticName === "string" && option.logisticName.trim().length > 0 && Number.isFinite(Number(option.logisticPrice)) && Number(option.logisticPrice) >= 0)
+    .sort((a, b) => Number(a.logisticPrice) - Number(b.logisticPrice));
+  if (options.length === 0) throw new Error("Aucun transporteur CJ disponible pour " + destinationCountryCode + ".");
+  // Le choix du tarif le moins cher ne garantit pas que le transporteur offre un suivi.
+  // La disponibilité du suivi doit être confirmée avant le lancement réel.
+  return (options[0].logisticName as string).trim();
+}
+
 /**
  * Retrouve une commande déjà créée avec notre référence partenaire stable.
  * CJ documente getOrderDetailBatch comme acceptant l'identifiant de commande
@@ -111,7 +146,7 @@ export type CjLineItem = {
  */
 export async function findCjOrderByOrderNumber(
   orderNumber: string,
-): Promise<{ orderId: string; orderCode?: string } | null> {
+): Promise<{ orderId: string; orderCode?: string; shipmentOrderId?: string } | null> {
   const token = await getAccessToken();
   const res = await fetch(`${CJ_API_BASE_URL}/shopping/order/getOrderDetailBatch`, {
     method: "POST",
@@ -166,8 +201,14 @@ export async function findCjOrderByOrderNumber(
     throw new Error("CJ a retrouvé la référence mais n'a retourné aucun identifiant de commande.");
   }
 
+  const shipmentOrderId =
+    typeof existing.shipmentOrderId === "string" && existing.shipmentOrderId
+      ? existing.shipmentOrderId
+      : undefined;
+
   return {
     orderId,
+    ...(shipmentOrderId ? { shipmentOrderId } : {}),
     ...(typeof existing.orderCode === "string" ? { orderCode: existing.orderCode } : {}),
     ...(typeof existing.cjOrderCode === "string" ? { orderCode: existing.cjOrderCode } : {}),
   };
@@ -175,6 +216,12 @@ export async function findCjOrderByOrderNumber(
 
 export async function createCjOrder(shipping: CjShippingInfo, products: CjLineItem[]) {
   const token = await getAccessToken();
+  const logisticName = await getCheapestAvailableLogistics(shipping.shippingCountryCode, products);
+  const shippingCountry = shipping.shippingCountryCode === "FR"
+    ? "France"
+    : shipping.shippingCountryCode === "CH"
+      ? "Switzerland"
+      : shipping.shippingCountryCode;
 
   const res = await fetch(`${CJ_API_BASE_URL}/shopping/order/createOrderV2`, {
     method: "POST",
@@ -186,6 +233,10 @@ export async function createCjOrder(shipping: CjShippingInfo, products: CjLineIt
       orderNumber: shipping.orderNumber,
       shippingCustomerName: shipping.shippingCustomerName,
       shippingCountryCode: shipping.shippingCountryCode,
+      shippingCountry,
+      logisticName,
+      // Crée la commande sans paiement via le flux CJ hébergé obsolète.
+      payType: 3,
       shippingProvince: shipping.shippingProvince,
       shippingCity: shipping.shippingCity,
       shippingAddress: shipping.shippingAddress,
@@ -206,7 +257,7 @@ export async function createCjOrder(shipping: CjShippingInfo, products: CjLineIt
     throw new Error(`Échec HTTP de création de commande CJ (HTTP ${res.status}).`);
   }
 
-  let data: { result?: boolean; message?: string; data?: { orderId?: string; orderCode?: string } };
+  let data: { result?: boolean; message?: string; data?: { orderId?: string; orderCode?: string; shipmentOrderId?: string } };
   try {
     data = await res.json();
   } catch {
@@ -216,10 +267,10 @@ export async function createCjOrder(shipping: CjShippingInfo, products: CjLineIt
   if (!data.result || typeof data.data?.orderId !== "string" || !data.data.orderId) {
     throw new Error(`Échec de création de commande CJ : ${data.message || "identifiant de commande absent"}`);
   }
-  return data.data as { orderId: string; orderCode?: string };
+  return data.data as { orderId: string; orderCode?: string; shipmentOrderId?: string };
 }
 
-export async function payCjOrder(orderId: string) {
+export async function payCjOrder(shipmentOrderId: string) {
   // Safety gate: createOrderV2 alone is not the complete CJ fulfillment/payment flow.
   // Do not allow a real balance debit until the full CJ flow has been implemented
   // and verified against a real test order and the returned parent/payment IDs.
@@ -229,6 +280,8 @@ export async function payCjOrder(orderId: string) {
     );
   }
 
+  if (!shipmentOrderId) throw new Error("Paiement CJ impossible : shipmentOrderId manquant dans la réponse de création.");
+
   const token = await getAccessToken();
 
   const res = await fetch(`${CJ_API_BASE_URL}/shopping/pay/payBalanceV2`, {
@@ -237,7 +290,7 @@ export async function payCjOrder(orderId: string) {
       "Content-Type": "application/json",
       "CJ-Access-Token": token,
     },
-    body: JSON.stringify({ shipmentOrderId: orderId }),
+    body: JSON.stringify({ shipmentOrderId }),
   });
 
   if (!res.ok) {

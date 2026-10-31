@@ -113,8 +113,10 @@ export async function POST(req: NextRequest) {
       console.log("Commande thermique CJ " + (existingOrder ? "retrouvée" : "créée") + " pour " + session.id + " : " + order.orderId);
       if (process.env.CJ_AUTO_PAY === "true" && existingOrder) {
         console.warn("Commande CJ " + order.orderId + " retrouvée après retry : paiement automatique ignoré pour éviter un double débit. Vérification MyCJ requise.");
+      } else if (process.env.CJ_AUTO_PAY === "true" && !order.shipmentOrderId) {
+        console.error("Paiement thermique CJ bloqué : shipmentOrderId absent pour " + order.orderId + ".");
       } else if (process.env.CJ_AUTO_PAY === "true") {
-        try { await payCjOrder(order.orderId); console.log("Commande thermique CJ payée automatiquement : " + order.orderId); }
+        try { await payCjOrder(order.shipmentOrderId!); console.log("Commande thermique CJ payée automatiquement : " + order.orderId); }
         catch (error: unknown) { console.error("Paiement fournisseur non confirmé pour " + order.orderId + " :", getStripeErrorDetails(error)); }
       } else { console.log("CJ_AUTO_PAY désactivé — commande thermique " + order.orderId + " créée mais non payée."); }
       return webhookResponse();
@@ -200,9 +202,11 @@ export async function POST(req: NextRequest) {
       console.warn(
         `Commande CJ ${order.orderId} retrouvée après une nouvelle tentative. Paiement automatique ignoré par sécurité ; vérifier son statut dans MyCJ.`,
       );
+    } else if (process.env.CJ_AUTO_PAY === "true" && !order.shipmentOrderId) {
+      console.error(`Paiement CJ bloqué : shipmentOrderId absent pour ${order.orderId}. Vérification manuelle requise.`);
     } else if (process.env.CJ_AUTO_PAY === "true") {
       try {
-        await payCjOrder(order.orderId);
+        await payCjOrder(order.shipmentOrderId!);
         console.log(`Commande CJ ${order.orderId} payée automatiquement.`);
       } catch (error: unknown) {
         // Ne pas demander à Stripe de rejouer la création : la commande CJ existe déjà.
