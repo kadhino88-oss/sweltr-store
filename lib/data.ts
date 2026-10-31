@@ -75,7 +75,6 @@ export const TIERS: Tier[] = [
     tagline: "Gants chauffants + Écharpe chauffante",
     price: 52.99,
     items: ["1× Gants chauffants SWELTR", "1× Écharpe chauffante USB"],
-    best: true,
     cjItems: [
       { vid: "42BD9CA6-6D95-4B26-8F20-A52375663923", quantity: 1 }, // gants chauffants
       { vid: "2410090540221610300", quantity: 1 }, // écharpe chauffante
@@ -95,6 +94,7 @@ export const TIERS: Tier[] = [
   {
     id: "trio",
     name: "Kit Grand Froid",
+    best: true,
     tagline: "Gants chauffants + Écharpe chauffante + Chaussettes thermiques",
     price: 62.99,
     items: [
