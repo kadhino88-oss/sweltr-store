@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ContentPage from "@/components/ContentPage";
 
-const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : ((process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, ""))).replace(/\/$/, "");
+const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
 
 export const metadata: Metadata = {
   title: "Guides et conseils contre le froid — SWELTR",
