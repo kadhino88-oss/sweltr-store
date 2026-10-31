@@ -74,7 +74,7 @@ export default function WinterProductPage({ params }: { params: { slug: string }
             <p className="font-mono text-xs uppercase tracking-[.22em] text-amber-700">{product.eyebrow}</p>
             <h1 className="mt-4 font-display text-4xl font-bold leading-tight md:text-5xl">{product.name}</h1>
             <p className="mt-5 text-lg leading-8 text-slate-600">{product.short}</p>
-            <p className="mt-5 text-sm leading-7 text-slate-600">{product.description}</p>
+            <p className="mt-5 text-sm leading-7 text-slate-600">{product.description}</p>\n            <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-bold uppercase tracking-[.16em] text-slate-500">Disponibilité</p><p className="mt-1 text-sm font-semibold">{product.availability === "existing" ? "Inclus dans les kits SWELTR disponibles" : "Produit en préparation — non disponible à l’achat pour le moment"}</p><p className="mt-1 text-xs leading-5 text-slate-500">{product.availability === "existing" ? "Le tarif est affiché sur la fiche de chaque kit ; aucun prix unitaire n’est annoncé tant qu’il n’est pas validé." : "Le prix, les variantes, le stock et les frais d’expédition seront confirmés avant la mise en vente."}</p></div>
             <div className="mt-7 space-y-3">
               {product.highlights.map((highlight) => (
                 <div key={highlight} className="flex items-start gap-3 text-sm text-slate-700">
@@ -83,7 +83,7 @@ export default function WinterProductPage({ params }: { params: { slug: string }
               ))}
             </div>
             <Link href={product.href || "/boutique"} className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-              Découvrir les kits SWELTR <ArrowRight size={16} />
+              {product.availability === "existing" ? "Voir les kits et leurs prix" : "Voir les produits disponibles"} <ArrowRight size={16} />
             </Link>
           </div>
         </div>
