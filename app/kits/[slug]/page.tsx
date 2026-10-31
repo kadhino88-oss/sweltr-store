@@ -7,7 +7,11 @@ import { TIERS } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
 import KitCheckoutButton from "@/components/KitCheckoutButton";
 
-const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
+const siteUrl = (
+  process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")
+).replace(/\/$/, "");
 
 export function generateStaticParams() {
   return TIERS.map((tier) => ({ slug: tier.id }));
