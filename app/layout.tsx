@@ -14,8 +14,8 @@ export const metadata: Metadata = {
   description: "Explorez les essentiels SWELTR pour la maison, les voyages et le plein air : une sélection pensée pour accompagner chaque saison.",
   alternates: { canonical: siteUrl },
   openGraph: {
-    title: "SWELTR — Confort en toute saison",
-    description: "Découvrez les collections SWELTR pensées pour les quatre saisons.",
+    title: "SWELTR — Kits et accessoires pour l’hiver",
+    description: "Découvrez les kits d’hiver SWELTR et leurs accessoires chauffants.",
     type: "website",
     url: siteUrl,
     siteName: "SWELTR",
