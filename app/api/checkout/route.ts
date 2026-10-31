@@ -59,6 +59,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Sélection invalide." }, { status: 400 });
   }
 
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "";
+  const isLiveStripeKey = /^(sk|rk)_live_/.test(stripeSecretKey);
+  if (isLiveStripeKey && process.env.STORE_SALES_ENABLED !== "true") {
+    return NextResponse.json(
+      {
+        code: "STORE_NOT_LAUNCH_READY",
+        error: "Les commandes sont temporairement suspendues pendant la validation finale du stock, de la livraison et des coûts fournisseurs.",
+      },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
   const data = body as Record<string, unknown>;
   const isThermal = data.productType === "thermal-underwear";
   let tier: (typeof TIERS)[number] | undefined;
