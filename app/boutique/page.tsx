@@ -7,7 +7,7 @@ import { TIERS } from "@/lib/data";
 const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app");
 
 export const metadata: Metadata = {
-  title: "Boutique — Kits chauffants et accessoires anti-froid | SWELTR",
+  title: "Boutique — Collections et accessoires toute l’année | SWELTR",
   description:
     "Découvre les kits SWELTR, compare leurs photos et leurs prix, puis choisis l'équipement adapté à tes journées froides.",
   alternates: { canonical: `${siteUrl}/boutique` },
