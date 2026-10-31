@@ -7,6 +7,14 @@ function read(relativePath) {
   return fs.readFileSync(path.join(__dirname, "..", relativePath), "utf8");
 }
 
+test("live Stripe checkout stays blocked until store release approval", () => {
+  const route = read("app/api/checkout/route.ts");
+  assert.match(route, /isLiveStripeKey = \/\^\(sk\|rk\)_live_\//);
+  assert.match(route, /isLiveStripeKey && process\.env\.STORE_SALES_ENABLED !== "true"/);
+  assert.match(route, /STORE_NOT_LAUNCH_READY/);
+  assert.match(read(".env.local.example"), /STORE_SALES_ENABLED=false/);
+});
+
 test("thermal variants stay unavailable until supplier validation is explicitly enabled", () => {
   const route = read("app/api/products/thermal-underwear/variants/route.ts");
   assert.match(route, /THERMAL_PRODUCT_SALES_ENABLED !== "true"/);
