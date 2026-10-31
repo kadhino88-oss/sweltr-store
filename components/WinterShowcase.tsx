@@ -20,7 +20,28 @@ export default function WinterShowcase() {
     <>
       <section className="relative isolate overflow-hidden bg-[#10151D] text-white">
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top_right,rgba(245,190,80,.18),transparent_40%),linear-gradient(135deg,#0b111b,#172334_55%,#0b111b)]" />
-        <div className="mx-auto max-w-[1440px] px-4 pb-12 pt-10 md:px-8 md:pb-16 md:pt-14">
+        <div className="relative mx-auto max-w-[1440px] px-4 pt-5 md:px-8 md:pt-8">
+          <div aria-label="SWELTR, les quatre saisons" className="relative isolate h-[250px] overflow-hidden rounded-[1.8rem] border border-white/15 shadow-2xl shadow-black/30 sm:h-[330px] md:h-[430px]">
+            <div className="absolute inset-0 grid grid-cols-4">
+              {[
+                {label:"Hiver",src:"https://images.unsplash.com/photo-1457269449834-928af64c684d?auto=format&fit=crop&w=1200&q=90"},
+                {label:"Printemps",src:"https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1200&q=90"},
+                {label:"Été",src:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=90"},
+                {label:"Automne",src:"https://images.unsplash.com/photo-1507371341162-763b5e419408?auto=format&fit=crop&w=1200&q=90"}
+              ].map((season)=> <div key={season.label} className="relative overflow-hidden">
+                <Image src={season.src} alt={season.label} fill sizes="25vw" unoptimized priority className="object-cover transition duration-1000 hover:scale-105"/>
+              </div>)}
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/75 via-slate-950/30 to-slate-950/60"/>
+            <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center">
+              <span className="rounded-full border border-white/35 bg-black/20 px-4 py-2 text-[10px] font-bold uppercase tracking-[.28em] text-amber-100 backdrop-blur-md sm:text-xs">SWELTR · toute l’année</span>
+              <p className="mt-4 max-w-4xl font-display text-3xl font-black leading-tight tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-7xl">Un monde de confort.<br/><span className="text-amber-200">Quatre saisons à vivre.</span></p>
+              <Link href="/boutique" className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-300 px-6 py-3 text-sm font-bold text-slate-950 shadow-lg transition hover:-translate-y-0.5 hover:bg-amber-200">Découvrir la collection <ArrowRight size={17}/></Link>
+            </div>
+            <div className="absolute inset-x-0 bottom-0 flex justify-between bg-black/25 px-3 py-2 text-[9px] font-bold uppercase tracking-[.18em] text-white/90 backdrop-blur-sm sm:px-6 sm:py-3 sm:text-xs"><span>Hiver</span><span>Printemps</span><span>Été</span><span>Automne</span></div>
+          </div>
+        </div>
+        <div className="mx-auto max-w-[1440px] px-4 pb-12 pt-8 md:px-8 md:pb-16 md:pt-10">
           <motion.div initial={reduceMotion ? false : {opacity:0,y:18}} animate={{opacity:1,y:0}} transition={{duration:.65}} className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
             <div className="max-w-3xl">
               <p className="inline-flex items-center gap-2 rounded-full border border-amber-200/25 bg-white/5 px-4 py-2 text-[10px] font-bold uppercase tracking-[.24em] text-amber-200 md:text-xs"><Globe2 size={14}/> SWELTR · Confort en toute saison</p>
