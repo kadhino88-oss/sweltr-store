@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Clock3, PackageCheck, RotateCcw } from "lucide-react";
 import ContentPage from "@/components/ContentPage";
 
-const siteUrl = process.env.SITE_URL || "https://sweltr-store-five.vercel.app";
+const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
 
 export const metadata: Metadata = {
   title: "Livraison, rétractation et retours — SWELTR",
@@ -60,6 +60,33 @@ export default function DeliveryReturnsPage() {
           les CGV. Pour initier une demande ou poser une question, contacte le{" "}
           <Link href="/contact" className="text-gold-deep underline">service client</Link> en
           indiquant ton numéro de commande.
+        </p>
+      </section>
+
+      <section id="suivi-colis" className="rounded-2xl border border-gold/40 bg-panel2 p-6 md:p-8">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-gold-deep">Après expédition</p>
+            <h2 className="mt-2 font-display text-2xl font-bold text-ink">Suivre ton colis</h2>
+            <p className="mt-3 max-w-2xl">
+              Dès que le numéro de suivi t'a été communiqué, ouvre le suivi universel du transporteur
+              et colle ce numéro pour consulter les dernières étapes d'acheminement. Le suivi n'est
+              disponible qu'une fois le colis enregistré par le transporteur.
+            </p>
+          </div>
+          <a
+            href="https://www.17track.net/fr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex shrink-0 items-center justify-center rounded-full bg-gold-strong px-6 py-3 text-sm font-semibold text-ink transition hover:bg-gold"
+          >
+            Ouvrir le suivi colis ↗
+          </a>
+        </div>
+        <p className="mt-4 text-sm text-muted">
+          Tu n'as pas reçu de numéro de suivi ou le suivi ne bouge plus ?{" "}
+          <Link href="/contact" className="text-gold-deep underline">Contacte le service client</Link>
+          {" "}avec ton numéro de commande.
         </p>
       </section>
 

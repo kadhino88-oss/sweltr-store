@@ -1,7 +1,7 @@
 import Link from "next/link";
 import LegalPage from "@/components/LegalPage";
 
-const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
+const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : ((process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, ""))).replace(/\/$/, "");
 
 export const metadata = {
   title: "Chaussettes thermiques : pourquoi on a froid aux pieds et comment y remédier — SWELTR",
