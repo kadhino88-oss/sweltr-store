@@ -25,23 +25,6 @@ export default function WinterShowcase() {
   const campaignVideo = process.env.NEXT_PUBLIC_SEASONAL_VIDEO_URL;
   return (
     <>
-      <Script id="google-translate-loader" strategy="afterInteractive" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" />
-      <Script id="google-translate-init" strategy="afterInteractive">{`
-        window.googleTranslateElementInit = function() {
-          if (window.google && window.google.translate) {
-            new window.google.translate.TranslateElement({pageLanguage:'fr', includedLanguages:'en,es,de,it,pt,nl,ar,zh-CN,ja,pl,tr', autoDisplay:false}, 'google_translate_element');
-            var saved = localStorage.getItem('sweltr-language');
-            if (saved && saved !== 'fr') {
-              var tries = 0;
-              var timer = setInterval(function() {
-                var select = document.querySelector('.goog-te-combo');
-                if (select) { select.value = saved; select.dispatchEvent(new Event('change')); clearInterval(timer); }
-                if (++tries > 30) clearInterval(timer);
-              }, 250);
-            }
-          }
-        };
-      `}</Script>
       <section className="relative isolate overflow-hidden bg-[#10151D] text-white">
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top_right,rgba(245,190,80,.18),transparent_40%),linear-gradient(135deg,#0b111b,#172334_55%,#0b111b)]" />
         <div className="mx-auto max-w-[1440px] px-4 pb-12 pt-10 md:px-8 md:pb-16 md:pt-14">
