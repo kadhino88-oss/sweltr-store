@@ -56,7 +56,7 @@ export default function SiteHeader() {
           <span className="leading-tight"><span className="block font-display text-xl font-black tracking-[.12em]">SWELTR</span><span className="hidden text-[9px] uppercase tracking-[.2em] text-white/55 sm:block">Comfort all year round</span></span>
         </Link>
         <div className="hidden items-center gap-6 text-sm font-medium text-white/80 lg:flex">
-          <Link href="/boutique" className="transition hover:text-amber-300">Toutes les collections</Link>
+          <Link href="/boutique" className="transition hover:text-amber-300">Les kits</Link><Link href="/produits" className="transition hover:text-amber-300">Tous les produits</Link>
           <a href="/#saisons" className="transition hover:text-amber-300">Les 4 saisons</a>
           <Link href="/guides" className="transition hover:text-amber-300">Guides</Link>
           <Link href="/contact" className="transition hover:text-amber-300">Contact</Link>
@@ -72,7 +72,7 @@ export default function SiteHeader() {
           <button type="button" onClick={() => setMenuOpen((open) => !open)} className="grid h-10 w-10 place-items-center rounded-full border border-white/15 lg:hidden" aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"} aria-expanded={menuOpen}>{menuOpen ? <X size={19}/> : <Menu size={19}/>}</button>
         </div>
       </nav>
-      {menuOpen && <div className="border-t border-white/10 px-5 py-4 lg:hidden"><div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm"><Link href="/boutique" onClick={() => setMenuOpen(false)}>Toutes les collections</Link><a href="/#saisons" onClick={() => setMenuOpen(false)}>Les 4 saisons</a><Link href="/guides" onClick={() => setMenuOpen(false)}>Guides</Link><Link href="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></div></div>}
+      {menuOpen && <div className="border-t border-white/10 px-5 py-4 lg:hidden"><div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm"><Link href="/boutique" onClick={() => setMenuOpen(false)}>Les kits</Link><Link href="/produits" onClick={() => setMenuOpen(false)}>Tous les produits</Link><a href="/#saisons" onClick={() => setMenuOpen(false)}>Les 4 saisons</a><Link href="/guides" onClick={() => setMenuOpen(false)}>Guides</Link><Link href="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></div></div>}
       <div id="google_translate_element" className="pointer-events-none absolute h-0 w-0 overflow-hidden opacity-0" aria-hidden="true" />
     </header>
   );
