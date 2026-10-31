@@ -38,9 +38,12 @@ export default function WinterProductPage({ params }: { params: { slug: string }
   const product = getWinterProduct(params.slug);
   if (!product) notFound();
   if (product.slug === "sous-vetements-thermiques") return <ThermalUnderwearProduct />;
+  const productUrl = `${siteUrl}/produits/${product.slug}`;
+  const productJsonLd = { "@context": "https://schema.org", "@type": "Product", name: product.name, description: product.description, image: product.images?.length ? product.images : [product.image], category: product.category, url: productUrl, brand: { "@type": "Brand", name: "SWELTR" } };
 
   return (
     <main className="min-h-screen bg-[#F8F6F0] text-slate-950">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c") }} />
       <div className="mx-auto max-w-7xl px-5 py-6 md:px-10">
         <div className="flex flex-wrap items-center justify-between gap-3"><Link href="/produits" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-slate-950"><ArrowLeft size={16} /> Retour au catalogue</Link><Link href="/boutique" className="text-sm font-semibold text-amber-800 hover:text-slate-950">Comparer les kits →</Link></div>
         <div className="mt-6 grid overflow-hidden rounded-[2rem] bg-white shadow-sm lg:grid-cols-2">
