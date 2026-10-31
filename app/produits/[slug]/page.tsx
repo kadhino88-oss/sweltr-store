@@ -4,6 +4,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { getWinterProduct, WINTER_PRODUCTS } from "@/lib/winter-products";
+import { TIERS } from "@/lib/data";
+import { formatPrice } from "@/lib/format";
 import ThermalUnderwearProduct from "@/components/ThermalUnderwearProduct";
 
 const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
@@ -40,6 +42,7 @@ export default function WinterProductPage({ params }: { params: { slug: string }
   if (product.slug === "sous-vetements-thermiques") return <ThermalUnderwearProduct />;
   const productUrl = `${siteUrl}/produits/${product.slug}`;
   const productJsonLd = { "@context": "https://schema.org", "@type": "Product", name: product.name, description: product.description, image: product.images?.length ? product.images : [product.image], category: product.category, url: productUrl, brand: { "@type": "Brand", name: "SWELTR" } };
+  const relatedTiers = product.slug === "gants-chauffants" ? TIERS : product.slug === "echarpe-chauffante" ? TIERS.filter((tier) => tier.id !== "solo") : product.slug === "chaussettes-thermiques" ? TIERS.filter((tier) => tier.id === "trio") : [];
 
   return (
     <main className="min-h-screen bg-[#F8F6F0] text-slate-950">
@@ -90,6 +93,7 @@ export default function WinterProductPage({ params }: { params: { slug: string }
             </Link>
           </div>
         </div>
+        {relatedTiers.length > 0 && <section className="mt-10"><h2 className="text-2xl font-bold">Retrouvez ce produit dans nos kits</h2><p className="mt-2 text-sm text-slate-600">Les tarifs ci-dessous correspondent au kit complet, pas à un prix unitaire du produit.</p><div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{relatedTiers.map((tier) => <article key={tier.id} className="rounded-2xl border border-slate-200 bg-white p-5"><h3 className="font-bold">{tier.name}</h3><p className="mt-2 text-xl font-bold">{formatPrice(tier.price)}</p><p className="mt-2 text-xs leading-5 text-slate-600">{tier.items.join(" · ")}</p><Link href={`/boutique#${tier.id}`} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-amber-800">Voir ce kit <ArrowRight size={15}/></Link></article>)}</div></section>}
         <section className="mt-10 grid gap-4 sm:grid-cols-3">
           {["Sélection soignée", "Informations transparentes", "Suisse & France"].map((item) => (
             <div key={item} className="rounded-2xl border border-slate-200 bg-white p-5 text-center text-sm font-semibold text-slate-700">{item}</div>
