@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { createHash } from "node:crypto";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { TIERS } from "@/lib/data";
-import { createCjOrder, findCjOrderByOrderNumber, payCjOrder } from "@/lib/cj";
+import { createCjOrder, findCjOrderByOrderNumber, getCjOrderNumber, payCjOrder } from "@/lib/cj";
 
 // Stripe doit recevoir le corps brut pour vérifier la signature du webhook.
 export const runtime = "nodejs";
@@ -15,11 +14,6 @@ function webhookResponse(status = 200) {
   );
 }
 
-// CJ limite orderNumber à 50 caractères. Un hash déterministe reste stable entre les retries.
-function getCjOrderNumber(stripeSessionId: string) {
-  const digest = createHash("sha256").update(stripeSessionId).digest("hex").slice(0, 40);
-  return `SWELTR-${digest}`;
-}
 
 function webhookRetryResponse(error: string) {
   // Ne pas acquitter un paiement si la commande fournisseur n'a pas pu être préparée.
