@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Clock3 } from "lucide-react";
 import { WINTER_PRODUCTS } from "@/lib/winter-products";
+import { TIERS } from "@/lib/data";
+import { formatPrice } from "@/lib/format";
 
 const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
 
@@ -28,6 +30,10 @@ export default function ProductsCatalogPage() {
         </div>
       </header>
       <div className="mx-auto max-w-7xl px-5 py-10 md:px-10 md:py-14">
+        <section className="mb-14">
+          <div className="mb-6"><p className="text-xs font-bold uppercase tracking-[.2em] text-amber-700">Prix confirmés</p><h2 className="mt-2 text-2xl font-bold md:text-3xl">Les kits SWELTR disponibles</h2><p className="mt-2 text-sm text-slate-600">Ces prix sont déjà définis et restent affichés. Seuls les produits encore en sélection fournisseur portent la mention « prix à confirmer ».</p></div>
+          <div className="grid gap-4 md:grid-cols-3">{TIERS.map((tier) => <article key={tier.id} id={tier.id} className="rounded-2xl border border-amber-200 bg-white p-5 shadow-sm"><p className="text-[10px] font-bold uppercase tracking-[.18em] text-amber-700">{tier.tagline}</p><h3 className="mt-2 text-lg font-bold">{tier.name}</h3><p className="mt-3 text-3xl font-black">{formatPrice(tier.price)}</p><ul className="mt-3 space-y-1 text-sm text-slate-600">{tier.items.map((item) => <li key={item}>✓ {item}</li>)}</ul><Link href={`/produit/${tier.id}`} className="mt-5 flex min-h-11 items-center justify-center rounded-full bg-amber-300 px-4 text-sm font-bold hover:bg-amber-200">Voir le kit</Link></article>)}</div>
+        </section>
         <section>
           <div className="mb-6"><p className="text-xs font-bold uppercase tracking-[.2em] text-amber-700">Disponibles dans les kits</p><h2 className="mt-2 text-2xl font-bold md:text-3xl">Les essentiels SWELTR</h2><p className="mt-2 text-sm text-slate-600">Les prix sont affichés au niveau du kit, afin de ne pas inventer de prix unitaires non validés.</p></div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
