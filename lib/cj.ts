@@ -13,7 +13,15 @@
  * de vérifier que tout fonctionne comme prévu.
  */
 
+import { createHash } from "node:crypto";
+
 export const CJ_API_BASE_URL = "https://developers.cjdropshipping.com/api2.0/v1";
+
+// Stable mapping from a paid Stripe session to the partner order number.
+export function getCjOrderNumber(stripeSessionId: string) {
+  const digest = createHash("sha256").update(stripeSessionId).digest("hex").slice(0, 40);
+  return `SWELTR-${digest}`;
+}
 
 let cachedToken: { accessToken: string; expiresAt: number } | null = null;
 
@@ -146,7 +154,15 @@ async function getCheapestAvailableLogistics(
  */
 export async function findCjOrderByOrderNumber(
   orderNumber: string,
-): Promise<{ orderId: string; orderCode?: string; shipmentOrderId?: string } | null> {
+): Promise<{
+  orderId: string;
+  orderCode?: string;
+  shipmentOrderId?: string;
+  trackingNumber?: string;
+  trackingUrl?: string;
+  logisticName?: string;
+  orderStatus?: string;
+} | null> {
   const token = await getAccessToken();
   const res = await fetch(`${CJ_API_BASE_URL}/shopping/order/getOrderDetailBatch`, {
     method: "POST",
@@ -205,10 +221,18 @@ export async function findCjOrderByOrderNumber(
     typeof existing.shipmentOrderId === "string" && existing.shipmentOrderId
       ? existing.shipmentOrderId
       : undefined;
+  const trackingNumber = typeof existing.trackNumber === "string" && existing.trackNumber ? existing.trackNumber : undefined;
+  const trackingUrl = typeof existing.trackingUrl === "string" && existing.trackingUrl ? existing.trackingUrl : undefined;
+  const logisticName = typeof existing.logisticName === "string" && existing.logisticName ? existing.logisticName : undefined;
+  const orderStatus = typeof existing.orderStatus === "string" && existing.orderStatus ? existing.orderStatus : undefined;
 
   return {
     orderId,
     ...(shipmentOrderId ? { shipmentOrderId } : {}),
+    ...(trackingNumber ? { trackingNumber } : {}),
+    ...(trackingUrl ? { trackingUrl } : {}),
+    ...(logisticName ? { logisticName } : {}),
+    ...(orderStatus ? { orderStatus } : {}),
     ...(typeof existing.orderCode === "string" ? { orderCode: existing.orderCode } : {}),
     ...(typeof existing.cjOrderCode === "string" ? { orderCode: existing.cjOrderCode } : {}),
   };

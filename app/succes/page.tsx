@@ -1,4 +1,5 @@
 import SuccessPageClient from "@/components/SuccessPageClient";
+import { findCjOrderByOrderNumber, getCjOrderNumber } from "@/lib/cj";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 
 export const metadata = {
@@ -26,11 +27,37 @@ export default async function SuccesPage({ searchParams }: SuccessPageProps) {
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    return (
-      <SuccessPageClient
-        status={session.payment_status === "paid" ? "confirmed" : "pending"}
-      />
-    );
+    if (session.payment_status !== "paid") {
+      return <SuccessPageClient status="pending" />;
+    }
+
+    let tracking: { number: string; url: string; carrier?: string; status?: string } | undefined;
+    try {
+      const order = await findCjOrderByOrderNumber(getCjOrderNumber(session.id));
+      if (order?.trackingNumber) {
+        const candidateUrl = order.trackingUrl;
+        let url = "https://www.17track.net/fr?nums=" + encodeURIComponent(order.trackingNumber);
+        if (candidateUrl) {
+          try {
+            const parsed = new URL(candidateUrl);
+            if (parsed.protocol === "https:") url = parsed.toString();
+          } catch {
+            // Use the universal tracking portal if CJ does not return a valid HTTPS URL.
+          }
+        }
+        tracking = {
+          number: order.trackingNumber,
+          url,
+          ...(order.logisticName ? { carrier: order.logisticName } : {}),
+          ...(order.orderStatus ? { status: order.orderStatus } : {}),
+        };
+      }
+    } catch (error: unknown) {
+      // A temporary CJ lookup failure must not hide a payment already confirmed by Stripe.
+      console.error("Consultation du suivi CJ indisponible :", getStripeErrorDetails(error));
+    }
+
+    return <SuccessPageClient status="confirmed" tracking={tracking} />;
   } catch (error: unknown) {
     console.error("Vérification de la session de paiement impossible :", getStripeErrorDetails(error));
     return <SuccessPageClient status="unverified" />;

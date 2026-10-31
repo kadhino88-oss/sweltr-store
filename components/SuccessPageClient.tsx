@@ -8,6 +8,7 @@ import SiteHeader from "@/components/SiteHeader";
 
 type SuccessPageClientProps = {
   status: "confirmed" | "pending" | "unverified";
+  tracking?: { number: string; url: string; carrier?: string; status?: string };
 };
 
 const statusCopy = {
@@ -34,7 +35,7 @@ const statusCopy = {
   },
 };
 
-export default function SuccessPageClient({ status }: SuccessPageClientProps) {
+export default function SuccessPageClient({ status, tracking }: SuccessPageClientProps) {
   const copy = statusCopy[status];
   const StatusIcon = copy.Icon;
 
@@ -65,6 +66,28 @@ export default function SuccessPageClient({ status }: SuccessPageClientProps) {
         >
           {copy.message}
         </motion.p>
+        {status === "confirmed" && (
+          <div className="mb-8 w-full max-w-md rounded-2xl border border-gold-strong/30 bg-white p-5 text-left shadow-sm">
+            {tracking ? (
+              <>
+                <p className="mb-2 text-xs font-bold uppercase tracking-widest text-gold-deep">Suivi de livraison</p>
+                <h2 className="font-display text-lg font-semibold text-ink">Ton colis est suivi</h2>
+                {tracking.carrier && <p className="mt-1 text-sm text-soft">Transporteur : {tracking.carrier}</p>}
+                <p className="mt-2 break-all text-sm text-ink">Numéro : {tracking.number}</p>
+                <a href={tracking.url} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex rounded-full bg-gold-strong px-5 py-3 text-sm font-semibold text-ink">
+                  Suivre mon colis
+                </a>
+              </>
+            ) : (
+              <>
+                <p className="mb-2 text-xs font-bold uppercase tracking-widest text-gold-deep">Prochaine étape</p>
+                <h2 className="font-display text-lg font-semibold text-ink">Préparation de ta commande</h2>
+                <p className="mt-2 text-sm text-soft">Le numéro de suivi apparaîtra ici dès que le transporteur sera attribué par notre fournisseur. Tu peux revenir sur cette page pour vérifier.</p>
+              </>
+            )}
+          </div>
+        )}
+
         <Link
           href="/contact"
           className="px-6 py-3 rounded-full font-display font-semibold text-sm uppercase tracking-wide bg-gold-strong text-ink"
