@@ -3,7 +3,11 @@ import { TIERS } from "@/lib/data";
 import { WINTER_PRODUCTS } from "@/lib/winter-products";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
+  const siteUrl = (
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : (process.env.SITE_URL || "https://sweltr-store-asx2wlahl-bk-entreprise.vercel.app")
+  ).replace(/\/$/, "");
   const now = new Date();
 
   const kitPages: MetadataRoute.Sitemap = TIERS.map((tier) => ({
@@ -17,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${siteUrl}/produits/${product.slug}`,
     lastModified: now,
     changeFrequency: "weekly",
-    priority: 0.8,
+    priority: product.availability === "existing" ? 0.8 : 0.5,
   }));
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -51,6 +55,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: siteUrl, lastModified: now, changeFrequency: "daily", priority: 1 },
-    ...kitPages, ...productPages, ...guidePages, ...staticPages,
+    ...kitPages,
+    ...productPages,
+    ...guidePages,
+    ...staticPages,
   ];
 }
