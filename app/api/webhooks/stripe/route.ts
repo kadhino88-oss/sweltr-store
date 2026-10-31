@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { TIERS } from "@/lib/data";
-import { createCjOrder, findCjOrderByOrderNumber, getCjOrderNumber, payCjOrder } from "@/lib/cj";
+import { createCjOrder, findCjOrderByOrderNumber, getCjOrderNumber, payCjOrder, prepareCjOrderForPayment } from "@/lib/cj";
 
 // Stripe doit recevoir le corps brut pour vérifier la signature du webhook.
 export const runtime = "nodejs";
@@ -104,15 +104,27 @@ export async function POST(req: NextRequest) {
         email: session.customer_details?.email || "",
       }, [{ vid: variantId, quantity: 1 }]);
       if (!order?.orderId) return webhookRetryResponse("Commande fournisseur non confirmée.");
+      let shipmentOrderId = order.shipmentOrderId;
+      let cjPayId: string | undefined;
+      if (!existingOrder || !shipmentOrderId) {
+        try {
+          const prepared = await prepareCjOrderForPayment(order.orderId, shipmentOrderId);
+          shipmentOrderId = prepared.shipmentOrderId;
+          cjPayId = prepared.payId;
+        } catch (error: unknown) {
+          console.error("Préparation de la commande thermique CJ incomplète :", getStripeErrorDetails(error));
+          return webhookRetryResponse("Commande créée chez le fournisseur mais confirmation CJ incomplète. Nouvelle tentative nécessaire.");
+        }
+      }
       console.log("Commande thermique CJ " + (existingOrder ? "retrouvée" : "créée") + " pour " + session.id + " : " + order.orderId);
       if (process.env.CJ_AUTO_PAY === "true" && existingOrder) {
         console.warn("Commande CJ " + order.orderId + " retrouvée après retry : paiement automatique ignoré pour éviter un double débit. Vérification MyCJ requise.");
-      } else if (process.env.CJ_AUTO_PAY === "true" && !order.shipmentOrderId) {
+      } else if (process.env.CJ_AUTO_PAY === "true" && !shipmentOrderId) {
         console.error("Paiement thermique CJ bloqué : shipmentOrderId absent pour " + order.orderId + ".");
       } else if (process.env.CJ_AUTO_PAY === "true") {
-        try { await payCjOrder(order.shipmentOrderId!); console.log("Commande thermique CJ payée automatiquement : " + order.orderId); }
+        try { await payCjOrder(shipmentOrderId!, cjPayId); console.log("Commande thermique CJ payée automatiquement : " + order.orderId); }
         catch (error: unknown) { console.error("Paiement fournisseur non confirmé pour " + order.orderId + " :", getStripeErrorDetails(error)); }
-      } else { console.log("CJ_AUTO_PAY désactivé — commande thermique " + order.orderId + " créée mais non payée."); }
+      } else { console.log("CJ_AUTO_PAY désactivé — commande thermique " + order.orderId + " préparée mais non payée."); }
       return webhookResponse();
     }
 
@@ -165,8 +177,7 @@ export async function POST(req: NextRequest) {
     const order = existingOrder ?? await createCjOrder(
       {
         orderNumber: cjOrderNumber,
-        shippingCustomerName:
-          shipping?.name || session.customer_details?.name || "Client SWELTR",
+        shippingCustomerName: shipping?.name || session.customer_details?.name || "Client SWELTR",
         shippingCountryCode: address.country,
         shippingProvince: address.state || address.city || "",
         shippingCity: address.city,
@@ -178,42 +189,38 @@ export async function POST(req: NextRequest) {
       },
       tier.cjItems,
     );
-
     if (!order?.orderId) {
-      console.error(`CJ n'a retourné aucun identifiant pour la session Stripe ${session.id}.`);
-      return NextResponse.json(
-        { error: "Commande fournisseur non confirmée." },
-        { status: 502, headers: { "Cache-Control": "no-store" } },
-      );
+      console.error("CJ n'a retourné aucun identifiant pour la session Stripe " + session.id + ".");
+      return webhookRetryResponse("Commande fournisseur non confirmée.");
     }
 
-    console.log(`${existingOrder ? "Commande CJ existante retrouvée" : "Commande CJ créée"} pour la session Stripe ${session.id} (référence fournisseur ${cjOrderNumber}) : ${order.orderId}`);
+    let shipmentOrderId = order.shipmentOrderId;
+    let cjPayId: string | undefined;
+    if (!existingOrder || !shipmentOrderId) {
+      try {
+        const prepared = await prepareCjOrderForPayment(order.orderId, shipmentOrderId);
+        shipmentOrderId = prepared.shipmentOrderId;
+        cjPayId = prepared.payId;
+      } catch (error: unknown) {
+        console.error("Préparation de la commande CJ incomplète :", getStripeErrorDetails(error));
+        return webhookRetryResponse("Commande créée chez le fournisseur mais confirmation CJ incomplète. Nouvelle tentative nécessaire.");
+      }
+    }
 
-    // Le paiement CJ dépense le solde réel. Il reste désactivé sauf opt-in explicite.
-    // Une commande retrouvée après retry n'est jamais payée automatiquement : son état
-    // de paiement peut être inconnu, donc on évite tout risque de second débit.
+    console.log((existingOrder ? "Commande CJ existante retrouvée" : "Commande CJ créée") + " pour la session Stripe " + session.id + " (référence fournisseur " + cjOrderNumber + ") : " + order.orderId);
     if (process.env.CJ_AUTO_PAY === "true" && existingOrder) {
-      console.warn(
-        `Commande CJ ${order.orderId} retrouvée après une nouvelle tentative. Paiement automatique ignoré par sécurité ; vérifier son statut dans MyCJ.`,
-      );
-    } else if (process.env.CJ_AUTO_PAY === "true" && !order.shipmentOrderId) {
-      console.error(`Paiement CJ bloqué : shipmentOrderId absent pour ${order.orderId}. Vérification manuelle requise.`);
+      console.warn("Commande CJ " + order.orderId + " retrouvée après une nouvelle tentative. Paiement automatique ignoré par sécurité ; vérifier son statut dans MyCJ.");
+    } else if (process.env.CJ_AUTO_PAY === "true" && !shipmentOrderId) {
+      console.error("Paiement CJ bloqué : shipmentOrderId absent pour " + order.orderId + ". Vérification manuelle requise.");
     } else if (process.env.CJ_AUTO_PAY === "true") {
       try {
-        await payCjOrder(order.shipmentOrderId!);
-        console.log(`Commande CJ ${order.orderId} payée automatiquement.`);
+        await payCjOrder(shipmentOrderId!, cjPayId);
+        console.log("Commande CJ " + order.orderId + " payée automatiquement.");
       } catch (error: unknown) {
-        // Ne pas demander à Stripe de rejouer la création : la commande CJ existe déjà.
-        // Le paiement doit être vérifié et repris manuellement dans MyCJ.
-        console.error(
-          `La commande CJ ${order.orderId} existe, mais son paiement automatique a échoué. Vérification manuelle requise :`,
-          getStripeErrorDetails(error),
-        );
+        console.error("La commande CJ " + order.orderId + " existe, mais son paiement automatique a échoué. Vérification manuelle requise :", getStripeErrorDetails(error));
       }
     } else {
-      console.log(
-        `CJ_AUTO_PAY désactivé — commande ${order.orderId} créée mais non payée. Valide-la manuellement dans MyCJ.`,
-      );
+      console.log("CJ_AUTO_PAY désactivé — commande " + order.orderId + " préparée mais non payée. Vérifier puis régler dans MyCJ.");
     }
 
     return webhookResponse();
