@@ -294,7 +294,56 @@ export async function createCjOrder(shipping: CjShippingInfo, products: CjLineIt
   return data.data as { orderId: string; orderCode?: string; shipmentOrderId?: string };
 }
 
-export async function payCjOrder(shipmentOrderId: string) {
+/**
+ * Finalise la préparation CJ sans débiter le solde : ajout au panier, confirmation,
+ * puis génération de la commande parent. Le paiement reste une action séparée.
+ */
+export async function prepareCjOrderForPayment(orderId: string, knownShipmentOrderId?: string) {
+  if (!orderId) throw new Error("Préparation CJ impossible : orderId manquant.");
+  const token = await getAccessToken();
+  const headers = { "Content-Type": "application/json", "CJ-Access-Token": token };
+
+  const addRes = await fetch(`${CJ_API_BASE_URL}/shopping/order/addCart`, {
+    method: "POST", headers, body: JSON.stringify({ cjOrderIdList: [orderId] }), cache: "no-store",
+  });
+  if (!addRes.ok) throw new Error(`Échec HTTP ajout au panier CJ (HTTP ${addRes.status}).`);
+  const addData = await addRes.json() as { result?: boolean; success?: boolean; code?: number; message?: string };
+  if (addData.result === false && addData.code !== 200) {
+    console.warn("Ajout au panier CJ non confirmé, tentative de confirmation : " + (addData.message || "réponse sans détail"));
+  }
+
+  const confirmRes = await fetch(`${CJ_API_BASE_URL}/shopping/order/addCartConfirm`, {
+    method: "POST", headers, body: JSON.stringify({ cjOrderIdList: [orderId] }), cache: "no-store",
+  });
+  if (!confirmRes.ok) throw new Error(`Échec HTTP confirmation CJ (HTTP ${confirmRes.status}).`);
+  const confirmData = await confirmRes.json() as {
+    result?: boolean; success?: boolean; code?: number; message?: string;
+    data?: { submitSuccess?: boolean; shipmentsId?: string; shipmentOrderId?: string };
+  };
+  if (confirmData.result === false || confirmData.data?.submitSuccess === false || (!confirmData.result && !confirmData.success && confirmData.code !== 200)) {
+    throw new Error("CJ n’a pas confirmé la commande : " + (confirmData.message || "confirmation en attente"));
+  }
+
+  const shipmentOrderId = confirmData.data?.shipmentOrderId || confirmData.data?.shipmentsId || knownShipmentOrderId;
+  if (!shipmentOrderId) {
+    throw new Error("CJ a confirmé la commande mais n’a retourné aucun shipmentOrderId. Paiement automatique bloqué.");
+  }
+
+  const parentRes = await fetch(`${CJ_API_BASE_URL}/shopping/order/saveGenerateParentOrder`, {
+    method: "POST", headers, body: JSON.stringify({ shipmentOrderId }), cache: "no-store",
+  });
+  if (!parentRes.ok) throw new Error(`Échec HTTP génération de commande parent CJ (HTTP ${parentRes.status}).`);
+  const parentData = await parentRes.json() as {
+    result?: boolean; success?: boolean; code?: number; message?: string;
+    data?: { submitSuccess?: boolean; successOrders?: string[]; unMatchOrderCodes?: string[]; payId?: string };
+  };
+  if (parentData.result === false || parentData.data?.submitSuccess === false || (!parentData.result && !parentData.success && parentData.code !== 200)) {
+    throw new Error("CJ n’a pas généré la commande parent : " + (parentData.message || "réponse invalide"));
+  }
+  return { shipmentOrderId, payId: parentData.data?.payId };
+}
+
+export async function payCjOrder(shipmentOrderId: string, payId?: string) {
   // Safety gate: createOrderV2 alone is not the complete CJ fulfillment/payment flow.
   // Do not allow a real balance debit until the full CJ flow has been implemented
   // and verified against a real test order and the returned parent/payment IDs.
@@ -314,7 +363,7 @@ export async function payCjOrder(shipmentOrderId: string) {
       "Content-Type": "application/json",
       "CJ-Access-Token": token,
     },
-    body: JSON.stringify({ shipmentOrderId }),
+    body: JSON.stringify({ shipmentOrderId, ...(payId ? { payId } : {}) }),
   });
 
   if (!res.ok) {
