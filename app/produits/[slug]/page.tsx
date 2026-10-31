@@ -42,9 +42,7 @@ export default function WinterProductPage({ params }: { params: { slug: string }
   return (
     <main className="min-h-screen bg-[#F8F6F0] text-slate-950">
       <div className="mx-auto max-w-7xl px-5 py-6 md:px-10">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-slate-950">
-          <ArrowLeft size={16} /> Retour à la collection
-        </Link>
+        <div className="flex flex-wrap items-center justify-between gap-3"><Link href="/produits" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-slate-950"><ArrowLeft size={16} /> Retour au catalogue</Link><Link href="/boutique" className="text-sm font-semibold text-amber-800 hover:text-slate-950">Comparer les kits →</Link></div>
         <div className="mt-6 grid overflow-hidden rounded-[2rem] bg-white shadow-sm lg:grid-cols-2">
           <div className="bg-slate-100 p-3 md:p-5">
             <div className="relative min-h-[340px] overflow-hidden rounded-2xl bg-slate-200 md:min-h-[480px]">
@@ -74,7 +72,9 @@ export default function WinterProductPage({ params }: { params: { slug: string }
             <p className="font-mono text-xs uppercase tracking-[.22em] text-amber-700">{product.eyebrow}</p>
             <h1 className="mt-4 font-display text-4xl font-bold leading-tight md:text-5xl">{product.name}</h1>
             <p className="mt-5 text-lg leading-8 text-slate-600">{product.short}</p>
-            <p className="mt-5 text-sm leading-7 text-slate-600">{product.description}</p>\n            <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-bold uppercase tracking-[.16em] text-slate-500">Disponibilité</p><p className="mt-1 text-sm font-semibold">{product.availability === "existing" ? "Inclus dans les kits SWELTR disponibles" : "Produit en préparation — non disponible à l’achat pour le moment"}</p><p className="mt-1 text-xs leading-5 text-slate-500">{product.availability === "existing" ? "Le tarif est affiché sur la fiche de chaque kit ; aucun prix unitaire n’est annoncé tant qu’il n’est pas validé." : "Le prix, les variantes, le stock et les frais d’expédition seront confirmés avant la mise en vente."}</p></div>
+            <p className="mt-5 text-sm leading-7 text-slate-600">{product.description}</p>
+            <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-bold uppercase tracking-[.16em] text-slate-500">Disponibilité</p><p className="mt-1 text-sm font-semibold">{product.availability === "existing" ? "Inclus dans les kits SWELTR disponibles" : "Produit en préparation — non disponible à l’achat pour le moment"}</p><p className="mt-1 text-xs leading-5 text-slate-500">{product.availability === "existing" ? "Le tarif est affiché sur la fiche de chaque kit ; aucun prix unitaire n’est annoncé tant qu’il n’est pas validé." : "Le prix, les variantes, le stock et les frais d’expédition seront confirmés avant la mise en vente."}</p></div>
+            <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-bold uppercase tracking-[.16em] text-slate-500">Disponibilité</p><p className="mt-1 text-sm font-semibold">{product.availability === "existing" ? "Inclus dans les kits SWELTR disponibles" : "Produit en préparation — non disponible à l’achat pour le moment"}</p><p className="mt-1 text-xs leading-5 text-slate-500">{product.availability === "existing" ? "Le tarif est affiché sur la fiche de chaque kit ; aucun prix unitaire n’est annoncé tant qu’il n’est pas validé." : "Le prix, les variantes, le stock et les frais d’expédition seront confirmés avant la mise en vente."}</p></div>
             <div className="mt-7 space-y-3">
               {product.highlights.map((highlight) => (
                 <div key={highlight} className="flex items-start gap-3 text-sm text-slate-700">
