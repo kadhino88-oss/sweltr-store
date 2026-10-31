@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import Script from "next/script";
 import { useEffect, useState } from "react";
 import { Globe2, ShoppingBag, Menu, X } from "lucide-react";
 
-const languages = [
+declare global {\n  interface Window {\n    google?: { translate?: { TranslateElement: new (options: Record<string, unknown>, elementId: string) => unknown } };\n    googleTranslateElementInit?: () => void;\n  }\n}\n\nconst languages = [
   { code: "fr", label: "Français", flag: "🇫🇷" }, { code: "en", label: "English", flag: "🇬🇧" },
   { code: "es", label: "Español", flag: "🇪🇸" }, { code: "de", label: "Deutsch", flag: "🇩🇪" },
   { code: "it", label: "Italiano", flag: "🇮🇹" }, { code: "pt", label: "Português", flag: "🇵🇹" },
-  { code: "nl", label: "Nederlands", flag: "🇳🇱" },
+  { code: "nl", label: "Nederlands", flag: "🇳🇱" }, { code: "ar", label: "العربية", flag: "🇸🇦" },\n  { code: "zh-CN", label: "中文", flag: "🇨🇳" }, { code: "ja", label: "日本語", flag: "🇯🇵" },\n  { code: "pl", label: "Polski", flag: "🇵🇱" }, { code: "tr", label: "Türkçe", flag: "🇹🇷" },
 ];
 function setTranslateCookie(language: string) {
   const value = language === "fr" ? "/fr/fr" : "/fr/" + language;
