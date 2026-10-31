@@ -9,7 +9,7 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: { params: { tierId: string } }) {
   const tier = TIERS.find((t) => t.id === params.tierId);
   if (!tier) return {};
-  const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
+  const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : ((process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, ""))).replace(/\/$/, "");
   return {
     title: `${tier.name} — SWELTR`,
     description: tier.description,
@@ -29,7 +29,7 @@ export default function ProductPage({ params }: { params: { tierId: string } }) 
   const tier = TIERS.find((t) => t.id === params.tierId);
   if (!tier) notFound();
 
-  const siteUrl = process.env.SITE_URL || "https://sweltr-store-bk-entreprise.vercel.app";
+  const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : ((process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, ""))).replace(/\/$/, "");
 
   const jsonLd = {
     "@context": "https://schema.org",
