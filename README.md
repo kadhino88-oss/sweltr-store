@@ -32,9 +32,14 @@ Configurer les valeurs dans Vercel (Production et Preview séparément selon les
 - `CJ_API_KEY` — clé API CJ Dropshipping.
 - `ADMIN_SECRET` — secret long et aléatoire pour la route d'administration de recherche de variantes.
 - `CJ_AUTO_PAY` — laisser `false` tant que le flux fournisseur n'a pas été validé manuellement.
+- `THERMAL_PRODUCT_SALES_ENABLED` — laisser `false` tant que la variante exacte, le stock, l’expédition et le coût livré de l’ensemble thermique n’ont pas été confirmés pour CH et FR.
 - `CJ_PAYMENT_FLOW_VALIDATED` — laisser absent ou `false`. Le paiement CJ reste bloqué par une garde de sécurité tant que le flux complet n'a pas été implémenté et testé de bout en bout.
 
 Ne jamais committer de fichier `.env.local`, de clé Stripe, de clé CJ ou de secret administrateur.
+
+## Disponibilité de l’ensemble thermique
+
+La fiche « Ensemble thermique » reste consultable, mais les variantes et le paiement sont bloqués par défaut. Ne définir `THERMAL_PRODUCT_SALES_ENABLED=true` qu’après validation documentée de la couleur et de la taille exactes, du stock réel, du coût et délai d’expédition vers la Suisse et la France, de la marge après frais, et d’un parcours de commande test. La simple présence d’un VID dans la réponse API CJ ne prouve pas le stock ni la disponibilité logistique.
 
 ## Paiement et traitement des commandes
 

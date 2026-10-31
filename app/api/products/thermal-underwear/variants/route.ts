@@ -39,6 +39,16 @@ function readableVariantKey(sku: string, fallback: string): string {
 }
 
 export async function GET() {
+  if (process.env.THERMAL_PRODUCT_SALES_ENABLED !== "true") {
+    return NextResponse.json(
+      {
+        code: "THERMAL_PRODUCT_NOT_LAUNCH_READY",
+        error: "Ce produit est en cours de validation fournisseur. Les commandes seront ouvertes après confirmation des variantes, du stock et de la livraison.",
+      },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
   try {
     const { accessToken } = await getCjAccessToken();
     const response = await fetch(`${CJ_API_BASE_URL}/product/productDetail/query`, {

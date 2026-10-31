@@ -70,6 +70,15 @@ export async function POST(req: NextRequest) {
   let description = "";
 
   if (isThermal) {
+    if (process.env.THERMAL_PRODUCT_SALES_ENABLED !== "true") {
+      return NextResponse.json(
+        {
+          code: "THERMAL_PRODUCT_NOT_LAUNCH_READY",
+          error: "Ce produit est en cours de validation fournisseur. La commande sera ouverte après confirmation des variantes, du stock et de la livraison.",
+        },
+        { status: 503, headers: { "Cache-Control": "no-store" } },
+      );
+    }
     if (typeof data.variantId !== "string" || !data.variantId || (data.country !== "FR" && data.country !== "CH")) {
       return NextResponse.json({ error: "Choisis une couleur, une taille et une destination valides." }, { status: 400 });
     }

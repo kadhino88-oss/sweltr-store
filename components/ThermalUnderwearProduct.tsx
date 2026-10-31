@@ -39,6 +39,7 @@ function parseVariant(key: string) {
 export default function ThermalUnderwearProduct() {
   const [variants, setVariants] = useState<SupplierVariant[]>([]);
   const [loading, setLoading] = useState(true);
+  const [variantsMessage, setVariantsMessage] = useState("");
   const [selectedColor, setSelectedColor] = useState("Black");
   const [selectedSize, setSelectedSize] = useState("");
   const [activeImage, setActiveImage] = useState(PRODUCT_IMAGE);
@@ -65,8 +66,11 @@ export default function ThermalUnderwearProduct() {
         setSelectedSize(first?.size || "");
         if (first?.item.image) setActiveImage(first.item.image);
       })
-      .catch((e: unknown) => {
-        // Supplier diagnostics stay out of the customer-facing page; checkout remains disabled without a verified variant.
+      .catch(() => {
+        // Do not expose supplier diagnostics; explain why checkout is unavailable.
+        if (alive) {
+          setVariantsMessage("Ce produit est en cours de validation fournisseur. Les commandes seront ouvertes après confirmation des variantes, du stock et de la livraison.");
+        }
       })
       .finally(() => {
         if (alive) setLoading(false);
@@ -136,7 +140,7 @@ export default function ThermalUnderwearProduct() {
               <label htmlFor="thermal-color" className="mb-2 block text-sm font-semibold">Couleur</label>
               {loading ? <div className="flex items-center gap-2 text-sm text-slate-500"><Loader2 size={16} className="animate-spin" /> Chargement des options…</div> :
                 colors.length ? <select id="thermal-color" value={selectedColor} onChange={(event) => chooseColor(event.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3">{colors.map((color) => <option key={color} value={color}>{color}</option>)}</select> :
-                <p className="text-sm text-slate-500">Les options de ce produit sont momentanément indisponibles. Merci de réessayer un peu plus tard.</p>}
+                <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">{variantsMessage || "Les options de ce produit sont momentanément indisponibles. Merci de réessayer un peu plus tard."}</p>}
             </div>
 
             <div className="mt-5">
