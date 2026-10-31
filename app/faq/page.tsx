@@ -17,7 +17,7 @@ export default function FaqPage() {
     ...PRODUCT_FAQS,
     {
       q: "Quels pays peuvent recevoir une commande ?",
-      a: "Le paiement accepte actuellement les adresses de livraison en Suisse et en France uniquement. Les autres pays ne sont pas encore ouverts à la commande.",
+      a: "Les pays de livraison actuellement disponibles apparaissent dans le formulaire sécurisé au moment du paiement. Une destination qui n'est pas proposée ne peut pas encore être commandée.",
     },
     {
       q: "Quel est le délai de livraison ?",
