@@ -37,6 +37,10 @@ Configurer les valeurs dans Vercel (Production et Preview séparément selon les
 
 Ne jamais committer de fichier `.env.local`, de clé Stripe, de clé CJ ou de secret administrateur.
 
+## Activation des ventes en mode live
+
+Le checkout bloque par défaut toutes les nouvelles commandes lorsque `STRIPE_SECRET_KEY` est une clé Stripe live. Laisser `STORE_SALES_ENABLED=false` jusqu’à ce que le stock et les variantes des kits soient vérifiés dans CJ, que le coût livré et la marge soient calculés pour la Suisse et la France, qu’une commande fournisseur test ait été contrôlée manuellement, et que les informations légales, les retours et la livraison soient validés. Les clés Stripe de test restent utilisables pour tester le parcours sans encaisser de vrais paiements. Ne pas activer ce drapeau uniquement pour faire disparaître une erreur de paiement.
+
 ## Disponibilité de l’ensemble thermique
 
 La fiche « Ensemble thermique » reste consultable, mais les variantes et le paiement sont bloqués par défaut. Ne définir `THERMAL_PRODUCT_SALES_ENABLED=true` qu’après validation documentée de la couleur et de la taille exactes, du stock réel, du coût et délai d’expédition vers la Suisse et la France, de la marge après frais, et d’un parcours de commande test. La simple présence d’un VID dans la réponse API CJ ne prouve pas le stock ni la disponibilité logistique.
