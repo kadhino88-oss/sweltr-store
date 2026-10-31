@@ -2,17 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import Script from "next/script";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Leaf, Sun, Snowflake, CloudRain, Globe2, ShieldCheck, PackageCheck } from "lucide-react";
 import { PRODUCT_IMAGES } from "@/lib/data";
 
-declare global {
-  interface Window {
-    google?: { translate?: { TranslateElement: new (options: Record<string, unknown>, elementId: string) => unknown; } };
-    googleTranslateElementInit?: () => void;
-  }
-}
 const seasons = [
   { id: "winter", label: "Hiver", title: "Affrontez le froid avec style.", text: "Des essentiels douillets, des accessoires chauffants et des indispensables pour vos sorties hivernales.", icon: Snowflake, image: "https://images.unsplash.com/photo-1457269449834-928af64c684d?auto=format&fit=crop&w=1400&q=85", product: PRODUCT_IMAGES.heatedGloves, productAlt: "Gants chauffants", color: "from-blue-950/90 via-blue-950/35" },
   { id: "spring", label: "Printemps", title: "Le renouveau vous va si bien.", text: "Des accessoires pratiques et légers pour les journées qui s’allongent et les escapades en plein air.", icon: Leaf, image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1400&q=85", product: PRODUCT_IMAGES.heatedScarf, productAlt: "Accessoire confortable", color: "from-emerald-950/80 via-emerald-950/25" },
