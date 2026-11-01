@@ -10,6 +10,8 @@ export type WinterProduct = {
   highlights: string[];
   category: string;
   availability: "planned" | "existing";
+  /** Prix public communiqué sur la maquette SWELTR, en CHF. */
+  retailPrice?: number;
   href?: string;
 };
 
@@ -25,6 +27,7 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     highlights: ["Collection hiver en préparation", "Prix à confirmer", "Modèle et disponibilité à confirmer"],
     category: "Confort maison",
     availability: "planned",
+    retailPrice: 49.99,
   },
   {
     slug: "pyjama-plaid",
@@ -37,6 +40,7 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     highlights: ["Collection hiver en préparation", "Prix à confirmer", "Tailles et composition à confirmer"],
     category: "Vêtements cocooning",
     availability: "planned",
+    retailPrice: 44.99,
   },
   {
     slug: "bottes-plaid",
@@ -49,6 +53,7 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     highlights: ["Collection hiver en préparation", "Prix à confirmer", "Pointures et disponibilité à confirmer"],
     category: "Confort des pieds",
     availability: "planned",
+    retailPrice: 29.99,
   },
   {
     slug: "gants-chauffants",

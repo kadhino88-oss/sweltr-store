@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import SiteHeader from "@/components/SiteHeader";
 import { TIERS } from "@/lib/data";
+import { formatPrice } from "@/lib/format";
 import { getSiteUrl } from "@/lib/site";
 import { WINTER_PRODUCTS } from "@/lib/winter-products";
 
@@ -74,11 +75,11 @@ export default async function ProductsCatalogPage({ searchParams }: { searchPara
         </section>}
 
         {planned.length > 0 && <section id="nouveautes" aria-labelledby="planned-title" className="scroll-mt-24">
-          <div className="mb-6"><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-slate-500">Nouveautés · sélection en cours</p><h2 id="planned-title" className="mt-2 font-display text-2xl font-black sm:text-3xl">Les prochaines références</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Ces articles ne sont pas ouverts à la commande. Leur modèle final, leurs variantes, le stock, le prix et les modalités de livraison doivent être confirmés.</p></div>
+          <div className="mb-6"><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-slate-500">Catalogue complet · Collection hiver</p><h2 id="planned-title" className="mt-2 font-display text-2xl font-black sm:text-3xl">Tous les produits SWELTR</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Retrouve ici chaque kit et chaque produit, avec son prix SWELTR lorsqu’il est défini. Les fiches détaillent le contenu, l’usage et la disponibilité.</p></div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {planned.map((product) => <article key={product.slug} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
               <Link href={`/produits/${product.slug}`} className="block"><div className="relative aspect-[4/3] bg-white"><Image src={product.image} alt={product.alt} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-contain p-5"/></div></Link>
-              <div className="p-5"><p className="font-mono text-[10px] font-bold uppercase tracking-widest text-slate-500">{product.category}</p><h3 className="mt-2 text-xl font-bold">{product.name}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{product.short}</p><p className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-amber-800"><Clock3 size={15}/> Bientôt disponible · prix à confirmer</p><Link href={`/produits/${product.slug}`} className="mt-4 flex min-h-11 items-center justify-center gap-2 rounded-full border border-slate-300 px-4 text-sm font-semibold transition hover:border-amber-500 hover:bg-amber-50">Voir l’état de la sélection <ArrowRight size={15}/></Link></div>
+              <div className="p-5"><p className="font-mono text-[10px] font-bold uppercase tracking-widest text-slate-500">{product.category}</p><h3 className="mt-2 text-xl font-bold">{product.name}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{product.short}</p><div className="mt-3 flex items-center justify-between gap-2"><p className="inline-flex items-center gap-2 text-xs font-semibold text-amber-800"><Clock3 size={15}/> Sélection en préparation</p>{product.retailPrice !== undefined && <p className="text-lg font-black">{formatPrice(product.retailPrice)}</p>}</div><Link href={`/produits/${product.slug}`} className="mt-4 flex min-h-11 items-center justify-center gap-2 rounded-full border border-slate-300 px-4 text-sm font-semibold transition hover:border-amber-500 hover:bg-amber-50">Découvrir le produit <ArrowRight size={15}/></Link></div>
             </article>)}
           </div>
         </section>}

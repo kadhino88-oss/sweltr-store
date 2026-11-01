@@ -78,6 +78,7 @@ export default async function WinterProductPage({ params }: { params: Promise<{ 
     category: product.category,
     url: `${siteUrl}/produits/${product.slug}`,
     brand: { "@type": "Brand", name: "SWELTR" },
+    ...(product.retailPrice !== undefined ? { offers: { "@type": "Offer", url: `${siteUrl}/produits/${product.slug}`, priceCurrency: "CHF", price: product.retailPrice.toFixed(2), availability: "https://schema.org/PreOrder" } } : {}),
   };
 
   return (
@@ -97,6 +98,7 @@ export default async function WinterProductPage({ params }: { params: Promise<{ 
             <p className="font-mono text-[10px] font-bold uppercase tracking-[.22em] text-amber-700 sm:text-xs">SWELTR · Collection hiver</p>
             <h1 className="mt-3 font-display text-3xl font-black leading-tight sm:text-4xl md:text-5xl">{product.name}</h1>
             <p className="mt-4 text-base leading-7 text-slate-700">{product.short}</p>
+            {product.retailPrice !== undefined && <p className="mt-4 text-3xl font-black">{formatPrice(product.retailPrice)} <span className="text-sm font-medium text-slate-500">prix public SWELTR</span></p>}
             <p className="mt-3 text-sm leading-7 text-slate-600">{product.description}</p>
 
             <div className={`mt-5 rounded-2xl border p-4 ${isAvailable ? "border-emerald-200 bg-emerald-50/70" : "border-amber-200 bg-amber-50/70"}`}>
