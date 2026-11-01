@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="740" viewBox="0 0 1600 740">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071321"/><stop offset=".48" stop-color="#263447"/><stop offset="1" stop-color="#090e16"/></linearGradient>
+ <linearGradient id="gold"><stop stop-color="#f6d77c"/><stop offset="1" stop-color="#c88a20"/></linearGradient>
+ <linearGradient id="blanket" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0d6"/><stop offset="1" stop-color="#9f765a"/></linearGradient>
+ <radialGradient id="fire"><stop stop-color="#ffc65e" stop-opacity=".75"/><stop offset="1" stop-color="#ff8c26" stop-opacity="0"/></radialGradient>
+ <filter id="shadow"><feGaussianBlur stdDeviation="18"/></filter>
+</defs>
+<rect width="1600" height="740" fill="url(#bg)"/>
+<circle cx="1260" cy="180" r="330" fill="url(#fire)"/>
+<g opacity=".7" fill="#ffe7a6"><circle cx="1070" cy="86" r="3"/><circle cx="1190" cy="142" r="2"/><circle cx="1390" cy="76" r="3"/><circle cx="1010" cy="190" r="2"/><circle cx="1500" cy="240" r="3"/></g>
+<g opacity=".7"><rect x="1050" y="55" width="400" height="255" rx="8" fill="#121c2a" stroke="#d9b56d" stroke-width="8"/><path d="M1250 55v255M1050 182h400" stroke="#d9b56d" stroke-width="7"/><rect x="1065" y="70" width="170" height="100" fill="#23445e"/><rect x="1265" y="70" width="170" height="100" fill="#1c3b52"/><rect x="1065" y="197" width="170" height="98" fill="#173349"/><rect x="1265" y="197" width="170" height="98" fill="#244760"/><path d="M1065 135l40-50 50 55 32-32 48 62h-170M1265 135l45-52 60 58 40-30 30 53h-175" fill="#d6e7ee" opacity=".75"/></g>
+<g><rect x="0" y="500" width="1600" height="240" fill="#090d13"/><ellipse cx="1050" cy="605" rx="520" ry="90" fill="#000" opacity=".45" filter="url(#shadow)"/></g>
+<g transform="translate(700 235)"><path d="M70 285Q-5 245 20 155L80 35Q110-5 160 30L275 110Q325 145 290 200L220 305Z" fill="url(#blanket)"/><path d="M92 260Q30 215 60 155L110 65Q135 40 170 65L255 125Q285 150 260 190L200 275Z" fill="#e5c5a1"/><path d="M105 260Q55 210 80 165L125 90Q145 70 170 90L235 140" fill="none" stroke="#fff1dc" stroke-width="14" opacity=".75"/></g>
+<g transform="translate(1030 300)"><path d="M30 280Q-10 180 35 75Q70 0 145 20Q215 45 230 125L245 280Z" fill="#161a22" stroke="#3d4654" stroke-width="5"/><path d="M65 80Q80 10 145 38Q188 53 192 105L160 130L92 126Z" fill="#292d36"/><path d="M72 150Q125 125 190 158L205 280H45Z" fill="#b51e32"/><path d="M82 164Q135 143 182 170" stroke="#e64e5c" stroke-width="10" fill="none"/></g>
+<g transform="translate(1280 440)"><path d="M0 80Q10 15 65 20L125 42Q150 55 140 88L130 140H15Z" fill="#f0e5d3"/><path d="M20 78Q40 45 72 62L110 75L105 110H20Z" fill="#a77b59"/><path d="M28 100h80" stroke="#8a6349" stroke-width="7"/><path d="M160 80Q170 15 225 20L285 42Q310 55 300 88L290 140H175Z" fill="#e5d8c6"/><path d="M180 78Q200 45 232 62L270 75L265 110H180Z" fill="#9a282d"/></g>
+<g transform="translate(875 445) rotate(-14)"><rect width="70" height="120" rx="24" fill="#171b24" stroke="#8a6c3e" stroke-width="4"/><path d="M18 20v80M35 20v80M52 20v80" stroke="#ff8c22" stroke-width="5" stroke-linecap="round" filter="url(#shadow)"/><path d="M18 20v80M35 20v80M52 20v80" stroke="#ff8c22" stroke-width="4" stroke-linecap="round"/></g>
+<g font-family="Arial,Helvetica,sans-serif" fill="#fff">
+ <text x="68" y="88" font-size="23" letter-spacing="8" fill="#f3d58b">CONFORT EN TOUTE SAISON</text>
+ <text x="60" y="190" font-size="100" font-weight="900" letter-spacing="-4">SWELTR</text>
+ <text x="66" y="252" font-size="42" font-weight="800">VOTRE BOUTIQUE</text>
+ <text x="66" y="304" font-size="42" font-weight="800" fill="#f4c75e">DE CONFORT</text>
+ <text x="66" y="355" font-size="34" font-weight="800">POUR TOUTE L’ANNÉE</text>
+ <text x="68" y="408" font-size="22" fill="#e4e8ed">Des produits innovants pour la maison, les voyages</text>
+ <text x="68" y="440" font-size="22" fill="#e4e8ed">et le plein air. Découvrez nos kits d’hiver.</text>
+ <text x="1170" y="375" font-size="30" font-style="italic" fill="#f7dfab">L’hiver en</text><text x="1165" y="414" font-size="30" font-style="italic" fill="#f7dfab">toute sérénité</text>
+</g>
+<rect x="60" y="475" width="250" height="58" rx="29" fill="url(#gold)"/><text x="92" y="512" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="bold" fill="#121820">DÉCOUVRIR LA COLLECTION  →</text>
+<g transform="translate(28 585)"><rect width="1544" height="130" rx="24" fill="#0e1825" stroke="#ffffff" stroke-opacity=".25" stroke-width="2"/>
+<g font-family="Arial,Helvetica,sans-serif" fill="#fff"><text x="40" y="52" font-size="28" font-weight="bold">❄ HIVER</text><text x="40" y="85" font-size="18" fill="#d3dce5">Restez au chaud avec nos produits innovants.</text>
+<text x="420" y="52" font-size="28" font-weight="bold" fill="#a9d18b">✿ PRINTEMPS</text><text x="420" y="85" font-size="18" fill="#d3dce5">Collection en préparation</text>
+<text x="820" y="52" font-size="28" font-weight="bold" fill="#8bd8ff">☼ ÉTÉ</text><text x="820" y="85" font-size="18" fill="#d3dce5">Collection en préparation</text>
+<text x="1190" y="52" font-size="28" font-weight="bold" fill="#edb47c">♧ AUTOMNE</text><text x="1190" y="85" font-size="18" fill="#d3dce5">Collection en préparation</text></g></g>
+</svg>
