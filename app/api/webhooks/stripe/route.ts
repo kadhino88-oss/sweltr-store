@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
-import { TIERS } from "@/lib/data";
+import { cjOrderItems, kitOrderTotalCents, normalizeKitOrder } from "@/lib/kit-order";
 import { createCjOrder, findCjOrderByOrderNumber, getCjOrderNumber, payCjOrder, prepareCjOrderForPayment } from "@/lib/cj";
 
 // Stripe doit recevoir le corps brut pour vérifier la signature du webhook.
@@ -128,15 +128,26 @@ export async function POST(req: NextRequest) {
       return webhookResponse();
     }
 
-    const tier = TIERS.find((item) => item.id === session.metadata?.tierId);
-    if (!tier) {
-      console.error(`Kit inconnu pour la session Stripe ${session.id}. Traitement requis.`);
-      return webhookRetryResponse("Kit inconnu : traitement de commande en attente de correction.");
+    let kitOrder = null;
+    if (session.metadata?.cartItems) {
+      try {
+        kitOrder = normalizeKitOrder({ items: JSON.parse(session.metadata.cartItems) });
+      } catch {
+        kitOrder = null;
+      }
+    } else {
+      kitOrder = normalizeKitOrder({
+        tierId: session.metadata?.tierId,
+        quantity: session.metadata?.quantity || 1,
+      });
+    }
+    if (!kitOrder) {
+      console.error(`Contenu de panier invalide pour la session Stripe ${session.id}. Traitement requis.`);
+      return webhookRetryResponse("Contenu de commande invalide : vérification requise.");
     }
 
-    // Défense en profondeur : ne jamais créer de commande fournisseur si le montant
-    // ou la devise de la session payée ne correspondent pas au kit configuré côté serveur.
-    const expectedAmount = Math.round(tier.price * 100);
+    // Recalculer les prix côté serveur avant toute création de commande fournisseur.
+    const expectedAmount = kitOrderTotalCents(kitOrder);
     if (session.currency !== "chf" || session.amount_total !== expectedAmount) {
       console.error(
         `Montant/devise incohérents pour la session Stripe ${session.id} : devise=${session.currency}, montant=${session.amount_total}. Traitement requis.`,
@@ -144,9 +155,10 @@ export async function POST(req: NextRequest) {
       return webhookRetryResponse("Montant du paiement incohérent : commande fournisseur suspendue.");
     }
 
-    if (!tier.cjItems?.length) {
+    const supplierItems = cjOrderItems(kitOrder);
+    if (!supplierItems.length) {
       console.error(
-        `Aucun produit CJ configuré pour le kit "${tier.name}". Commande Stripe ${session.id} à traiter.`,
+        `Aucun produit CJ configuré pour le contenu de la session Stripe ${session.id}.`,
       );
       return webhookRetryResponse("Produits fournisseur non configurés pour ce kit.");
     }
@@ -187,7 +199,7 @@ export async function POST(req: NextRequest) {
         shippingPhone: session.customer_details?.phone || "",
         email: session.customer_details?.email || "",
       },
-      tier.cjItems,
+      supplierItems,
     );
     if (!order?.orderId) {
       console.error("CJ n'a retourné aucun identifiant pour la session Stripe " + session.id + ".");

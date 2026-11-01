@@ -3,14 +3,16 @@ import Link from "next/link";
 import ContentPage from "@/components/ContentPage";
 import ProductCard from "@/components/ProductCard";
 import { TIERS } from "@/lib/data";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app");
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: "Boutique — Collections et accessoires toute l’année | SWELTR",
   description:
-    "Découvre les kits SWELTR, compare leurs photos et leurs prix, puis choisis l'équipement adapté à tes journées froides.",
+    "Compare les trois kits d’hiver SWELTR : articles inclus, photos et prix confirmés en CHF. Choisis l’équipement adapté à tes journées froides.",
   alternates: { canonical: `${siteUrl}/boutique` },
+  openGraph: { title: "Boutique SWELTR — Kits d’hiver", description: "Comparez le contenu et le prix des trois kits SWELTR pour l’hiver.", url: `${siteUrl}/boutique`, siteName: "SWELTR", locale: "fr_CH", type: "website" },
 };
 
 export default function BoutiquePage() {

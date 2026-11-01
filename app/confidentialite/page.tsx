@@ -1,10 +1,13 @@
 import LegalPage from "@/components/LegalPage";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
+const siteUrl = getSiteUrl();
 
 export const metadata = {
   title: "Politique de confidentialité — SWELTR",
+  description: "Découvrez comment SWELTR utilise et protège les données nécessaires au traitement des commandes et des demandes client.",
   alternates: { canonical: `${siteUrl}/confidentialite` },
+  openGraph: { title: "Politique de confidentialité — SWELTR", description: "Informations sur le traitement des données personnelles par SWELTR.", url: `${siteUrl}/confidentialite`, siteName: "SWELTR", locale: "fr_CH", type: "website" },
 };
 
 export default function Confidentialite() {

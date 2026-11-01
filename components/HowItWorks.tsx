@@ -1,7 +1,7 @@
 const STEPS = [
   { number: "01", title: "Choisis", detail: "Compare les kits et leurs photos." },
-  { number: "02", title: "Commande", detail: "Paie de façon sécurisée avec Stripe." },
-  { number: "03", title: "Reçois", detail: "Consulte les délais selon ta destination." },
+  { number: "02", title: "Vérifie", detail: "Contrôle le prix, le total et les options proposés avant validation." },
+  { number: "03", title: "Finalise", detail: "Les modalités et le suivi dépendent de ta destination." },
 ];
 
 export default function HowItWorks() {

@@ -1,101 +1,26 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import LegalPage from "@/components/LegalPage";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : ((process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, ""))).replace(/\/$/, "");
+const siteUrl = getSiteUrl();
 
-export const metadata = {
-  title: "Ne plus avoir froid cet hiver : 5 conseils concrets — SWELTR",
-  description:
-    "Mains, cou, pieds : pourquoi tu as froid en hiver malgré des vêtements chauds, et comment y remédier concrètement. Conseils pratiques et équipement adapté.",
-  alternates: {
-    canonical: `${siteUrl}/guide/ne-plus-avoir-froid-hiver`,
-  },
+export const metadata: Metadata = {
+  title: "Comment mieux s’équiper contre le froid en hiver | SWELTR",
+  description: "Conseils pour choisir des accessoires d’hiver selon les zones exposées, les habitudes et le contenu vérifié des kits SWELTR.",
+  alternates: { canonical: `${siteUrl}/guide/ne-plus-avoir-froid-hiver` },
+  openGraph: { title: "Mieux s’équiper contre le froid en hiver | SWELTR", description: "Quelques repères pour comparer les accessoires d’hiver et les kits SWELTR.", url: `${siteUrl}/guide/ne-plus-avoir-froid-hiver`, siteName: "SWELTR", locale: "fr_CH", type: "article" },
 };
 
 export default function GuideFroidHiver() {
   return (
-    <LegalPage title="Ne plus avoir froid cet hiver : ce qui marche vraiment" updated="Septembre 2026">
-      <section>
-        <h2>Pourquoi tu as froid même bien habillé</h2>
-        <p>
-          Le corps privilégie les organes vitaux en cas de froid : il réduit la circulation
-          sanguine vers les extrémités (mains, pieds, oreilles) en premier. C'est pour ça qu'on
-          peut avoir le torse au chaud sous une bonne veste et les doigts complètement gourds au
-          bout de dix minutes dehors. L'isolation passive (duvet, laine, polaire) ralentit la perte
-          de chaleur, mais ne compense pas cette baisse de circulation localisée — d'où l'intérêt
-          d'une source de chaleur active sur les zones les plus exposées.
-        </p>
-      </section>
-
-      <section>
-        <h2>1. Cible les extrémités en priorité</h2>
-        <p>
-          Mains, cou et pieds perdent la chaleur plus vite que le reste du corps (surface
-          d'échange élevée, moins de masse musculaire pour générer de la chaleur). C'est
-          généralement là que ça vaut le coup d'investir en premier, avant une veste plus épaisse.
-        </p>
-      </section>
-
-      <section>
-        <h2>2. Ne néglige pas le cou</h2>
-        <p>
-          Le cou concentre des vaisseaux sanguins proches de la surface de la peau — le couvrir
-          limite une vraie déperdition de chaleur, souvent sous-estimée par rapport aux mains.
-        </p>
-      </section>
-
-      <section>
-        <h2>3. Les couches actives valent mieux que les couches épaisses</h2>
-        <p>
-          Empiler les pulls limite les mouvements et n'apporte pas de chaleur au-delà d'un certain
-          point. Un équipement chauffant actif (gants, écharpe) reste efficace même par grand froid,
-          contrairement à l'isolation seule qui atteint vite ses limites sous -5°C en usage statique
-          (attente, vélo lent, chantier extérieur).
-        </p>
-      </section>
-
-      <section>
-        <h2>4. Recharge la veille, pas le matin même</h2>
-        <p>
-          Les équipements chauffants USB (gants, écharpe) se rechargent en 2h environ — largement
-          faisable le soir pour repartir avec l'autonomie complète le lendemain matin, plutôt que de
-          découvrir une batterie vide au moment de sortir.
-        </p>
-      </section>
-
-      <section>
-        <h2>5. Adapte le palier de chauffe à la météo réelle</h2>
-        <p>
-          Utiliser le palier maximum tous les jours use la batterie plus vite qu'utile. Réserve-le
-          aux journées vraiment froides (en dessous de -5°C) et reste sur un palier intermédiaire le
-          reste du temps — l'autonomie s'en ressent directement.
-        </p>
-      </section>
-
-      <section>
-        <h2>L'équipement SWELTR pour appliquer ces principes</h2>
-        <p>
-          Les trois produits de la gamme couvrent les zones prioritaires citées ci-dessus :{" "}
-          <Link href="/produit/solo">gants chauffants</Link> pour les mains, écharpe chauffante à 3
-          paliers pour le cou (dans le <Link href="/produit/duo">Duo Chaleur Totale</Link>), et
-          chaussettes thermiques pour les pieds (dans le{" "}
-          <Link href="/produit/trio">Kit Grand Froid</Link>). Consulte les{" "}
-          <Link href="/livraison-retours">informations de livraison et de retour</Link> avant de
-          commander.
-        </p>
-      </section>
-
-      <section>
-        <h2>Aller plus loin</h2>
-        <p>
-          Pour le détail des critères de choix des gants chauffants, voir notre{" "}
-          <Link href="/guide/gants-chauffants-avis">guide d'achat des gants chauffants</Link>. Si tu
-          cherches plutôt une idée cadeau pour quelqu'un de frileux, voir notre{" "}
-          <Link href="/guide/cadeaux-hiver-chauffants">guide cadeau hiver chauffant</Link>. Pour les
-          pieds froids en particulier, voir notre{" "}
-          <Link href="/guide/chaussettes-thermiques-pieds-froids">guide des chaussettes thermiques</Link>.
-        </p>
-      </section>
+    <LegalPage title="Mieux s’équiper contre le froid en hiver" updated="Novembre 2026">
+      <section><h2>Commence par les moments où tu as froid</h2><p>Avant de choisir un accessoire, repère les situations où tu en as besoin : trajets, promenades, attente dehors ou moments de détente à la maison. La durée passée à l’extérieur, ton niveau d’activité et la liberté de mouvement souhaitée peuvent orienter le choix.</p></section>
+      <section><h2>Choisis la zone que tu veux équiper</h2><p>Si ce sont surtout tes mains qui te gênent, un kit centré sur les gants peut suffire. Si tu souhaites réunir un accessoire pour les mains et un autre pour le cou, compare le Duo. Pour retrouver aussi des chaussettes thermiques dans le même ensemble, regarde le Kit Grand Froid.</p></section>
+      <section><h2>Vérifie le confort et les consignes</h2><p>Un accessoire doit convenir à ton usage et rester confortable. Pour les articles chauffants, lis la notice avant la première utilisation et suis les consignes d’alimentation, d’entretien et de sécurité du modèle livré. Pour les articles textiles, consulte l’étiquette d’entretien.</p></section>
+      <section><h2>Compare le contenu et le prix complet</h2><p>Les trois prix confirmés sont : Solo Chaleur Mains, 36,99 CHF ; Duo Chaleur Totale, 52,99 CHF ; Kit Grand Froid, 62,99 CHF. Chaque fiche précise les articles inclus. Ces accessoires sont proposés en kits ; aucun prix unitaire séparé n’est affiché.</p><p>Les nouveautés en sélection restent indiquées « Bientôt disponible · prix à confirmer » tant que le modèle et les modalités de vente ne sont pas validés.</p></section>
+      <section><h2>Les kits d’hiver SWELTR</h2><ul><li><Link href="/produit/solo">Solo Chaleur Mains</Link> : une paire de gants chauffants, 36,99 CHF.</li><li><Link href="/produit/duo">Duo Chaleur Totale</Link> : gants chauffants et écharpe chauffante USB, 52,99 CHF.</li><li><Link href="/produit/trio">Kit Grand Froid</Link> : gants, écharpe chauffante USB et chaussettes thermiques, 62,99 CHF.</li></ul><p>Consulte aussi les <Link href="/guide/gants-chauffants-avis">repères pour choisir des gants chauffants</Link>, le <Link href="/guide/chaussettes-thermiques-pieds-froids">guide des chaussettes thermiques</Link> et nos <Link href="/guides">autres guides d’hiver</Link>.</p></section>
+      <section><h2>Avant de commander</h2><p>Vérifie les détails de l’offre, le contenu du kit et les modalités qui s’appliquent à ta destination sur la page <Link href="/livraison-retours">Livraison et retours</Link>. En cas de doute sur un produit ou une commande, l’équipe SWELTR est joignable depuis la page <Link href="/contact">Contact</Link>.</p></section>
     </LegalPage>
   );
 }

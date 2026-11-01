@@ -1,90 +1,22 @@
-"use client";
-
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
-import { track } from "@vercel/analytics/react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { TIERS } from "@/lib/data";
-import { formatPrice } from "@/lib/format";
 import ProductCard from "@/components/ProductCard";
 
 export default function ProductTiers() {
-  const [tier, setTierState] = useState(
-    () => TIERS.find((item) => item.best)?.id ?? TIERS[0]?.id ?? "",
-  );
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const selected = TIERS.find((item) => item.id === tier);
-
-  function setTier(id: string) {
-    setTierState(id);
-    track("select_kit", { tierId: id });
-  }
-
-  async function handleCheckout() {
-    if (!selected) return;
-    setLoading(true);
-    setError(null);
-    track("begin_checkout", { tierId: selected.id, price: selected.price });
-    try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tierId: selected.id }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.url) {
-        throw new Error(data.error || "Impossible de créer la session de paiement");
-      }
-      window.location.href = data.url;
-    } catch (error) {
-      setError(error instanceof Error ? error.message : "Une erreur est survenue, réessaie.");
-      setLoading(false);
-    }
-  }
-
   return (
-    <section id="gear" className="mx-auto max-w-7xl px-6 py-16 md:px-12 md:py-20">
-      <div className="mb-10 text-center">
-        <span className="font-mono text-xs uppercase tracking-widest text-gold-deep">
-          La boutique
-        </span>
-        <h2 className="mt-3 font-display text-3xl font-bold md:text-4xl">Choisis ton kit</h2>
+    <section id="kits" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-12 sm:px-6 md:px-10 md:py-16">
+      <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="font-mono text-xs font-bold uppercase tracking-[.22em] text-amber-700">Les essentiels pour l’hiver</p>
+          <h2 className="mt-2 font-display text-3xl font-black text-slate-950 md:text-4xl">Nos kits de chaleur</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Choisis un kit selon les accessoires que tu veux réunir. Le contenu et le prix complet sont indiqués sur chaque fiche.</p>
+        </div>
+        <Link href="/boutique" className="inline-flex min-h-10 items-center gap-2 text-sm font-bold text-amber-800 transition hover:text-slate-950">Voir toute la boutique <ArrowRight size={16}/></Link>
       </div>
-
-      {TIERS.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {TIERS.map((item) => (
-            <ProductCard
-              key={item.id}
-              tier={item}
-              selected={tier === item.id}
-              onSelect={() => setTier(item.id)}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="rounded-2xl border border-line bg-panel p-8 text-center text-muted">
-          Les produits seront bientôt disponibles.
-        </p>
-      )}
-
-      {selected && (
-        <div className="mx-auto mt-8 flex max-w-3xl flex-col items-center justify-between gap-4 rounded-2xl border border-line bg-panel2 p-5 sm:flex-row sm:p-6">
-          <div className="text-center sm:text-left">
-            <p className="font-mono text-xs uppercase tracking-widest text-muted">{selected.name}</p>
-            <p className="font-display text-2xl font-bold">{formatPrice(selected.price)}</p>
-          </div>
-          <button
-            onClick={handleCheckout}
-            disabled={loading}
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-gold-strong px-6 py-3 font-display text-sm font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-gold disabled:opacity-60"
-          >
-            {loading && <Loader2 size={16} className="animate-spin" />}
-            {loading ? "Redirection..." : "Commander ce kit"}
-          </button>
-        </div>
-      )}
-      {error && <p className="mt-3 text-center text-sm text-magenta">{error}</p>}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {TIERS.map((tier) => <ProductCard key={tier.id} tier={tier} />)}
+      </div>
     </section>
   );
 }

@@ -1,17 +1,14 @@
 import type { MetadataRoute } from "next";
 import { TIERS } from "@/lib/data";
+import { getSiteUrl } from "@/lib/site";
 import { WINTER_PRODUCTS } from "@/lib/winter-products";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = (
-    process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")
-  ).replace(/\/$/, "");
+  const siteUrl = getSiteUrl();
   const now = new Date();
 
   const kitPages: MetadataRoute.Sitemap = TIERS.map((tier) => ({
-    url: `${siteUrl}/kits/${tier.id}`,
+    url: `${siteUrl}/produit/${tier.id}`,
     lastModified: now,
     changeFrequency: "weekly",
     priority: 0.85,

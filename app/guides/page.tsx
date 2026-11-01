@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ContentPage from "@/components/ContentPage";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: "Guides et conseils contre le froid — SWELTR",
   description:
-    "Retrouve les guides SWELTR pour mieux choisir tes gants chauffants, protéger tes pieds du froid et préparer l'hiver.",
+    "Retrouve les guides SWELTR pour comparer les accessoires d’hiver, mieux choisir tes gants chauffants et vérifier les détails avant l’achat.",
   alternates: { canonical: `${siteUrl}/guides` },
+  openGraph: { title: "Guides et conseils d’hiver — SWELTR", description: "Des repères pratiques pour choisir et utiliser les accessoires d’hiver SWELTR.", url: `${siteUrl}/guides`, siteName: "SWELTR", locale: "fr_CH", type: "website" },
 };
 
 const guides = [

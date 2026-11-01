@@ -1,10 +1,13 @@
 import LegalPage from "@/components/LegalPage";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
+const siteUrl = getSiteUrl();
 
 export const metadata = {
   title: "Conditions Générales de Vente — SWELTR",
+  description: "Consultez les conditions de vente SWELTR : commandes, prix, paiement, livraison, rétractation et retours.",
   alternates: { canonical: `${siteUrl}/cgv` },
+  openGraph: { title: "Conditions Générales de Vente — SWELTR", description: "Les conditions applicables aux commandes passées sur SWELTR.", url: `${siteUrl}/cgv`, siteName: "SWELTR", locale: "fr_CH", type: "website" },
 };
 
 export default function CGV() {

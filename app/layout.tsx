@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
+import { CartProvider } from "@/components/CartProvider";
+import { getSiteUrl } from "@/lib/site";
 import "./globals.css";
 
-const siteUrl = (
-  process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")
-).replace(/\/$/, "");
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "SWELTR — Confort et essentiels pour les quatre saisons",
-  description: "Explorez les essentiels SWELTR pour la maison, les voyages et le plein air : une sélection pensée pour accompagner chaque saison.",
+  title: "SWELTR — Kits d’hiver et accessoires de confort",
+  description: "Choisissez votre kit d’hiver SWELTR : gants chauffants, écharpe chauffante USB et chaussettes thermiques. Contenu et prix clairement indiqués.",
   alternates: { canonical: siteUrl },
   openGraph: {
     title: "SWELTR — Kits et accessoires pour l’hiver",
@@ -20,13 +18,13 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "SWELTR",
     locale: "fr",
-    images: [{ url: "https://cf.cjdropshipping.com/20180920/2155711379153.jpg", width: 800, height: 800, alt: "Sélection d’accessoires SWELTR" }],
+    images: [{ url: "/images/sweltr-winter-hero.png", width: 1536, height: 1024, alt: "Ambiance hivernale chaleureuse SWELTR" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SWELTR — Confort en toute saison",
-    description: "Découvrez les collections SWELTR pensées pour les quatre saisons.",
-    images: ["https://cf.cjdropshipping.com/20180920/2155711379153.jpg"],
+    title: "SWELTR — Kits d’hiver et accessoires de confort",
+    description: "Découvrez les kits d’hiver SWELTR, leurs articles inclus et leurs prix en CHF.",
+    images: ["/images/sweltr-winter-hero.png"],
   },
 };
 
@@ -42,8 +40,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           ["--font-serif" as string]: "Georgia, 'Times New Roman', serif",
         } as React.CSSProperties}
       >
-        {children}
-        <Analytics />
+        <CartProvider>
+          {children}
+          <Analytics />
+        </CartProvider>
       </body>
     </html>
   );

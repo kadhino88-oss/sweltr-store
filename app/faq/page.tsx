@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ContentPage from "@/components/ContentPage";
 import { FAQS as PRODUCT_FAQS } from "@/lib/data";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Questions fréquentes — Livraison, produits et garantie | SWELTR",
+  title: "Questions fréquentes sur les produits et commandes SWELTR",
   description:
-    "Toutes les réponses aux questions fréquentes sur les kits SWELTR, l'autonomie, la livraison et la garantie.",
+    "Réponses aux questions sur les kits SWELTR, leur contenu, les prix confirmés, les commandes, la livraison et les retours.",
   alternates: { canonical: `${siteUrl}/faq` },
+  openGraph: { title: "Questions fréquentes SWELTR", description: "Réponses sur le contenu et les prix des kits, la commande, la livraison et les retours.", url: `${siteUrl}/faq`, siteName: "SWELTR", locale: "fr_CH", type: "website" },
 };
 
 export default function FaqPage() {
@@ -17,7 +19,7 @@ export default function FaqPage() {
     ...PRODUCT_FAQS,
     {
       q: "Quels pays peuvent recevoir une commande ?",
-      a: "Les pays de livraison actuellement disponibles apparaissent dans le formulaire sécurisé au moment du paiement. Une destination qui n'est pas proposée ne peut pas encore être commandée.",
+      a: "Le parcours de commande est prévu pour la Suisse et la France. Une destination non proposée ne peut pas encore être commandée. Si le paiement est temporairement indisponible, aucune commande n'est créée.",
     },
     {
       q: "Quel est le délai de livraison ?",
@@ -33,7 +35,7 @@ export default function FaqPage() {
     },
     {
       q: "Les chaussettes thermiques chauffent-elles avec une batterie ?",
-      a: "Non. Les chaussettes du Kit Grand Froid sont isolantes et sans batterie. Elles retiennent la chaleur naturelle du pied, contrairement aux gants et à l'écharpe qui produisent activement de la chaleur.",
+      a: "Les chaussettes thermiques sont incluses dans le Kit Grand Froid. Consulte l’étiquette et les informations du modèle livré pour ses détails et son entretien.",
     },
   ];
 

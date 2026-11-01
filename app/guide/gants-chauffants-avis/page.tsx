@@ -1,106 +1,26 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import LegalPage from "@/components/LegalPage";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
+const siteUrl = getSiteUrl();
 
-export const metadata = {
-  title: "Gants chauffants : guide d'achat 2026 (autonomie, sécurité, prix) — SWELTR",
-  description:
-    "Comment choisir des gants chauffants efficaces : autonomie réelle, paliers de température, sécurité au grand froid, entretien. Guide complet avant d'acheter.",
-  alternates: {
-    canonical: `${siteUrl}/guide/gants-chauffants-avis`,
-  },
+export const metadata: Metadata = {
+  title: "Gants chauffants : les critères à vérifier avant achat | SWELTR",
+  description: "Comment choisir des gants chauffants : confort, taille, consignes du fabricant et comparaison des kits SWELTR.",
+  alternates: { canonical: `${siteUrl}/guide/gants-chauffants-avis` },
+  openGraph: { title: "Bien choisir ses gants chauffants | SWELTR", description: "Repères pratiques pour examiner une paire de gants chauffants et comparer les kits SWELTR.", url: `${siteUrl}/guide/gants-chauffants-avis`, siteName: "SWELTR", locale: "fr_CH", type: "article" },
 };
 
 export default function GuideGantsChauffants() {
   return (
-    <LegalPage title="Gants chauffants : comment bien choisir en 2026" updated="Septembre 2026">
-      <section>
-        <h2>Pourquoi un gant chauffant plutôt qu'un gant d'hiver classique</h2>
-        <p>
-          Un gant d'hiver classique isole — il ralentit la perte de chaleur, mais n'en produit pas.
-          Sous -3°C, en dessous d'un certain seuil d'activité (vélo, chantier statique, attente en
-          extérieur), l'isolation seule ne suffit plus : les mains finissent par se refroidir quand
-          même. Un gant chauffant ajoute une source de chaleur active, généralement une résistance
-          électrique alimentée par une batterie rechargeable, qui maintient une température
-          constante indépendamment du froid extérieur.
-        </p>
-      </section>
-
-      <section>
-        <h2>Les critères qui comptent vraiment</h2>
-        <p>
-          <strong>Autonomie réelle</strong> — pas l'autonomie annoncée au palier le plus faible. La
-          plupart des fabricants communiquent sur le meilleur cas (chaleur minimale). Vérifie
-          l'autonomie au palier que tu utiliseras vraiment.
-        </p>
-        <p>
-          <strong>Temps de recharge</strong> — une batterie qui met 4 à 5h à recharger est
-          contraignante si tu comptes t'en servir tous les jours. Vise une recharge USB en 2h maximum.
-        </p>
-        <p>
-          <strong>Nombre de paliers de température</strong> — un seul niveau de chauffe use la
-          batterie plus vite qu'utile par temps doux, et peut être insuffisant par grand froid. Plusieurs
-          paliers permettent d'adapter la consommation à la météo du jour.
-        </p>
-        <p>
-          <strong>Poids et souplesse</strong> — un gant chauffant reste un gant : s'il est trop
-          rigide ou trop lourd, il devient inutilisable pour du vélo ou du travail manuel précis.
-        </p>
-      </section>
-
-      <section>
-        <h2>Sécurité et entretien</h2>
-        <p>
-          Les caractéristiques électriques, les consignes de lavage et la résistance à l'eau
-          dépendent du modèle. Avant toute utilisation ou tout nettoyage, vérifie la notice du
-          fabricant. Ne mouille pas les batteries et ne lave pas les gants avec les batteries en
-          place, sauf indication explicite du fabricant.
-        </p>
-      </section>
-
-      <section>
-        <h2>Ce que propose SWELTR</h2>
-        <p>
-          Consulte la fiche des{" "}
-          <Link href="/produit/solo">gants chauffants SWELTR</Link> pour connaître les
-          caractéristiques annoncées pour ce modèle. Le{" "}
-          <Link href="/produit/duo">Duo Chaleur Totale</Link> et le{" "}
-          <Link href="/produit/trio">Kit Grand Froid</Link> proposent d'autres compositions ;
-          vérifie leur contenu et leur prix avant de choisir.
-        </p>
-      </section>
-
-      <section>
-        <h2>Aller plus loin</h2>
-        <p>
-          Ce guide se concentre sur les mains. Pour une vue d'ensemble (mains, cou, pieds) et les
-          erreurs courantes qui font qu'on a froid malgré un bon équipement, voir{" "}
-          <Link href="/guide/ne-plus-avoir-froid-hiver">notre guide complet contre le froid</Link>.
-          Envie d'offrir plutôt que d'acheter pour toi ? Voir notre{" "}
-          <Link href="/guide/cadeaux-hiver-chauffants">guide cadeau hiver chauffant</Link>. Pour les
-          pieds spécifiquement, voir notre{" "}
-          <Link href="/guide/chaussettes-thermiques-pieds-froids">guide des chaussettes thermiques</Link>.
-        </p>
-      </section>
-
-      <section>
-        <h2>Questions fréquentes</h2>
-        <p>
-          <strong>Les gants chauffants sont-ils résistants à l'eau ?</strong> Consulte la fiche et
-          les instructions du fabricant du modèle choisi ; n'utilise pas un accessoire électrique
-          mouillé ou endommagé.
-        </p>
-        <p>
-          <strong>Peut-on recharger en roulant, avec une batterie externe ?</strong> Oui, tant que la
-          batterie externe fournit une sortie USB standard.
-        </p>
-        <p>
-          <strong>Combien de temps dure la batterie avant de devoir la remplacer ?</strong> La
-          durée de vie varie selon la batterie et les conditions d'utilisation. Consulte les
-          consignes du fabricant pour l'entretien et le remplacement.
-        </p>
-      </section>
+    <LegalPage title="Gants chauffants : les critères à vérifier avant achat" updated="Novembre 2026">
+      <section><h2>Pars de l’usage prévu</h2><p>Réfléchis aux situations où tu porteras les gants : trajet quotidien, promenade ou activité en plein air. Vérifie que la coupe et la liberté de mouvement te conviennent pour cet usage. La taille et les consignes exactes dépendent toujours du modèle retenu.</p></section>
+      <section><h2>Lis les informations du modèle</h2><p>Avant d’acheter un accessoire chauffant, consulte sa fiche et sa notice. Vérifie les consignes d’alimentation et de recharge, les commandes disponibles, les précautions d’utilisation et les instructions de nettoyage. N’applique pas à un produit les chiffres ou les consignes d’un autre modèle.</p><p>Les détails techniques précis des modèles SWELTR sont ceux de la notice fournie. Nous n’affichons pas de durée d’autonomie, de température ou de temps de recharge qui n’a pas été confirmé.</p></section>
+      <section><h2>Choisis le contenu qui te sera utile</h2><p>Le <Link href="/produit/solo">Solo Chaleur Mains</Link> contient une paire de gants chauffants et coûte 36,99 CHF. Le <Link href="/produit/duo">Duo Chaleur Totale</Link> ajoute une écharpe chauffante USB pour 52,99 CHF. Le <Link href="/produit/trio">Kit Grand Froid</Link> ajoute aussi des chaussettes thermiques et coûte 62,99 CHF.</p><p>Ces prix concernent les kits complets ; les gants ne sont pas affichés comme article vendu séparément. Compare le contenu avant de décider.</p></section>
+      <section><h2>Utilise et entretiens les gants avec soin</h2><p>Suis les consignes du fabricant pour l’utilisation, l’alimentation et le nettoyage. N’utilise pas l’article si son câble ou son boîtier est visiblement abîmé. Si une instruction n’est pas claire, contacte le service client avant utilisation.</p></section>
+      <section><h2>Questions fréquentes</h2><p><strong>Quelle est l’autonomie des gants SWELTR ?</strong> Elle dépend du modèle livré ; consulte la notice correspondante. Aucun chiffre non confirmé n’est annoncé sur le site.</p><p><strong>Peut-on laver les gants en machine ?</strong> Vérifie la notice du modèle avant le nettoyage et respecte ses instructions.</p><p><strong>Les gants sont-ils disponibles seuls ?</strong> Ils sont proposés dans les kits d’hiver SWELTR. Les prix et le contenu complets figurent sur chaque fiche de kit.</p></section>
+      <section><h2>Pour aller plus loin</h2><p>Découvre les autres repères dans notre <Link href="/guide/ne-plus-avoir-froid-hiver">guide pour mieux s’équiper en hiver</Link>, le <Link href="/guide/chaussettes-thermiques-pieds-froids">guide des chaussettes thermiques</Link> et la page de <Link href="/boutique">comparaison des kits</Link>.</p></section>
     </LegalPage>
   );
 }

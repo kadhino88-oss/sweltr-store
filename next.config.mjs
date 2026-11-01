@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Keep tracing inside the app when a parent directory has an unrelated lockfile.
+  outputFileTracingRoot: process.cwd(),
   images: {
     // Keep remote image loading limited to the supplier CDNs actually used by the catalogue.
     remotePatterns: [

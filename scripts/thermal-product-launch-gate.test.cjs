@@ -7,7 +7,7 @@ function read(relativePath) {
   return fs.readFileSync(path.join(__dirname, "..", relativePath), "utf8");
 }
 
-test("live Stripe checkout stays blocked until store release approval", () => {
+test("live Stripe checkout remains blocked until store release approval", () => {
   const route = read("app/api/checkout/route.ts");
   assert.match(route, /isLiveStripeKey = \/\^\(sk\|rk\)_live_\//);
   assert.match(route, /isLiveStripeKey && process\.env\.STORE_SALES_ENABLED !== "true"/);
@@ -15,31 +15,31 @@ test("live Stripe checkout stays blocked until store release approval", () => {
   assert.match(read(".env.local.example"), /STORE_SALES_ENABLED=false/);
 });
 
-test("thermal variants stay unavailable until supplier validation is explicitly enabled", () => {
+test("unconfirmed thermal product never exposes supplier variants or an invented price", () => {
   const route = read("app/api/products/thermal-underwear/variants/route.ts");
-  assert.match(route, /THERMAL_PRODUCT_SALES_ENABLED !== "true"/);
-  assert.match(route, /THERMAL_PRODUCT_NOT_LAUNCH_READY/);
+  assert.match(route, /PRODUCT_NOT_LAUNCH_READY/);
+  assert.match(route, /Bientôt disponible · prix à confirmer/);
   assert.match(route, /status: 503/);
+  assert.doesNotMatch(route, /getCjAccessToken|supplierPrice|variantSellPrice/);
 });
 
-test("thermal checkout is blocked server-side when the launch gate is off", () => {
+test("checkout blocks thermal-product requests before contacting Stripe", () => {
   const route = read("app/api/checkout/route.ts");
-  const gate = route.indexOf('process.env.THERMAL_PRODUCT_SALES_ENABLED !== "true"');
-  const supplierLookup = route.indexOf("isValidThermalVariant(variantIdValue)");
+  const unavailable = route.indexOf('productType === "thermal-underwear"');
   const stripeClient = route.indexOf("const stripe = getStripeClient()");
-  assert.notEqual(gate, -1, "checkout route must enforce the launch gate");
-  assert.ok(supplierLookup > gate, "launch gate must run before supplier variant lookup");
-  assert.ok(stripeClient > gate, "launch gate must run before Stripe session creation");
+  assert.notEqual(unavailable, -1, "checkout must explicitly block the planned item");
+  assert.ok(stripeClient > unavailable, "the planned item must be blocked before creating a Stripe session");
+  assert.match(route, /Bientôt disponible · prix à confirmer/);
 });
 
-test("the customer-facing page explains the supplier validation hold", () => {
-  const component = read("components/ThermalUnderwearProduct.tsx");
-  assert.match(component, /setVariantsMessage/);
-  assert.match(component, /validation fournisseur/);
-  assert.match(component, /disabled=\{loading \|\| !selectedVariant \|\| checkoutLoading\}/);
+test("planned product pages display the same unavailable status and hide buying actions", () => {
+  const page = read("app/produits/[slug]/page.tsx");
+  assert.match(page, /Bientôt disponible · prix à confirmer/);
+  assert.match(page, /product\.availability === "existing"/);
+  assert.match(page, /Voir les kits disponibles/);
+  assert.doesNotMatch(page, /Stripe|supplierPrice/);
 });
 
-test("the example configuration keeps thermal product sales disabled by default", () => {
-  const env = read(".env.local.example");
-  assert.match(env, /THERMAL_PRODUCT_SALES_ENABLED=false/);
+test("the example configuration keeps thermal product sales disabled", () => {
+  assert.match(read(".env.local.example"), /THERMAL_PRODUCT_SALES_ENABLED=false/);
 });

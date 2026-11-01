@@ -1,10 +1,13 @@
 import LegalPage from "@/components/LegalPage";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
+const siteUrl = getSiteUrl();
 
 export const metadata = {
   title: "Mentions légales — SWELTR",
+  description: "Identité de l’éditeur du site SWELTR, coordonnées de contact et informations légales.",
   alternates: { canonical: `${siteUrl}/mentions-legales` },
+  openGraph: { title: "Mentions légales — SWELTR", description: "Informations légales et coordonnées de l’éditeur du site SWELTR.", url: `${siteUrl}/mentions-legales`, siteName: "SWELTR", locale: "fr_CH", type: "website" },
 };
 
 export default function MentionsLegales() {

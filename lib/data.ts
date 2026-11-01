@@ -4,7 +4,6 @@ export type Tier = {
   tagline: string;
   price: number;
   items: string[];
-  best?: boolean;
   // À remplir une fois les vid récupérés via /api/admin/find-vid.
   // Un kit peut contenir plusieurs produits CJ (ex: le Trio = 3 vid différents).
   cjItems?: { vid: string; quantity: number }[];
@@ -13,7 +12,6 @@ export type Tier = {
   // Une seule vignette par article, pour les petites cartes de la page d'accueil
   cardImages: string[];
   description: string;
-  specs: { label: string; value: string }[];
 };
 
 // Photos produit officielles CJ Dropshipping (une par article sourcé) — gamme hiver, sourcée le 03/09/2026
@@ -60,14 +58,7 @@ export const TIERS: Tier[] = [
     images: HEATED_GLOVES_GALLERY,
     cardImages: [PRODUCT_IMAGES.heatedGloves],
     description:
-      "Des gants chauffants rechargeables par USB pour protéger tes mains pendant les trajets et les activités par temps froid.",
-    specs: [
-      { label: "Autonomie", value: "Jusqu'à 4h de chaleur constante" },
-      { label: "Recharge", value: "USB, complète en environ 2h" },
-      { label: "Coloris", value: "Gris, kaki ou rouge" },
-      { label: "Poids", value: "Environ 314g la paire" },
-      { label: "Matière", value: "Tissu isolant, doublure chaude" },
-    ],
+      "Tu veux équiper tes mains sans ajouter d’autres articles ? Le Solo réunit une paire de gants chauffants dans une offre simple à comparer. Les consignes et caractéristiques précises sont celles du modèle fourni.",
   },
   {
     id: "duo",
@@ -82,19 +73,11 @@ export const TIERS: Tier[] = [
     images: [...HEATED_GLOVES_GALLERY.slice(0, 3), ...HEATED_SCARF_GALLERY.slice(0, 3)],
     cardImages: [PRODUCT_IMAGES.heatedGloves, PRODUCT_IMAGES.heatedScarf],
     description:
-      "Des gants chauffants et une écharpe USB à trois niveaux pour protéger les mains et le cou du froid.",
-    specs: [
-      { label: "Contenu", value: "1 gants chauffants + 1 écharpe chauffante" },
-      { label: "Autonomie gants", value: "Jusqu'à 4h" },
-      { label: "Paliers écharpe", value: "3 réglages : 42°C, 48°C, 55°C" },
-      { label: "Recharge", value: "USB pour les deux accessoires" },
-      { label: "Entretien écharpe", value: "Lavable, sans démontage" },
-    ],
+      "Choisis le Duo si tu souhaites réunir un accessoire pour les mains et un autre pour le cou. Le kit comprend les gants chauffants et une écharpe chauffante USB ; son tarif complet est affiché avant la commande.",
   },
   {
     id: "trio",
     name: "Kit Grand Froid",
-    best: true,
     tagline: "Gants chauffants + Écharpe chauffante + Chaussettes thermiques",
     price: 62.99,
     items: [
@@ -114,29 +97,22 @@ export const TIERS: Tier[] = [
     ],
     cardImages: [PRODUCT_IMAGES.heatedGloves, PRODUCT_IMAGES.heatedScarf, PRODUCT_IMAGES.thermalSocks],
     description:
-      "Le kit qui réunit gants chauffants, écharpe USB et chaussettes thermiques pour équiper plusieurs zones.",
-    specs: [
-      { label: "Contenu", value: "1 gants chauffants + 1 écharpe chauffante + 1 paire de chaussettes thermiques" },
-      { label: "Autonomie gants", value: "Jusqu'à 4h" },
-      { label: "Paliers écharpe", value: "3 réglages : 42°C, 48°C, 55°C" },
-      { label: "Chaussettes", value: "Molleton épais, isolation thermique passive (sans batterie)" },
-      { label: "Recharge", value: "USB pour gants et écharpe" },
-    ],
+      "Pour une composition d’hiver plus complète, ce kit rassemble des gants chauffants, une écharpe chauffante USB et des chaussettes thermiques. Chaque article est listé pour savoir exactement ce qui est inclus.",
   },
 ];
 
 export const FAQS = [
   {
-    q: "Combien de temps dure la chaleur ?",
-    a: "Les caractéristiques d'autonomie et de recharge annoncées pour chaque accessoire figurent sur sa fiche produit. L'autonomie réelle dépend notamment du réglage, de l'environnement et de l'utilisation. Les chaussettes thermiques du kit Trio n'ont pas de batterie.",
+    q: "Comment connaître les consignes d’utilisation ?",
+    a: "Les consignes de fonctionnement, d’alimentation et d’entretien dépendent du modèle fourni. Consulte toujours la notice jointe à l’article ; nous ne publions que les caractéristiques confirmées.",
   },
   {
     q: "En combien de temps je suis livré ?",
-    a: "Le délai indicatif de livraison est de 7 à 15 jours ouvrés selon la destination. Il peut varier selon les conditions logistiques ; consulte les conditions générales de vente.",
+    a: "Les délais varient selon la destination et le traitement logistique. Consulte la page Livraison et retours et les conditions présentées avant le paiement.",
   },
   {
-    q: "Est-ce que ça tient vraiment chaud ?",
-    a: "Les gants et l'écharpe sont des accessoires chauffants ; les chaussettes du kit Trio sont thermiques et sans batterie. Consulte les caractéristiques de chaque fiche produit pour choisir selon ton usage.",
+    q: "Quel kit choisir ?",
+    a: "Le Solo comprend les gants chauffants, le Duo ajoute l’écharpe chauffante USB, et le Kit Grand Froid réunit aussi des chaussettes thermiques. Compare le contenu indiqué et choisis selon les accessoires dont tu as besoin.",
   },
   {
     q: "Et si ça ne me réchauffe pas assez ?",

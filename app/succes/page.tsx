@@ -8,12 +8,13 @@ export const metadata = {
 };
 
 type SuccessPageProps = {
-  searchParams: { session_id?: string | string[] };
+  searchParams: Promise<{ session_id?: string | string[] }>;
 };
 
 export default async function SuccesPage({ searchParams }: SuccessPageProps) {
+  const resolvedSearchParams = await searchParams;
   const sessionId =
-    typeof searchParams.session_id === "string" ? searchParams.session_id : undefined;
+    typeof resolvedSearchParams.session_id === "string" ? resolvedSearchParams.session_id : undefined;
 
   if (!sessionId || !sessionId.startsWith("cs_")) {
     return <SuccessPageClient status="unverified" />;

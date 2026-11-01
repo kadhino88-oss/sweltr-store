@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Battery, Hand, Layers3 } from "lucide-react";
 import ContentPage from "@/components/ContentPage";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: "À propos de SWELTR — Des équipements pensés pour le froid",
   description:
     "Découvre l'approche SWELTR : des accessoires pour protéger les mains, le cou et les pieds lors des journées froides.",
   alternates: { canonical: `${siteUrl}/a-propos` },
+  openGraph: { title: "À propos de SWELTR", description: "Notre sélection d’accessoires et de kits d’hiver, avec des informations claires sur leur contenu.", url: `${siteUrl}/a-propos`, siteName: "SWELTR", locale: "fr_CH", type: "website" },
 };
 
 export default function AboutPage() {
@@ -32,8 +34,9 @@ export default function AboutPage() {
           <Battery className="text-gold-deep" size={24} />
           <h2 className="mt-5 font-display text-xl font-semibold text-ink">Chaleur active</h2>
           <p className="mt-3">
-            Les gants et l'écharpe de la gamme sont des accessoires chauffants rechargeables par
-            USB. Leur autonomie dépend notamment du niveau de chauffe et des conditions d'utilisation.
+            Les gants et l'écharpe de la gamme sont des accessoires chauffants. Les consignes
+            d'alimentation, d'utilisation et d'entretien dépendent du modèle livré et figurent dans
+            sa notice.
           </p>
         </article>
         <article className="rounded-2xl border border-line bg-panel p-6">

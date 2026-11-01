@@ -1,10 +1,10 @@
-import { Battery, Box, PlugZap } from "lucide-react";
+import { BadgeCheck, Box, Snowflake } from "lucide-react";
 import { TIERS } from "@/lib/data";
 
 const FEATURES = [
-  { icon: Battery, label: "Accessoires chauffants" },
-  { icon: PlugZap, label: "Recharge USB" },
-  { icon: Box, label: `${TIERS.length} kits à comparer` },
+  { icon: Snowflake, label: "Collection hiver clairement identifiée" },
+  { icon: Box, label: `${TIERS.length} kits d’hiver à comparer` },
+  { icon: BadgeCheck, label: "Prix et contenu affichés avant l’achat" },
 ];
 
 export default function TrustBar() {

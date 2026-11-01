@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Clock3, PackageCheck, RotateCcw } from "lucide-react";
 import ContentPage from "@/components/ContentPage";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: "Livraison, rétractation et retours — SWELTR",
   description:
     "Informations SWELTR sur la préparation des commandes, les délais de livraison, le droit de rétractation et les retours.",
   alternates: { canonical: `${siteUrl}/livraison-retours` },
+  openGraph: { title: "Livraison et retours — SWELTR", description: "Consultez les délais, les destinations, la rétractation et les retours avant de commander.", url: `${siteUrl}/livraison-retours`, siteName: "SWELTR", locale: "fr_CH", type: "website" },
 };
 
 export default function DeliveryReturnsPage() {

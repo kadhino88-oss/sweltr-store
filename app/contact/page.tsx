@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { ArrowUpRight, Mail, Phone, ShieldCheck } from "lucide-react";
 import ContentPage from "@/components/ContentPage";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app")).replace(/\/$/, "");
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: "Contact — Service client SWELTR",
   description:
     "Une question sur un produit ou une commande SWELTR ? Contacte notre service client par e-mail ou par téléphone.",
   alternates: { canonical: `${siteUrl}/contact` },
+  openGraph: { title: "Contacter le service client SWELTR", description: "Coordonnées du service client pour les questions sur les produits et les commandes SWELTR.", url: `${siteUrl}/contact`, siteName: "SWELTR", locale: "fr_CH", type: "website" },
 };
 
 export default function ContactPage() {
@@ -54,7 +56,8 @@ export default function ContactPage() {
             </p>
             <p className="mt-3">
               Pour ta sécurité, ne transmets jamais de numéro de carte bancaire, de code de
-              sécurité ou de mot de passe. Le règlement s'effectue sur la page sécurisée de Stripe.
+              sécurité ou de mot de passe. Lorsque le paiement est disponible, le règlement
+              s'effectue sur la page de paiement Stripe.
             </p>
           </div>
         </div>
