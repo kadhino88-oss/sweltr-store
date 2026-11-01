@@ -21,7 +21,7 @@ export default function WinterShowcase() {
       <div className="mx-auto max-w-[1440px] px-4 pb-7 pt-5 sm:px-6 md:px-10 md:pb-10">
         <div className="relative overflow-hidden rounded-[1.5rem] border border-white/15 bg-[#10151D] shadow-2xl md:rounded-[2rem]">
           <div className="relative aspect-[16/9] min-h-[330px] sm:min-h-[420px] md:aspect-[2.15/1] md:min-h-[500px]">
-            <Image src="https://sweltr-store-five.vercel.app/sweltr-hero.jpg" alt="Univers SWELTR : confort d’hiver, plaid douillet, gants chauffants, écharpe, chaussettes et quatre collections saisonnières" fill priority sizes="100vw" unoptimized className="object-cover object-center"/>
+            <Image src={PRODUCT_IMAGES.heatedGloves} alt="Gants chauffants SWELTR, produit phare de la collection hiver" fill priority sizes="100vw" unoptimized className="object-cover object-center"/>
             <div className="absolute inset-0 bg-gradient-to-r from-[#07101c]/75 via-[#07101c]/20 to-transparent"/>
             <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-4 p-5 sm:p-8 md:p-10">
               <div className="max-w-xl">
