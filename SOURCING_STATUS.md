@@ -46,7 +46,10 @@ Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de
 - Fiche CJ : https://www.cjdropshipping.com/product/hoodie-sweatshirt-with-big-pocket-tops-sweater-comfortable-loose-double-sided-fleece-thicker-wearable-blanket-p-1374599054109052928.html
 - L’image principale est exactement la même que celle déjà utilisée sur SWELTR. SKU CJ : `CJWY105347801AZ`.
 - CJ décrit un sweat à capuche en velours double face, matière principale annoncée à 80 % polyester. Taille unique : poitrine 156 cm, longueur 100 cm. Coloris : noir, gris, marron, bordeaux et bleu marine. Le conditionnement indiqué contient un sweat.
-- Le client confirme stock et expédition pour cette référence. Capture CJ transmise le 02.11.2026 pour une unité, taille unique, vers la France : CJPacket EUB disponible ; traitement estimé 1–3 jours pour 90 % des commandes ; livraison estimée 12–50 jours. Le devis affichait 4,86 USD de produit, 11,24 USD de transport et 16,10 USD au total ; il s’agit de coûts fournisseur indicatifs, non du prix client, et CJ avertit que le montant réel peut varier. Ne pas extrapoler ce devis à d’autres pays. Le prix public SWELTR reste 44,99 CHF.
+- Le client confirme stock et expédition pour cette référence. La page « Produits ajoutés » CJ affiche le SPU `CJWY1053478` à 1,98–11,24 USD et un stock agrégé de 651’764 ; la variante sélectionnée vert armée (SKU `CJWY105347816PK`), taille unique, 600 g, apparaît à 4,86 USD avec 10’486 unités. Ces stocks CJ ne sont pas synchronisés avec SWELTR.
+- Relevés CJ du 02.11.2026 pour cette variante vers la France : le tarif standard sélectionné affiche 11,24 USD de transport, 4,86 USD de produit (16,10 USD au total) et 12–50 jours selon CJPacket EUB ; l’option CJPacket Ordinary I affiche 11,24 USD et 8–18 jours. L’option DHL Official est disponible à 44,30 USD de transport, 49,16 USD au total et 4–7 jours. Le délai DHL correspond à l’objectif SWELTR de 10 jours pour cette configuration, mais le tarif élevé doit être intégré au calcul de marge avant toute ouverture de vente.
+- Autres devis CJ observés pour la même variante, quantité 1 : Royaume-Uni — YunExpress Clothing Line 8,08 USD, total fournisseur 12,94 USD, estimation 4–6 jours pour 49 % des colis puis 7 jours pour 38 % et 8+ jours pour 13 % ; DHL Official 63,63 USD, total 68,49 USD, estimation 3–7 jours. Canada — CJPacket Ordinary 10,77 USD, total 15,63 USD, estimation 4–7 jours pour 66 %, 8–9 jours pour 26 % et 10+ pour 8 %. États-Unis — LuWei Ordinary US 12,85 USD, total 17,71 USD, estimation 5–11 jours pour 62 % ; CJPacket Ordinary 13,74 USD, total 18,60 USD, estimation 4–9 jours pour 62 %, 10–12 jours pour 31 % et 13+ pour 7 %. Ces estimations et coûts peuvent évoluer ; seuls les tarifs avec délai documenté sont consignés, sans promesse générale de 10 jours hors France.
+- La fiche SWELTR conserve son prix public existant de 44,99 CHF. Les coûts fournisseur ci-dessus sont internes, pas des prix à montrer aux clients.
 
 ### Chaussons — références similaires repérées, sans correspondance exacte vérifiée
 - CJ propose plusieurs chaussons pelucheux avec pointures et stocks variables, mais les fiches consultées ne prouvent pas que la paire fantaisie montrée sur SWELTR est la même variante. Garder les détails et le stock en attente d’une correspondance exacte.
@@ -68,6 +71,11 @@ Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de
 ### Écharpe chauffante USB — piste publique, non validée
 - Fiche repérée : https://cjdropshipping.com/product/usb-women-men-heating-scarf-temperature-scarf-3-gears-adjustable-usb-charging-heat-control-neck-warmer-for-cycling-camping-usb-heated-scarf---temperature-adjustable-heating-scarf-p-1707960135605702656.html
 - Prix public précédemment observé autour de 9,98 USD pour une variante grise ; le noir, le stock et la correspondance avec le produit actuel de SWELTR doivent être confirmés.
+
+### Prix CJ relevés — autres produits (coût produit uniquement, pas le prix SWELTR)
+- Couverture velours à bulles : CJ affiche 1,34–14,18 USD selon coloris, taille et quantité. Les frais de livraison vers CH relevés séparément sont de 12,45 USD pour la configuration transmise ; le total rendu dépend de la variante.
+- Pyjama-plaid géant : la variante vert armée examinée coûte 4,86 USD ; DHL France revient à 44,30 USD de transport, soit 49,16 USD fournisseur avant éventuels frais/taxes. Au prix public actuel de 44,99 CHF, cette route rapide ne permet pas d’ouvrir la vente avec livraison incluse ; garder l’achat fermé jusqu’à tarification transparente de l’expédition et contrôle de marge.
+- Ensemble thermique : références candidates à 6,27 USD et 6,48–12,94 USD, non équivalentes/confirmées. Écharpe chauffante : environ 9,98 USD observés auparavant pour une variante grise non rapprochée. Gants : la fiche candidate consultée ne publiait pas de prix/stock exploitable ; chauffe-mains et chaussons : pas de prix CJ apparié à une variante SWELTR confirmée. Ne pas transformer ces prix incomplets en fiches vendables.
 
 ### Autres articles
 - Couverture, pyjama-plaid, chaussons, gants et chauffe-mains : des images et/ou pistes publiques figurent déjà dans `lib/winter-products.ts` et les échanges de recherche, mais aucun coût livré CH/FR ni stock réel n'a été authentifié dans cette session.
@@ -91,6 +99,6 @@ Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de
 ## Statut synthétique
 - Page de production : répond HTTP 200 lors du contrôle.
 - Sept produits conservés.
-- Stocks et expéditions : NON CONFIRMÉS.
+- Stocks et expéditions : relevés documentés pour la couverture vers CH et une variante du pyjama-plaid vers FR/UK/CA/US ; les autres produits et destinations ne sont pas tous confirmés.
 - Ensemble thermique noir épais : NON VALIDÉ.
 - Aucun achat ni paiement fournisseur effectué.

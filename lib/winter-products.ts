@@ -50,9 +50,9 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     category: "Vêtements cocooning",
     availability: "planned",
     retailPrice: 44.99,
-    variants: ["Coloris CJ : noir, gris, marron, bordeaux et bleu marine", "Taille unique indiquée par CJ : poitrine 156 cm, longueur 100 cm", "Composition principale annoncée : 80 % polyester ; conditionnement : 1 sweat"],
-    supplierStock: "Référence CJ rapprochée de l’image produit SWELTR. Le client confirme le stock fournisseur pour cette référence. Quantité et ventilation CJ/usine non transmises ici ; le stock peut évoluer et n’est pas synchronisé en temps réel avec SWELTR.",
-    supplierShipping: "Devis CJ consulté pour 1 sweat en taille unique vers la France (FR) : CJPacket EUB disponible, traitement estimé à 1–3 jours pour 90 % des commandes et livraison estimée à 12–50 jours. Il s’agit d’une estimation fournisseur pour cette destination et cette configuration ; le transporteur, le délai et les frais peuvent varier ailleurs.",
+    variants: ["Coloris vert armée, taille unique (variante vérifiée)", "Autres coloris annoncés par CJ : noir, gris, marron, bordeaux et bleu marine ; leur disponibilité doit être vérifiée", "Taille unique indiquée par CJ : poitrine 156 cm, longueur 100 cm", "Composition principale annoncée : 80 % polyester ; conditionnement : 1 sweat"],
+    supplierStock: "Le stock fournisseur a été vérifié pour la variante vert armée. Les quantités évoluent et ne sont pas synchronisées en temps réel avec SWELTR.",
+    supplierShipping: "France : l’option DHL repérée pour cette variante affiche 4–7 jours d’acheminement ; le traitement est estimé à 1–3 jours pour 90 % des commandes. L’estimation totale observée est donc de 5–10 jours pour cette configuration, sans garantie de délai. Destination et coloris différents : délai et transport à recalculer.",
   },
   {
     slug: "bottes-plaid",
