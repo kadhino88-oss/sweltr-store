@@ -74,7 +74,7 @@ Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de
 
 ### Prix CJ relevés — autres produits (coût produit uniquement, pas le prix SWELTR)
 - Couverture velours à bulles : CJ affiche 1,34–14,18 USD selon coloris, taille et quantité. Les frais de livraison vers CH relevés séparément sont de 12,45 USD pour la configuration transmise ; le total rendu dépend de la variante.
-- Pyjama-plaid géant : la variante vert armée examinée coûte 4,86 USD ; DHL France revient à 44,30 USD de transport, soit 49,16 USD fournisseur avant éventuels frais/taxes. Au prix public actuel de 44,99 CHF, cette route rapide ne permet pas d’ouvrir la vente avec livraison incluse ; garder l’achat fermé jusqu’à tarification transparente de l’expédition et contrôle de marge.
+- Pyjama-plaid géant : la variante vert armée examinée coûte 4,86 USD ; DHL France revient à 44,30 USD de transport, soit 49,16 USD fournisseur avant éventuels frais/taxes. Ne pas comparer directement ce total en USD au prix public de 44,99 CHF : calculer le coût rendu et la marge après conversion, frais de paiement, taxes/douane et choix de facturation du transport avant d’ouvrir la vente.
 - Ensemble thermique : références candidates à 6,27 USD et 6,48–12,94 USD, non équivalentes/confirmées. Écharpe chauffante : environ 9,98 USD observés auparavant pour une variante grise non rapprochée. Gants : la fiche candidate consultée ne publiait pas de prix/stock exploitable ; chauffe-mains et chaussons : pas de prix CJ apparié à une variante SWELTR confirmée. Ne pas transformer ces prix incomplets en fiches vendables.
 
 ### Autres articles
