@@ -39,6 +39,10 @@ Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de
 - Une fiche publique d’écharpe chauffante USB indique trois réglages (42/48/55 °C), 5 V, 8 W, tailles 80×10 cm et batterie externe non incluse : https://cjdropshipping.com/product/usb-women-men-heating-scarf-temperature-scarf-3-gears-adjustable-usb-charging-heat-control-neck-warmer-for-cycling-camping-usb-heated-scarf---temperature-adjustable-heating-scarf-p-1707960135605702656.html
 - La référence d’écharpe actuellement enregistrée dans `lib/data.ts` ne correspond pas de façon démontrée au SKU de cette fiche ; son stock public est « -- ». Ne pas publier ces caractéristiques comme celles de l’article du kit avant rapprochement exact.
 
+### Pyjama-plaid géant — fiche candidate, correspondance image à confirmer
+- Une fiche CJ de sweat-plaid à capuche présente un modèle ample à capuche, une seule taille (poitrine 156 cm, longueur 100 cm), cinq coloris (noir, gris, marron, bordeaux, bleu marine) et une composition annoncée à 80 % polyester : https://www.cjdropshipping.com/product/hoodie-sweatshirt-with-big-pocket-tops-sweater-comfortable-loose-double-sided-fleece-thicker-wearable-blanket-p-1374599054109052928.html
+- Le SKU CJ est `CJWY105347801AZ`, le stock est « -- », et CJ n’affiche pas le coût d’expédition sans connexion. La photo de la fiche n’a pas été rapprochée de manière concluante du visuel du pyjama-plaid déjà utilisé sur SWELTR. Ne pas attribuer ces options au produit SWELTR avant validation de la correspondance.
+
 ### Chaussons — références similaires repérées, sans correspondance exacte vérifiée
 - CJ propose plusieurs chaussons pelucheux avec pointures et stocks variables, mais les fiches consultées ne prouvent pas que la paire fantaisie montrée sur SWELTR est la même variante. Garder les détails et le stock en attente d’une correspondance exacte.
 
