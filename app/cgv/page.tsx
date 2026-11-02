@@ -44,9 +44,10 @@ export default function CGV() {
         <h2>4. Livraison</h2>
         <p>
           Les produits sont expédiés depuis les entrepôts de nos fournisseurs partenaires. Le délai
-          de livraison moyen est de <strong>7 à 15 jours ouvrés</strong> selon la destination, à
-          compter de la confirmation de commande. Ce délai est indicatif et peut varier selon les
-          conditions logistiques.
+          de livraison dépend du pays de destination, du produit et du transporteur disponible.
+          Certaines destinations internationales prennent plus longtemps. Les informations de
+          livraison communiquées pour l’article et la destination concernés prévalent sur toute
+          estimation générale.
         </p>
       </section>
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, Search, ShoppingCart, X } from "lucide-react";
+import { Globe, Menu, Search, ShoppingCart, X } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 
 export default function SiteHeader() {
@@ -40,7 +40,7 @@ export default function SiteHeader() {
             <ShoppingCart size={18} /><span className="hidden sm:inline">Panier</span>
             {count > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-red-500 px-1 text-[10px] font-black text-white" aria-hidden="true">{count}</span>}
           </Link>
-          <span className="hidden rounded-full border border-white/15 px-3 py-2 text-[10px] font-semibold tracking-wide text-white/80 md:inline-flex">FR <span className="mx-1 text-amber-300">/</span> CHF</span>
+          <span className="hidden items-center gap-1.5 rounded-full border border-white/15 px-3 py-2 text-[10px] font-semibold tracking-wide text-white/80 md:inline-flex"><Globe size={13} className="text-amber-300"/> International <span className="text-amber-300">·</span> CHF</span>
           <button type="button" onClick={() => setMenuOpen((open) => !open)} className="grid h-10 w-10 place-items-center rounded-full border border-white/15 transition hover:border-amber-300 2xl:hidden" aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"} aria-expanded={menuOpen} aria-controls="mobile-navigation">
             {menuOpen ? <X size={19} /> : <Menu size={19} />}
           </button>

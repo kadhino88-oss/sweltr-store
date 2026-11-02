@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
+import { SHIPPING_COUNTRIES } from "@/lib/shipping-countries";
 import { cjOrderItems, kitOrderTotalCents, normalizeKitOrder } from "@/lib/kit-order";
 import { createCjOrder, findCjOrderByOrderNumber, getCjOrderNumber, payCjOrder, prepareCjOrderForPayment } from "@/lib/cj";
 
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest) {
     if (session.metadata?.productType === "thermal-underwear") {
       const destination = session.metadata.destinationCountry;
       const variantId = session.metadata.thermalVariantId;
-      const expectedCurrency = destination === "FR" ? "eur" : destination === "CH" ? "chf" : "";
+      const expectedCurrency = destination === "FR" ? "eur" : "chf";
       const expectedAmount = 3990;
       if (!variantId || !expectedCurrency || session.currency !== expectedCurrency || session.amount_total !== expectedAmount) {
         console.error("Montant, devise ou variante thermique incohérents pour la session " + session.id);
@@ -88,7 +89,7 @@ export async function POST(req: NextRequest) {
       const shipping = session.shipping_details;
       const address = shipping?.address;
       if (!address?.country || !address.line1 || !address.city || !address.postal_code) return webhookRetryResponse("Adresse de livraison incomplète : commande fournisseur en attente.");
-      if ((destination === "FR" && address.country !== "FR") || (destination === "CH" && address.country !== "CH")) return webhookRetryResponse("Le pays de livraison ne correspond pas au paiement. Vérification requise.");
+      if (address.country !== destination || !(SHIPPING_COUNTRIES as readonly string[]).includes(address.country)) return webhookRetryResponse("Le pays de livraison ne correspond pas au paiement ou n’est pas pris en charge.");
       const cjOrderNumber = getCjOrderNumber(session.id);
       const existingOrder = await findCjOrderByOrderNumber(cjOrderNumber);
       const order = existingOrder ?? await createCjOrder({
@@ -172,11 +173,11 @@ export async function POST(req: NextRequest) {
       return webhookRetryResponse("Adresse de livraison incomplète : commande fournisseur en attente.");
     }
 
-    // Le webhook applique aussi la limite CH/FR : une adresse inattendue ne part
-    // jamais chez le fournisseur, même si une session était créée hors du checkout normal.
-    if (address.country !== "CH" && address.country !== "FR") {
+    // Aucune session ne peut expédier vers une destination qui n'est pas proposée
+    // par le Checkout international ; CJ confirmera le transporteur lors de la commande.
+    if (!(SHIPPING_COUNTRIES as readonly string[]).includes(address.country)) {
       console.error(
-        `Pays de livraison non autorisé pour la session Stripe ${session.id} : ${address.country}.`,
+        `Pays de livraison non pris en charge pour la session Stripe ${session.id} : ${address.country}.`,
       );
       return webhookRetryResponse("Pays de livraison non pris en charge : commande fournisseur suspendue.");
     }

@@ -19,7 +19,7 @@ export default function FaqPage() {
     ...PRODUCT_FAQS,
     {
       q: "Quels pays peuvent recevoir une commande ?",
-      a: "Le parcours de commande est prévu pour la Suisse et la France. Une destination non proposée ne peut pas encore être commandée. Si le paiement est temporairement indisponible, aucune commande n'est créée.",
+      a: "SWELTR vise les destinations internationales, notamment les États-Unis, le Canada et le Royaume-Uni. Les destinations proposées dépendent des transporteurs disponibles pour le produit et l’adresse. Les prix du site sont affichés en CHF ; les délais et frais de livraison peuvent varier selon le pays. Si une destination ne dispose pas d’une option d’expédition confirmée, la commande reste indisponible.",
     },
     {
       q: "Quel est le délai de livraison ?",

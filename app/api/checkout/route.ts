@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { normalizeKitOrder } from "@/lib/kit-order";
+import { SHIPPING_COUNTRIES } from "@/lib/shipping-countries";
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
       : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app");
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      locale: "fr",
+      locale: "auto",
       payment_method_types: ["card"],
       phone_number_collection: { enabled: true },
       line_items: items.map(({ tier, quantity }) => ({
@@ -61,7 +62,7 @@ export async function POST(req: NextRequest) {
       metadata: items.length === 1
         ? { orderType: "kit", tierId: items[0].tierId, quantity: String(items[0].quantity) }
         : { orderType: "kit-cart", cartItems: JSON.stringify(items.map(({ tierId, quantity }) => ({ tierId, quantity }))) },
-      shipping_address_collection: { allowed_countries: ["CH", "FR"] },
+      shipping_address_collection: { allowed_countries: [...SHIPPING_COUNTRIES] },
       success_url: `${siteUrl.replace(/\/$/, "")}/succes?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl.replace(/\/$/, "")}/annulation`,
     });

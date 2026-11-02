@@ -11,6 +11,7 @@ Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de
 - Client API CJ : `lib/cj.ts`
 - Route admin existante : `app/api/admin/find-vid/route.ts`
 - Site de production indiqué dans le dépôt : https://sweltr-store-five.vercel.app
+- Expédition visée à l’international, notamment aux États-Unis, au Canada et au Royaume-Uni. Les méthodes et délais CJ restent propres au produit et à la destination ; ne pas appliquer le devis CH de la couverture aux autres pays.
 - Contrôle effectué le 28 octobre 2026 : la page d'accueil de production répond HTTP 200.
 - Une tentative de lecture d'une route de déploiement protégée par Vercel a été refusée par l'authentification du déploiement. Aucun secret n'a été contourné.
 - La route CJ existante exige `x-admin-secret` et ne cherche que dans `product/myProduct/query`. Sans accès autorisé au secret, le stock réel et les VID ne peuvent pas être interrogés à partir de cette route.
@@ -26,14 +27,14 @@ Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de
 
 ## Résultats vérifiables des recherches publiques
 
-### Couverture velours à bulles — fiche correspondante trouvée, vente bloquée en attente du stock et du coût livré
+### Couverture velours à bulles — fiche correspondante, stock et expédition confirmés pour une configuration CH
 - Fiche CJ : https://cjdropshipping.com/product/soft-wind-bubble-velvet-blanket-warm-solid-rabbit-fur-blankets-double-sided-thickening-cover-throw-warm-fur-blanket-p-2410100547241617300.html
 - SKU : `CJCS215603101AZ`. Correspondance visuelle avec l’image déjà utilisée sur SWELTR.
 - CJ annonce une couverture en polyester, effet fausse fourrure façon lapin, double face épaissie, emballage 1 ou 2 pièces. Options affichées : 10 coloris et 7 dimensions, de 70×100 à 230×250 cm.
 - Prix public CJ affiché entre 1,34 et 14,18 USD selon les variantes. Le prix SWELTR reste celui déjà validé : 49,99 CHF.
 - Relevé d’inventaire transmis par le client le 02.11.2026 : 12’681 unités affichées (CJ : 0 ; Factory : 12’681) pour la configuration consultée. La taille et le coloris sélectionnés n’étaient pas indiqués ; le stock peut évoluer.
 - Transport vers CH transmis par le client : YunExpress Ordinary disponible, traitement estimé 1–4 jours pour 55,7 % des commandes, livraison estimée 8–15 jours, frais affichés à 12,45 USD pour la configuration consultée. Ce coût peut varier selon la taille et le conditionnement.
-- La fiche SWELTR affiche le relevé et l’estimation logistique, tout en conservant le prix public de 49,99 CHF. Les commandes restent fermées jusqu’à confirmation de la variante exacte.
+- Le client confirme que stock et expédition sont établis pour les deux articles documentés ici. La fiche SWELTR affiche le relevé et le délai CH, tout en conservant le prix public de 49,99 CHF. Les données CH ne sont pas des tarifs mondiaux.
 
 ### Chaussettes thermiques et écharpe chauffante — fiches candidates, lien exact au SKU SWELTR non établi
 - Une fiche CJ de chaussettes polaire indique une paire, taille unique, 8 couleurs, polyester et semelle antidérapante : https://cjdropshipping.com/product/winter-warm-fuzzy-coral-fleece-socks-women-men-velvet-thickened-home-sleepping-floor-socks-p-1732222258162585600.html
@@ -45,7 +46,7 @@ Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de
 - Fiche CJ : https://www.cjdropshipping.com/product/hoodie-sweatshirt-with-big-pocket-tops-sweater-comfortable-loose-double-sided-fleece-thicker-wearable-blanket-p-1374599054109052928.html
 - L’image principale est exactement la même que celle déjà utilisée sur SWELTR. SKU CJ : `CJWY105347801AZ`.
 - CJ décrit un sweat à capuche en velours double face, matière principale annoncée à 80 % polyester. Taille unique : poitrine 156 cm, longueur 100 cm. Coloris : noir, gris, marron, bordeaux et bleu marine. Le conditionnement indiqué contient un sweat.
-- Prix public CJ : 1,98–11,24 USD selon la variante/conditionnement ; quantité affichée « -- ». Frais d’expédition vers CH non affichés sans connexion. La fiche SWELTR présente désormais les options et le relevé de stock avec son prix public existant de 44,99 CHF ; commande fermée en attendant la confirmation du stock et du coût livré.
+- Prix public CJ : 1,98–11,24 USD selon la variante/conditionnement. Le client confirme stock et expédition pour cette référence ; le relevé détaillé par pays, méthode et tarif n’a pas été transmis. La fiche SWELTR présente les options et conserve le prix public existant de 44,99 CHF.
 
 ### Chaussons — références similaires repérées, sans correspondance exacte vérifiée
 - CJ propose plusieurs chaussons pelucheux avec pointures et stocks variables, mais les fiches consultées ne prouvent pas que la paire fantaisie montrée sur SWELTR est la même variante. Garder les détails et le stock en attente d’une correspondance exacte.

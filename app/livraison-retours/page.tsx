@@ -19,7 +19,7 @@ export default function DeliveryReturnsPage() {
     <ContentPage
       eyebrow="INFORMATIONS COMMANDE"
       title="Livraison et retours"
-      description="Les étapes et délais utiles à connaître avant de commander un kit SWELTR."
+      description="Informations sur l’expédition internationale, les délais et les retours avant de commander chez SWELTR."
     >
       <section className="grid gap-5 md:grid-cols-3">
         <article className="rounded-2xl border border-line bg-panel p-6">
@@ -34,8 +34,9 @@ export default function DeliveryReturnsPage() {
           <Clock3 className="text-gold-deep" size={24} />
           <h2 className="mt-5 font-display text-xl font-semibold text-ink">Délai estimé</h2>
           <p className="mt-3">
-            Le délai moyen de livraison indiqué dans les CGV est de 7 à 15 jours ouvrés selon la
-            destination. Il peut varier selon les conditions logistiques.
+            SWELTR vise les destinations internationales, dont les États-Unis, le Canada et le
+            Royaume-Uni, lorsque le transporteur du produit dessert l’adresse. Le délai varie selon
+            le pays, le produit et la méthode disponible ; certains trajets prennent plus longtemps.
           </p>
         </article>
         <article className="rounded-2xl border border-line bg-panel p-6">
@@ -93,8 +94,11 @@ export default function DeliveryReturnsPage() {
       </section>
 
       <p>
-        Avant de commander, vérifie les pays disponibles lors du paiement et l'adresse de livraison
-        saisie. Pour d'autres questions, consulte la <Link href="/faq" className="text-gold-deep underline">FAQ</Link>.
+        Les prix de la boutique sont affichés en CHF. Les transporteurs, frais et délais varient
+        selon la destination et le produit ; une estimation CJ pour une configuration de la
+        couverture vers la Suisse indique 8 à 15 jours de livraison après 1 à 4 jours de traitement.
+        Cette estimation ne s’applique pas aux autres pays ou variantes. Pour d'autres questions,
+        consulte la <Link href="/faq" className="text-gold-deep underline">FAQ</Link>.
       </p>
     </ContentPage>
   );
