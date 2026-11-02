@@ -1,5 +1,5 @@
 # SWELTR — état du sourcing fournisseur
-Mise à jour : 28 octobre 2026
+Mise à jour : 2 novembre 2026
 
 ## Objectif non négociable
 Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de catégories. Ne jamais déclarer un produit prêt à vendre sans référence exacte, variante, stock, frais/délai d'expédition et conformité vérifiés.
@@ -25,6 +25,27 @@ Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de
 7. `sous-vetements-thermiques` — ensemble haut + pantalon.
 
 ## Résultats vérifiables des recherches publiques
+
+### Couverture velours à bulles — fiche correspondante trouvée, vente bloquée en attente du stock et du coût livré
+- Fiche CJ : https://cjdropshipping.com/product/soft-wind-bubble-velvet-blanket-warm-solid-rabbit-fur-blankets-double-sided-thickening-cover-throw-warm-fur-blanket-p-2410100547241617300.html
+- SKU : `CJCS215603101AZ`. Correspondance visuelle avec l’image déjà utilisée sur SWELTR.
+- CJ annonce une couverture en polyester, effet fausse fourrure façon lapin, double face épaissie, emballage 1 ou 2 pièces. Options affichées : 10 coloris et 7 dimensions, de 70×100 à 230×250 cm.
+- Prix public CJ affiché entre 1,34 et 14,18 USD selon les variantes. Le prix SWELTR reste celui déjà validé : 49,99 CHF.
+- Quantité CJ : « -- » ; aucune quantité de stock confirmée. Le calcul d’expédition vers la Suisse n’est pas disponible publiquement pour cette fiche. La fiche SWELTR liste désormais les options et explique explicitement ces limites ; les commandes restent fermées.
+
+### Chaussettes thermiques et écharpe chauffante — fiches candidates, lien exact au SKU SWELTR non établi
+- Une fiche CJ de chaussettes polaire indique une paire, taille unique, 8 couleurs, polyester et semelle antidérapante : https://cjdropshipping.com/product/winter-warm-fuzzy-coral-fleece-socks-women-men-velvet-thickened-home-sleepping-floor-socks-p-1732222258162585600.html
+- Cette fiche affiche le stock « -- » et son SKU (`CJWZ191410901AZ`) n’est pas la référence actuellement reliée au kit SWELTR ; ne pas l’utiliser comme confirmation du produit vendu.
+- Une fiche publique d’écharpe chauffante USB indique trois réglages (42/48/55 °C), 5 V, 8 W, tailles 80×10 cm et batterie externe non incluse : https://cjdropshipping.com/product/usb-women-men-heating-scarf-temperature-scarf-3-gears-adjustable-usb-charging-heat-control-neck-warmer-for-cycling-camping-usb-heated-scarf---temperature-adjustable-heating-scarf-p-1707960135605702656.html
+- La référence d’écharpe actuellement enregistrée dans `lib/data.ts` ne correspond pas de façon démontrée au SKU de cette fiche ; son stock public est « -- ». Ne pas publier ces caractéristiques comme celles de l’article du kit avant rapprochement exact.
+
+### Chaussons — références similaires repérées, sans correspondance exacte vérifiée
+- CJ propose plusieurs chaussons pelucheux avec pointures et stocks variables, mais les fiches consultées ne prouvent pas que la paire fantaisie montrée sur SWELTR est la même variante. Garder les détails et le stock en attente d’une correspondance exacte.
+
+### Gants chauffants — piste publique distincte, non rapprochée du kit
+- Fiche CJ : https://cjdropshipping.com/product/rechargeable-heated-gloves-p-18B762E9-2F4C-4244-B64E-5404E02EA7EA.html
+- La fiche décrit une paire tricotée, couleurs khaki/rouge et environ 4 h de maintien en température ; le SKU public affiché est `CJNSFJST00039-Grey`, avec stock « -- ».
+- Ce SKU n’est pas la variante déjà enregistrée pour les kits SWELTR : ne pas attribuer ces caractéristiques au produit du kit avant confirmation authentifiée.
 
 ### Ensemble thermique noir et épais — NON VALIDÉ
 - Fiche CJ publique : https://cjdropshipping.com/product/winter-dralon-quick-hot-thermal-underwear-set-p-1694170605223944192.html
