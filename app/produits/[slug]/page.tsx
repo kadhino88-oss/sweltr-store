@@ -23,7 +23,7 @@ const productGuides: Record<string, { forWho: string; reason: string; use: strin
     forWho: "Pour celles et ceux qui aiment prolonger les soirées à la maison dans une tenue ample et décontractée.",
     reason: "Une pièce cocooning facile à enfiler pour lire, regarder un film ou télétravailler au calme. Prix public SWELTR : 44,99 CHF.",
     use: "Porte-le par-dessus une tenue adaptée à la température de la pièce et suis l’étiquette du vêtement pour l’entretien.",
-    caution: "Les tailles, la composition et le guide de coupe seront publiés après contrôle de la variante fournisseur.",
+    caution: "CJ indique une taille unique et précise qu’une mesure manuelle peut varier de 2 à 3 cm. Compare les mesures du vêtement avec celles d’un sweat que tu portes confortablement ; les couleurs peuvent aussi légèrement varier selon l’écran.",
   },
   "bottes-plaid": {
     forWho: "Pour compléter les moments cocooning à la maison avec une paire de chaussons fantaisie.",
