@@ -16,6 +16,8 @@ export type WinterProduct = {
   variants?: string[];
   /** État fournisseur observé, avec date, sans synchronisation temps réel. */
   supplierStock?: string;
+  /** Estimation de transport fournisseur observée pour une destination donnée. */
+  supplierShipping?: string;
   href?: string;
 };
 
@@ -25,7 +27,7 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     name: "Couverture velours à bulles",
     eyebrow: "DOUCEUR HIVERNALE",
     short: "Le plaisir d’une pause cocooning, avec une texture à bulles qui donne envie de s’installer et de ralentir.",
-    description: "Cette couverture à bulles en fausse fourrure façon lapin est annoncée par CJ en polyester, avec une finition épaisse sur les deux faces. Elle convient au canapé ou au lit, et la fiche fournisseur propose plusieurs tailles pour choisir entre un plaid d’appoint et une grande couverture. Son relief doux apporte une présence chaleureuse au coin détente ; la commande reste fermée tant que la variante exacte et son expédition vers la Suisse ne sont pas confirmées.",
+    description: "Cette couverture à bulles en fausse fourrure façon lapin est annoncée par CJ en polyester, avec une finition épaisse sur les deux faces. Elle convient au canapé ou au lit, et la fiche fournisseur propose plusieurs tailles pour choisir entre un plaid d’appoint et une grande couverture. Son relief doux apporte une présence chaleureuse au coin détente. Le relevé CJ indique une option d’expédition vers la Suisse ; SWELTR précisera la taille et le coloris retenus avant l’ouverture des commandes.",
     image: "https://cf.cjdropshipping.com/17026848/1735911896785227776.jpg",
     alt: "Couverture velours à bulles — fiche fournisseur CJ Dropshipping",
     highlights: ["Polyester annoncé par le fournisseur, finition à bulles double face", "7 dimensions et 10 coloris proposés sur la fiche CJ", "Prix public SWELTR : 49,99 CHF · vente bientôt ouverte"],
@@ -33,7 +35,8 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     availability: "planned",
     retailPrice: 49.99,
     variants: ["Coloris CJ : rose, vert fruit, caramel, kaki, bleu, blanc lait, custard, gris foncé, gris argent et violet", "Dimensions CJ : 70×100, 100×150, 120×200, 150×200, 180×200, 200×230 et 230×250 cm", "Conditionnement indiqué : 1 ou 2 couvertures selon la variante"],
-    supplierStock: "Fiche CJ vérifiée le 02.11.2026 : quantité affichée « -- », donc aucun stock chiffré confirmé. Le prix fournisseur varie selon la taille et le conditionnement ; CJ n’affiche pas publiquement un calcul d’expédition vers la Suisse pour cette référence. Les commandes SWELTR restent fermées jusqu’à vérification de la variante, du stock et du coût livré.",
+    supplierStock: "Relevé CJ communiqué le 02.11.2026 : 12’681 unités affichées (CJ : 0 ; usine : 12’681) pour la configuration consultée. Ce relevé n’identifie pas la taille et le coloris sélectionnés ; le stock peut évoluer et n’est pas synchronisé en temps réel avec SWELTR.",
+    supplierShipping: "Destination : Suisse (CH). YunExpress Ordinary indiqué disponible. Traitement estimé : 1 à 4 jours pour 55,7 % des commandes ; livraison estimée : 8 à 15 jours. Frais d’expédition affichés : 12,45 USD pour la configuration CJ consultée. Le coût exact peut varier selon la taille et le conditionnement retenus.",
   },
   {
     slug: "pyjama-plaid",

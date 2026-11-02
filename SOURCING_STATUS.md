@@ -31,7 +31,9 @@ Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de
 - SKU : `CJCS215603101AZ`. Correspondance visuelle avec l’image déjà utilisée sur SWELTR.
 - CJ annonce une couverture en polyester, effet fausse fourrure façon lapin, double face épaissie, emballage 1 ou 2 pièces. Options affichées : 10 coloris et 7 dimensions, de 70×100 à 230×250 cm.
 - Prix public CJ affiché entre 1,34 et 14,18 USD selon les variantes. Le prix SWELTR reste celui déjà validé : 49,99 CHF.
-- Quantité CJ : « -- » ; aucune quantité de stock confirmée. Le calcul d’expédition vers la Suisse n’est pas disponible publiquement pour cette fiche. La fiche SWELTR liste désormais les options et explique explicitement ces limites ; les commandes restent fermées.
+- Relevé d’inventaire transmis par le client le 02.11.2026 : 12’681 unités affichées (CJ : 0 ; Factory : 12’681) pour la configuration consultée. La taille et le coloris sélectionnés n’étaient pas indiqués ; le stock peut évoluer.
+- Transport vers CH transmis par le client : YunExpress Ordinary disponible, traitement estimé 1–4 jours pour 55,7 % des commandes, livraison estimée 8–15 jours, frais affichés à 12,45 USD pour la configuration consultée. Ce coût peut varier selon la taille et le conditionnement.
+- La fiche SWELTR affiche le relevé et l’estimation logistique, tout en conservant le prix public de 49,99 CHF. Les commandes restent fermées jusqu’à confirmation de la variante exacte.
 
 ### Chaussettes thermiques et écharpe chauffante — fiches candidates, lien exact au SKU SWELTR non établi
 - Une fiche CJ de chaussettes polaire indique une paire, taille unique, 8 couleurs, polyester et semelle antidérapante : https://cjdropshipping.com/product/winter-warm-fuzzy-coral-fleece-socks-women-men-velvet-thickened-home-sleepping-floor-socks-p-1732222258162585600.html
