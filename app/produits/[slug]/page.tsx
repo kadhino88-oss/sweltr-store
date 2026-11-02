@@ -15,7 +15,7 @@ const siteUrl = getSiteUrl();
 const productGuides: Record<string, { forWho: string; reason: string; use: string; caution: string }> = {
   "plaid-velours-bulle": {
     forWho: "Pour aménager un coin lecture, regarder un film au chaud ou offrir une pause douce à la maison.",
-    reason: "Son relief à bulles donne du caractère au canapé et son prix public est déjà fixé à 49,99 CHF. La fiche finale précisera les dimensions et la variante choisie avant toute commande.",
+    reason: "Son relief à bulles apporte une texture douce et du caractère au canapé. CJ propose plusieurs dimensions et couleurs ; SWELTR précisera la variante retenue avant l’ouverture des commandes. Prix public : 49,99 CHF.",
     use: "Déplie la couverture sur un canapé ou un lit, puis suis l’étiquette fournie pour le lavage et le séchage.",
     caution: "La composition et les consignes d’entretien dépendent de la variante finale ; vérifie l’étiquette avant le premier lavage.",
   },
