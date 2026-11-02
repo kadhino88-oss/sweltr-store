@@ -52,7 +52,7 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     retailPrice: 44.99,
     variants: ["Coloris CJ : noir, gris, marron, bordeaux et bleu marine", "Taille unique indiquée par CJ : poitrine 156 cm, longueur 100 cm", "Composition principale annoncée : 80 % polyester ; conditionnement : 1 sweat"],
     supplierStock: "Référence CJ rapprochée de l’image produit SWELTR. Le client confirme le stock fournisseur pour cette référence. Quantité et ventilation CJ/usine non transmises ici ; le stock peut évoluer et n’est pas synchronisé en temps réel avec SWELTR.",
-    supplierShipping: "Le client confirme que l’expédition est disponible pour cette référence. Le transporteur, le délai et les frais dépendent du pays de destination ; le relevé détaillé par pays n’est pas encore intégré à cette fiche.",
+    supplierShipping: "Devis CJ consulté pour 1 sweat en taille unique vers la France (FR) : CJPacket EUB disponible, traitement estimé à 1–3 jours pour 90 % des commandes et livraison estimée à 12–50 jours. Il s’agit d’une estimation fournisseur pour cette destination et cette configuration ; le transporteur, le délai et les frais peuvent varier ailleurs.",
   },
   {
     slug: "bottes-plaid",
