@@ -10,8 +10,12 @@ export type WinterProduct = {
   highlights: string[];
   category: string;
   availability: "planned" | "existing";
-  /** Prix public communiqué sur la maquette SWELTR, en CHF. */
+  /** Prix public SWELTR en CHF, communiqué ou fixé à partir du coût fournisseur. */
   retailPrice?: number;
+  /** Variantes confirmées dans la fiche CJ consultée. */
+  variants?: string[];
+  /** État fournisseur observé, avec date, sans synchronisation temps réel. */
+  supplierStock?: string;
   href?: string;
 };
 
@@ -125,10 +129,10 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
   },
   {
     slug: "sous-vetements-thermiques",
-    name: "Ensemble thermique",
+    name: "Ensemble thermique en peluche",
     eyebrow: "UNE COUCHE DE CHALEUR",
-    short: "Une idée de première couche pour compléter une tenue les jours froids.",
-    description: "L’ensemble thermique est à l’étude comme première couche à porter sous une tenue d’hiver. La composition textile, les pièces incluses, les tailles et les conseils d’entretien doivent être confirmés sur la fiche fournisseur avant publication d’une offre. Aucun prix ni aucune commande ne sont annoncés à ce stade.",
+    short: "Un haut à manches longues et un pantalon assorti pour composer une tenue cocooning les jours froids.",
+    description: "La fiche fournisseur CJ décrit un ensemble deux pièces composé d’un haut pullover à col rond et d’un pantalon à taille intermédiaire. Le tissu annoncé est en polyester à 100 %. Le modèle enregistré est rouge, coupe femme. CJ précise que ses tailles asiatiques taillent plus petit que les tailles européennes et conseille de vérifier le tableau avant le choix.",
     image: "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/2380523575462.jpg",
     images: [
       "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/2380523575462.jpg",
@@ -141,9 +145,12 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
       "https://cc-west-usa.oss-accelerate.aliyuncs.com/2042/5609032418762.jpg",
     ],
     alt: "Visuel de référence fournisseur pour un ensemble thermique, modèle final à confirmer",
-    highlights: ["Bientôt disponible · prix à confirmer", "Modèle et composition à confirmer", "Tailles et disponibilité à confirmer"],
+    highlights: ["Ensemble haut pullover + pantalon", "Polyester annoncé à 100 % par le fournisseur", "Prix public SWELTR : 39,99 CHF · variantes fournisseur relevées"],
     category: "Vêtements thermiques",
     availability: "planned",
+    retailPrice: 39.99,
+    variants: ["Couleur enregistrée : rouge (modèle femme)", "Tailles CJ : L, XL, XXL, 3XL, L/XL et XL/L"],
+    supplierStock: "Relevé CJ du 02.11.2026 : 840’000 unités indiquées sur la référence. La variante rouge 3XL sélectionnée affichait 20’000 unités. Quantités fournisseur non synchronisées en temps réel avec la boutique.",
   },
 ];
 

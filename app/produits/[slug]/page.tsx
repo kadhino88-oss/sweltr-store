@@ -39,9 +39,9 @@ const productGuides: Record<string, { forWho: string; reason: string; use: strin
   },
   "sous-vetements-thermiques": {
     forWho: "Pour celles et ceux qui souhaitent étudier une couche supplémentaire sous leur tenue d’hiver.",
-    reason: "Cette sélection pourrait compléter une garde-robe pour les journées froides. SWELTR publiera le contenu, les tailles et le prix après contrôle de la fiche fournisseur.",
-    use: "Le guide des tailles et les conseils d’entretien seront affichés une fois la composition et le modèle confirmés.",
-    caution: "La coupe, la composition, les pièces incluses et les tailles ne sont pas encore confirmées ; aucune commande n’est ouverte.",
+    reason: "Le haut pullover et le pantalon assorti réunissent deux pièces dans une seule tenue détente. Le prix public SWELTR est de 39,99 CHF.",
+    use: "Consulte le tableau de tailles avant de choisir : CJ indique que ses tailles asiatiques taillent plus petit que les tailles européennes. Respecte l’étiquette pour l’entretien.",
+    caution: "Le fournisseur indique une composition polyester à 100 %. Vérifie la taille choisie et les instructions de lavage de l’étiquette du vêtement reçu.",
   },
   "gants-chauffants": {
     forWho: "Pour les trajets, les promenades et les journées froides où tu veux un accessoire dédié aux mains.",
@@ -137,7 +137,7 @@ export default async function WinterProductPage({ params }: { params: Promise<{ 
 
             <div className={`mt-5 rounded-2xl border p-4 ${isAvailable ? "border-emerald-200 bg-emerald-50/70" : "border-amber-200 bg-amber-50/70"}`}>
               <p className="inline-flex items-center gap-2 text-sm font-bold">{isAvailable ? <CheckCircle2 size={17} className="text-emerald-700"/> : <Clock3 size={17} className="text-amber-800"/>}{isAvailable ? "Disponible dans les kits d’hiver" : product.retailPrice !== undefined ? "Prix public affiché · ouverture des commandes à venir" : "Bientôt disponible · prix à confirmer"}</p>
-              <p className="mt-1 text-xs leading-5 text-slate-600">{isAvailable ? "Les articles ne sont pas vendus séparément. Le prix affiché sur chaque fiche correspond au kit complet." : product.retailPrice !== undefined ? "Prix public SWELTR fixé d’après la maquette validée. La commande sera ouverte après vérification de la variante, des tailles et des conditions de livraison." : "Le produit n’est pas ouvert à la commande. Son modèle, ses variantes, son prix et sa disponibilité seront confirmés avant la vente."}</p>
+              <p className="mt-1 text-xs leading-5 text-slate-600">{isAvailable ? "Les articles ne sont pas vendus séparément. Le prix affiché sur chaque fiche correspond au kit complet." : product.variants?.length ? "Les variantes ci-dessous ont été relevées sur la fiche CJ. Le stock fournisseur peut évoluer et n’est pas synchronisé en direct avec SWELTR; la commande ouvrira après le dernier contrôle logistique." : product.retailPrice !== undefined ? "Le prix public SWELTR est affiché. La commande ouvrira après vérification finale des variantes et de l’expédition." : "Le produit n’est pas ouvert à la commande. Son modèle, ses variantes, son prix et sa disponibilité seront confirmés avant la vente."}</p>
             </div>
 
             {isAvailable && <div className="mt-6"><p className="text-xs font-bold uppercase tracking-widest text-slate-500">Kits qui contiennent cet article</p><div className="mt-3 grid gap-2 sm:grid-cols-2">{relatedTiers.map((tier) => <Link key={tier.id} href={`/produit/${tier.id}`} className="rounded-xl border border-slate-200 bg-white p-3 transition hover:border-amber-400 hover:bg-amber-50"><span className="block text-sm font-bold">{tier.name}</span><span className="mt-1 block text-lg font-black">{formatPrice(tier.price)}</span><span className="mt-1 block text-[11px] leading-4 text-slate-600">{tier.items.join(" · ")}</span></Link>)}</div></div>}
@@ -152,6 +152,11 @@ export default async function WinterProductPage({ params }: { params: Promise<{ 
           <article className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8"><p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-amber-700">L’usage au quotidien</p><h2 className="mt-2 text-2xl font-black">Comment l’utiliser ?</h2><p className="mt-3 text-sm leading-7 text-slate-600">{guide?.use || "Les consignes d’utilisation détaillées seront publiées après validation du modèle final et de la notice fournisseur."}</p></article>
           <article className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8"><p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-amber-700">Pourquoi ce choix ?</p><h2 className="mt-2 text-2xl font-black">Un achat facile à comparer</h2><p className="mt-3 text-sm leading-7 text-slate-600">{guide?.forWho || "Une référence envisagée pour compléter la sélection d’hiver SWELTR. Consulte cette fiche pour suivre son état de préparation."}</p><p className="mt-3 text-sm leading-7 text-slate-600">{guide?.reason || "Le produit reste en préparation. Nous confirmerons les caractéristiques, le contenu, le prix et la disponibilité avant de le proposer à l’achat."}</p></article>
         </section>
+
+        {(product.variants?.length || product.supplierStock) && <section className="mt-5 grid gap-5 md:grid-cols-2" aria-label="Variantes et disponibilité fournisseur">
+          {product.variants?.length ? <article className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8"><p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-amber-700">Choix fournisseur</p><h2 className="mt-2 text-2xl font-black">Coloris et tailles</h2><ul className="mt-4 space-y-2 text-sm leading-6 text-slate-700">{product.variants.map((variant) => <li key={variant} className="flex gap-2"><CheckCircle2 size={17} className="mt-0.5 shrink-0 text-amber-700"/>{variant}</li>)}</ul></article> : <div/>}
+          {product.supplierStock && <article className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8"><p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-amber-700">Disponibilité observée</p><h2 className="mt-2 text-2xl font-black">Stock fournisseur</h2><p className="mt-3 text-sm leading-7 text-slate-600">{product.supplierStock}</p></article>}
+        </section>}
 
         <section className="mt-5 rounded-2xl border border-amber-200 bg-amber-50/70 p-6 md:p-8"><h2 className="text-xl font-black">Précautions et informations à vérifier</h2><p className="mt-3 text-sm leading-7 text-slate-700">{guide?.caution || "Les précautions, le mode d’emploi et l’entretien seront ajoutés après validation du produit retenu et des documents du fabricant."}</p></section>
 
