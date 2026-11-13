@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
-import { normalizeKitOrder } from "@/lib/kit-order";
+import { normalizeStoreOrder } from "@/lib/kit-order";
 import { SHIPPING_COUNTRIES } from "@/lib/shipping-countries";
+import { createStoreShippingQuote } from "@/lib/shipping-quote";
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -21,16 +22,20 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const items = normalizeKitOrder(body);
-  if (!items) return NextResponse.json({ error: "Sélection de kit invalide." }, { status: 400 });
+  const items = normalizeStoreOrder(body);
+  if (!items) return NextResponse.json({ error: "Sélection invalide." }, { status: 400 });
+  const countryCode = typeof (body as Record<string, unknown>).countryCode === "string"
+    ? (body as Record<string, unknown>).countryCode as string
+    : "";
+  if (!(SHIPPING_COUNTRIES as readonly string[]).includes(countryCode)) {
+    return NextResponse.json({ error: "Choisis un pays de livraison valide." }, { status: 400 });
+  }
 
-  const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "";
-  const isLiveStripeKey = /^(sk|rk)_live_/.test(stripeSecretKey);
-  if (isLiveStripeKey && process.env.STORE_SALES_ENABLED !== "true") {
+  if (process.env.STORE_SALES_ENABLED !== "true") {
     return NextResponse.json(
       {
         code: "STORE_NOT_LAUNCH_READY",
-        error: "Les commandes sont temporairement suspendues pendant la validation finale du stock, de la livraison et des coûts fournisseurs.",
+        error: "Les commandes en ligne ne sont pas encore ouvertes. Réessaie bientôt ou contacte notre service client.",
       },
       { status: 503, headers: { "Cache-Control": "no-store" } },
     );
@@ -43,6 +48,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const shippingQuote = await createStoreShippingQuote(items, countryCode);
     const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : (process.env.SITE_URL || "https://sweltr-store-five.vercel.app");
@@ -51,18 +57,38 @@ export async function POST(req: NextRequest) {
       locale: "auto",
       payment_method_types: ["card"],
       phone_number_collection: { enabled: true },
-      line_items: items.map(({ tier, quantity }) => ({
+      line_items: items.map((item) => ({
         price_data: {
           currency: "chf",
-          product_data: { name: `SWELTR — ${tier.name}`, description: tier.items.join(", ") },
-          unit_amount: Math.round(tier.price * 100),
+          product_data: item.kind === "kit"
+            ? { name: `SWELTR — ${item.tier.name}`, description: item.tier.items.join(", ") }
+            : { name: `SWELTR — ${item.product.name}`, description: item.product.short },
+          unit_amount: Math.round((item.kind === "kit" ? item.tier.price : item.product.retailPrice!) * 100),
         },
-        quantity,
+        quantity: item.quantity,
       })),
-      metadata: items.length === 1
-        ? { orderType: "kit", tierId: items[0].tierId, quantity: String(items[0].quantity) }
-        : { orderType: "kit-cart", cartItems: JSON.stringify(items.map(({ tierId, quantity }) => ({ tierId, quantity }))) },
-      shipping_address_collection: { allowed_countries: [...SHIPPING_COUNTRIES] },
+      metadata: {
+        orderType: "store-cart",
+        destinationCountry: countryCode,
+        logisticName: shippingQuote.logisticName,
+        shippingAmountCents: String(shippingQuote.shippingAmountCents),
+        fxUsdToChf: String(shippingQuote.exchangeRate),
+        cartItems: JSON.stringify(items.map((item) => item.kind === "kit"
+          ? { tierId: item.tierId, quantity: item.quantity }
+          : { productSlug: item.productSlug, quantity: item.quantity })),
+      },
+      shipping_address_collection: { allowed_countries: [countryCode as typeof SHIPPING_COUNTRIES[number]] },
+      shipping_options: [{
+        shipping_rate_data: {
+          type: "fixed_amount",
+          fixed_amount: { amount: shippingQuote.shippingAmountCents, currency: "chf" },
+          display_name: `Livraison estimée (jusqu’à ${shippingQuote.maxDays} jours)`,
+          delivery_estimate: {
+            minimum: { unit: "day", value: 1 },
+            maximum: { unit: "day", value: shippingQuote.maxDays },
+          },
+        },
+      }],
       success_url: `${siteUrl.replace(/\/$/, "")}/succes?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl.replace(/\/$/, "")}/annulation`,
     });

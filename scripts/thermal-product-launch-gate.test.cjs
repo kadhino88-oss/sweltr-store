@@ -7,10 +7,9 @@ function read(relativePath) {
   return fs.readFileSync(path.join(__dirname, "..", relativePath), "utf8");
 }
 
-test("live Stripe checkout remains blocked until store release approval", () => {
+test("Stripe checkout remains blocked in every mode until store release approval", () => {
   const route = read("app/api/checkout/route.ts");
-  assert.match(route, /isLiveStripeKey = \/\^\(sk\|rk\)_live_\//);
-  assert.match(route, /isLiveStripeKey && process\.env\.STORE_SALES_ENABLED !== "true"/);
+  assert.match(route, /process\.env\.STORE_SALES_ENABLED !== "true"/);
   assert.match(route, /STORE_NOT_LAUNCH_READY/);
   assert.match(read(".env.local.example"), /STORE_SALES_ENABLED=false/);
 });

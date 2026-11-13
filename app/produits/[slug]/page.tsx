@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, CheckCircle2, Clock3 } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
+import AddProductToCartButton from "@/components/AddProductToCartButton";
 import { TIERS } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
 import { getSiteUrl } from "@/lib/site";
@@ -15,7 +16,7 @@ const siteUrl = getSiteUrl();
 const productGuides: Record<string, { forWho: string; reason: string; use: string; caution: string }> = {
   "plaid-velours-bulle": {
     forWho: "Pour aménager un coin lecture, regarder un film au chaud ou offrir une pause douce à la maison.",
-    reason: "Son relief à bulles apporte une texture douce et du caractère au canapé. CJ propose plusieurs dimensions et couleurs ; SWELTR précisera la variante retenue avant l’ouverture des commandes. Prix public : 49,99 CHF.",
+    reason: "Son relief à bulles apporte une texture douce et du caractère au canapé. Plusieurs dimensions et couleurs sont prévues pour la collection SWELTR. Prix public : 49,99 CHF.",
     use: "Déplie la couverture sur un canapé ou un lit, puis suis l’étiquette fournie pour le lavage et le séchage.",
     caution: "La composition et les consignes d’entretien dépendent de la variante finale ; vérifie l’étiquette avant le premier lavage.",
   },
@@ -23,7 +24,7 @@ const productGuides: Record<string, { forWho: string; reason: string; use: strin
     forWho: "Pour celles et ceux qui aiment prolonger les soirées à la maison dans une tenue ample et décontractée.",
     reason: "Une pièce cocooning facile à enfiler pour lire, regarder un film ou télétravailler au calme. Prix public SWELTR : 44,99 CHF.",
     use: "Porte-le par-dessus une tenue adaptée à la température de la pièce et suis l’étiquette du vêtement pour l’entretien.",
-    caution: "CJ indique une taille unique et précise qu’une mesure manuelle peut varier de 2 à 3 cm. Compare les mesures du vêtement avec celles d’un sweat que tu portes confortablement ; les couleurs peuvent aussi légèrement varier selon l’écran.",
+    caution: "Les mesures peuvent varier légèrement d’un article à l’autre. Compare-les avec celles d’un sweat que tu portes confortablement ; les couleurs peuvent aussi légèrement varier selon l’écran.",
   },
   "bottes-plaid": {
     forWho: "Pour compléter les moments cocooning à la maison avec une paire de chaussons fantaisie.",
@@ -40,24 +41,24 @@ const productGuides: Record<string, { forWho: string; reason: string; use: strin
   "sous-vetements-thermiques": {
     forWho: "Pour celles et ceux qui souhaitent étudier une couche supplémentaire sous leur tenue d’hiver.",
     reason: "Le haut pullover et le pantalon assorti réunissent deux pièces dans une seule tenue détente. Le prix public SWELTR est de 39,99 CHF.",
-    use: "Consulte le tableau de tailles avant de choisir : CJ indique que ses tailles asiatiques taillent plus petit que les tailles européennes. Respecte l’étiquette pour l’entretien.",
-    caution: "Le fournisseur indique une composition polyester à 100 %. Vérifie la taille choisie et les instructions de lavage de l’étiquette du vêtement reçu.",
+    use: "Consulte le guide des tailles avant de choisir et respecte l’étiquette pour l’entretien.",
+    caution: "Vérifie la taille choisie et les instructions de lavage indiquées sur l’étiquette du vêtement.",
   },
   "gants-chauffants": {
     forWho: "Pour les trajets, les promenades et les journées froides où tu veux un accessoire dédié aux mains.",
-    reason: "Le même article est proposé dans les trois kits confirmés : tu peux commencer par les gants seuls ou choisir un kit qui les associe à d’autres accessoires.",
+    reason: "Choisis la paire seule pour équiper tes mains, ou retrouve-la dans les kits d’hiver SWELTR.",
     use: "Utilise les gants selon la notice du modèle livré. Elle indique les consignes exactes d’alimentation, de réglage, d’entretien et d’utilisation.",
     caution: "Lis la notice avant la première utilisation. N’utilise pas un accessoire chauffant si son câble ou son boîtier est visiblement endommagé.",
   },
   "echarpe-chauffante": {
     forWho: "Pour les personnes qui souhaitent ajouter un accessoire pour le cou à leur équipement d’hiver.",
-    reason: "Elle rejoint les gants dans les kits Duo et Grand Froid. Le contenu et le tarif du kit complet sont affichés avant l’ajout au panier.",
+    reason: "Choisis l’écharpe seule ou associe-la aux gants dans un kit d’hiver.",
     use: "Suis la notice du modèle fourni pour l’alimentation et l’utilisation. Débranche l’accessoire avant de le nettoyer et respecte les instructions d’entretien.",
     caution: "Consulte la notice avant utilisation et nettoyage. N’utilise pas l’article si le câble ou le boîtier est visiblement endommagé.",
   },
   "chaussettes-thermiques": {
     forWho: "Pour compléter une tenue d’hiver avec un accessoire dédié au confort des pieds.",
-    reason: "Elles sont incluses dans le Kit Grand Froid, avec les gants et l’écharpe. Le prix de 62,99 CHF correspond au kit complet.",
+    reason: "Choisis les chaussettes seules ou retrouve-les dans le Kit Grand Froid avec les gants et l’écharpe.",
     use: "Respecte les consignes d’entretien inscrites sur l’étiquette du produit livré.",
     caution: "Vérifie l’étiquette d’entretien et choisis des chaussures adaptées à ton confort.",
   },
@@ -135,33 +136,33 @@ export default async function WinterProductPage({ params }: { params: Promise<{ 
               {product.highlights.map((highlight) => <li key={highlight} className="flex items-start gap-2 text-sm leading-6 text-slate-700"><CheckCircle2 size={17} className="mt-0.5 shrink-0 text-amber-700"/><span>{highlight}</span></li>)}
             </ul>
 
-            <div className={`mt-5 rounded-2xl border p-4 ${isAvailable ? "border-emerald-200 bg-emerald-50/70" : "border-amber-200 bg-amber-50/70"}`}>
-              <p className="inline-flex items-center gap-2 text-sm font-bold">{isAvailable ? <CheckCircle2 size={17} className="text-emerald-700"/> : <Clock3 size={17} className="text-amber-800"/>}{isAvailable ? "Disponible dans les kits d’hiver" : product.retailPrice !== undefined ? "Prix public affiché · ouverture des commandes à venir" : "Bientôt disponible · prix à confirmer"}</p>
-              <p className="mt-1 text-xs leading-5 text-slate-600">{isAvailable ? "Les articles ne sont pas vendus séparément. Le prix affiché sur chaque fiche correspond au kit complet." : product.variants?.length ? "Les variantes ci-dessous ont été relevées sur la fiche CJ. Le stock fournisseur peut évoluer et n’est pas synchronisé en direct avec SWELTR; la commande ouvrira après le dernier contrôle logistique." : product.retailPrice !== undefined ? "Le prix public SWELTR est affiché. La commande ouvrira après vérification finale des variantes et de l’expédition." : "Le produit n’est pas ouvert à la commande. Son modèle, ses variantes, son prix et sa disponibilité seront confirmés avant la vente."}</p>
-            </div>
+            {isAvailable && <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4">
+              <p className="inline-flex items-center gap-2 text-sm font-bold"><CheckCircle2 size={17} className="text-emerald-700"/>Disponible dans les kits d’hiver</p>
+              <p className="mt-1 text-xs leading-5 text-slate-600">Le prix affiché correspond au kit complet indiqué sur la fiche.</p>
+            </div>}
 
             {isAvailable && <div className="mt-6"><p className="text-xs font-bold uppercase tracking-widest text-slate-500">Kits qui contiennent cet article</p><div className="mt-3 grid gap-2 sm:grid-cols-2">{relatedTiers.map((tier) => <Link key={tier.id} href={`/produit/${tier.id}`} className="rounded-xl border border-slate-200 bg-white p-3 transition hover:border-amber-400 hover:bg-amber-50"><span className="block text-sm font-bold">{tier.name}</span><span className="mt-1 block text-lg font-black">{formatPrice(tier.price)}</span><span className="mt-1 block text-[11px] leading-4 text-slate-600">{tier.items.join(" · ")}</span></Link>)}</div></div>}
 
             {isAvailable
-              ? <Link href={relatedTiers.length === 1 ? `/produit/${relatedTiers[0].id}` : "/boutique"} className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-amber-400 px-6 py-3 text-sm font-bold text-slate-950 transition hover:-translate-y-0.5 hover:bg-amber-300">Choisir un kit avec cet article <ArrowRight size={16}/></Link>
+              ? <div className="mt-6 grid gap-3">
+                  {product.retailPrice !== undefined && <AddProductToCartButton productSlug={product.slug} />}
+                  {relatedTiers.length > 0 && <Link href={relatedTiers.length === 1 ? `/produit/${relatedTiers[0].id}` : "/boutique"} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 text-sm font-bold text-slate-950 transition hover:border-amber-400 hover:bg-amber-50">Comparer les kits avec cet article <ArrowRight size={16}/></Link>}
+                </div>
               : <Link href="/boutique" className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-bold text-white transition hover:bg-slate-800">Voir les kits disponibles <ArrowRight size={16}/></Link>}
           </div>
         </section>
 
         <section className="mt-8 grid gap-5 md:grid-cols-2">
-          <article className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8"><p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-amber-700">L’usage au quotidien</p><h2 className="mt-2 text-2xl font-black">Comment l’utiliser ?</h2><p className="mt-3 text-sm leading-7 text-slate-600">{guide?.use || "Les consignes d’utilisation détaillées seront publiées après validation du modèle final et de la notice fournisseur."}</p></article>
+          <article className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8"><p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-amber-700">L’usage au quotidien</p><h2 className="mt-2 text-2xl font-black">Comment l’utiliser ?</h2><p className="mt-3 text-sm leading-7 text-slate-600">{guide?.use || "Suis les consignes d’utilisation et d’entretien indiquées sur le produit."}</p></article>
           <article className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8"><p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-amber-700">Pourquoi ce choix ?</p><h2 className="mt-2 text-2xl font-black">Un achat facile à comparer</h2><p className="mt-3 text-sm leading-7 text-slate-600">{guide?.forWho || "Une référence envisagée pour compléter la sélection d’hiver SWELTR. Consulte cette fiche pour suivre son état de préparation."}</p><p className="mt-3 text-sm leading-7 text-slate-600">{guide?.reason || "Le produit reste en préparation. Nous confirmerons les caractéristiques, le contenu, le prix et la disponibilité avant de le proposer à l’achat."}</p></article>
         </section>
 
-        {(product.variants?.length || product.supplierStock) && <section className="mt-5 grid gap-5 md:grid-cols-2" aria-label="Variantes et disponibilité fournisseur">
-          {product.variants?.length ? <article className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8"><p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-amber-700">Choix fournisseur</p><h2 className="mt-2 text-2xl font-black">Coloris et tailles</h2><ul className="mt-4 space-y-2 text-sm leading-6 text-slate-700">{product.variants.map((variant) => <li key={variant} className="flex gap-2"><CheckCircle2 size={17} className="mt-0.5 shrink-0 text-amber-700"/>{variant}</li>)}</ul></article> : <div/>}
-          {(product.supplierStock || product.supplierShipping) && <article className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8"><p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-amber-700">Disponibilité observée</p><h2 className="mt-2 text-2xl font-black">Stock et expédition</h2>{product.supplierStock && <p className="mt-3 text-sm leading-7 text-slate-600">{product.supplierStock}</p>}{product.supplierShipping && <p className="mt-3 text-sm leading-7 text-slate-600">{product.supplierShipping}</p>}</article>}
-        </section>}
+        {isAvailable && product.variants?.length ? <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-6 md:p-8" aria-label="Détails du produit"><h2 className="text-2xl font-black">Détails du produit</h2><ul className="mt-4 space-y-2 text-sm leading-6 text-slate-700">{product.variants.map((variant) => <li key={variant} className="flex gap-2"><CheckCircle2 size={17} className="mt-0.5 shrink-0 text-amber-700"/>{variant}</li>)}</ul></section> : null}
 
         <section className="mt-5 rounded-2xl border border-amber-200 bg-amber-50/70 p-6 md:p-8"><h2 className="text-xl font-black">Précautions et informations à vérifier</h2><p className="mt-3 text-sm leading-7 text-slate-700">{guide?.caution || "Les précautions, le mode d’emploi et l’entretien seront ajoutés après validation du produit retenu et des documents du fabricant."}</p></section>
 
         <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 md:p-8" aria-labelledby="product-faq-title"><p className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-amber-700">Questions fréquentes</p><h2 id="product-faq-title" className="mt-2 text-2xl font-black">Ce qu’il faut savoir avant de choisir</h2><div className="mt-4 divide-y divide-slate-200">
-          <details className="group py-4"><summary className="cursor-pointer list-none font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-600">Peut-on commander cet article seul ?<span className="float-right text-amber-700" aria-hidden="true">＋</span></summary><p className="mt-3 text-sm leading-7 text-slate-600">{isAvailable ? "Non, il est proposé dans un ou plusieurs kits SWELTR. Le prix unitaire de l’accessoire n’est pas confirmé ; seul le tarif du kit complet est affiché." : "Non. Le produit est en préparation et aucune commande n’est ouverte."}</p></details>
+          <details className="group py-4"><summary className="cursor-pointer list-none font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-600">Peut-on commander cet article seul ?<span className="float-right text-amber-700" aria-hidden="true">＋</span></summary><p className="mt-3 text-sm leading-7 text-slate-600">{isAvailable && product.retailPrice !== undefined ? `Oui. ${product.name} est disponible seul à ${formatPrice(product.retailPrice)}. Tu peux aussi le retrouver dans les kits associés.` : "Cet article est présenté dans la sélection SWELTR. Consulte le catalogue pour découvrir les produits actuellement proposés."}</p></details>
           <details className="group py-4"><summary className="cursor-pointer list-none font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-600">Quel est son prix ?<span className="float-right text-amber-700" aria-hidden="true">＋</span></summary><p className="mt-3 text-sm leading-7 text-slate-600">{isAvailable ? "Les kits confirmés coûtent 36,99 CHF (Solo Chaleur Mains), 52,99 CHF (Duo Chaleur Totale) et 62,99 CHF (Kit Grand Froid). La fiche de chaque kit précise son contenu." : product.retailPrice !== undefined ? `Le prix public SWELTR est ${formatPrice(product.retailPrice)}. La commande sera ouverte après vérification finale des variantes et de l’expédition.` : "Bientôt disponible · prix à confirmer. Le tarif sera publié après validation de la référence et des coûts de livraison."}</p></details>
           <details className="group py-4"><summary className="cursor-pointer list-none font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-600">Pourquoi acheter chez SWELTR ?<span className="float-right text-amber-700" aria-hidden="true">＋</span></summary><p className="mt-3 text-sm leading-7 text-slate-600">Tu peux comparer le contenu exact des kits, voir leur prix complet avant de choisir et consulter les consignes disponibles. Les nouveautés qui ne sont pas encore validées restent clairement indiquées comme en préparation.</p></details>
         </div></section>

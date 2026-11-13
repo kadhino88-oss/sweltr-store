@@ -111,15 +111,26 @@ export type CjLineItem = {
   quantity: number;
 };
 
-type CjFreightOption = {
+export type CjFreightOption = {
   logisticName?: unknown;
   logisticPrice?: unknown;
+  logisticAging?: unknown;
 };
 
-async function getCheapestAvailableLogistics(
+export type EligibleCjFreight = { logisticName: string; costUsd: number; maxDays: number };
+
+export function maxDeliveryDays(value: unknown): number | null {
+  if (typeof value !== "string" && typeof value !== "number") return null;
+  const match = String(value).trim().match(/^(\d+)\s*(?:-\s*(\d+))?$/);
+  if (!match) return null;
+  const max = Number(match[2] ?? match[1]);
+  return Number.isInteger(max) && max > 0 ? max : null;
+}
+
+export async function getEligibleShippingOptions(
   destinationCountryCode: string,
   products: CjLineItem[],
-): Promise<string> {
+): Promise<EligibleCjFreight[]> {
   const token = await getAccessToken();
   const res = await fetch(CJ_API_BASE_URL + "/logistic/freightCalculate", {
     method: "POST",
@@ -131,19 +142,61 @@ async function getCheapestAvailableLogistics(
     }),
     cache: "no-store",
   });
-  if (!res.ok) throw new Error("Échec HTTP du calcul de transport CJ (HTTP " + res.status + ").");
-  let data: { result?: boolean; message?: string; data?: unknown };
-  try { data = await res.json(); } catch { throw new Error("Réponse de calcul de transport CJ invalide."); }
-  if (data.result !== true || !Array.isArray(data.data)) {
-    throw new Error("Aucun tarif de transport CJ confirmé : " + (data.message || "réponse invalide"));
-  }
-  const options = (data.data as CjFreightOption[])
-    .filter((option) => typeof option.logisticName === "string" && option.logisticName.trim().length > 0 && Number.isFinite(Number(option.logisticPrice)) && Number(option.logisticPrice) >= 0)
-    .sort((a, b) => Number(a.logisticPrice) - Number(b.logisticPrice));
-  if (options.length === 0) throw new Error("Aucun transporteur CJ disponible pour " + destinationCountryCode + ".");
-  // Le choix du tarif le moins cher ne garantit pas que le transporteur offre un suivi.
-  // La disponibilité du suivi doit être confirmée avant le lancement réel.
-  return (options[0].logisticName as string).trim();
+  if (!res.ok) throw new Error("Échec HTTP du calcul de transport (HTTP " + res.status + ").");
+  const data = await res.json() as { result?: boolean; message?: string; data?: unknown };
+  if (data.result !== true || !Array.isArray(data.data)) throw new Error("Aucun tarif de livraison disponible pour cette destination.");
+  return (data.data as CjFreightOption[]).flatMap((option) => {
+    const logisticName = typeof option.logisticName === "string" ? option.logisticName.trim() : "";
+    const costUsd = Number(option.logisticPrice);
+    const maxDays = maxDeliveryDays(option.logisticAging);
+    return logisticName && Number.isFinite(costUsd) && costUsd >= 0 && maxDays !== null && maxDays <= 10
+      ? [{ logisticName, costUsd, maxDays }]
+      : [];
+  }).sort((a, b) => a.costUsd - b.costUsd);
+}
+
+export async function getVariantCostAndStock(vid: string): Promise<{ costUsd: number; availableQuantity: number }> {
+  const token = await getAccessToken();
+  const url = new URL(CJ_API_BASE_URL + "/product/variant/queryByVid");
+  url.searchParams.set("vid", vid);
+  url.searchParams.set("features", "enable_inventory");
+  const res = await fetch(url, { headers: { "CJ-Access-Token": token }, cache: "no-store" });
+  if (!res.ok) throw new Error("Impossible de vérifier la disponibilité d’un article.");
+  const result = await res.json() as { result?: boolean; data?: Record<string, unknown> };
+  if (!result.result || !result.data || result.data.vid !== vid) throw new Error("Référence d’article indisponible.");
+  const expectedProductPattern: Record<string, RegExp> = {
+    "42BD9CA6-6D95-4B26-8F20-A52375663923": /glove|mitten/i,
+    "2410090540221610300": /scarf|neck.?warmer/i,
+    "1573872746495488003": /sock/i,
+  };
+  const expectedName = expectedProductPattern[vid];
+  const pid = typeof result.data.pid === "string" ? result.data.pid : "";
+  if (!expectedName || !pid) throw new Error("Référence d’article non vérifiée.");
+  const productUrl = new URL(CJ_API_BASE_URL + "/product/query");
+  productUrl.searchParams.set("pid", pid);
+  const productResponse = await fetch(productUrl, { headers: { "CJ-Access-Token": token }, cache: "no-store" });
+  if (!productResponse.ok) throw new Error("Identité du produit temporairement indisponible.");
+  const productResult = await productResponse.json() as { result?: boolean; data?: Record<string, unknown> };
+  const productName = typeof productResult.data?.productNameEn === "string" ? productResult.data.productNameEn : "";
+  if (!productResult.result || !expectedName.test(productName)) throw new Error("La référence choisie ne correspond pas au produit attendu.");
+  const costUsd = Number(result.data.variantSellPrice);
+  const inventories = Array.isArray(result.data.inventories) ? result.data.inventories as Array<Record<string, unknown>> : [];
+  const availableQuantity = inventories.reduce((total, row) => total + Math.max(0, Number(row.totalInventory) || 0), 0);
+  if (!Number.isFinite(costUsd) || costUsd <= 0) throw new Error("Prix d’achat temporairement indisponible.");
+  return { costUsd, availableQuantity };
+}
+
+async function getCheapestAvailableLogistics(
+  destinationCountryCode: string,
+  products: CjLineItem[],
+  requestedLogisticName?: string,
+): Promise<string> {
+  const options = await getEligibleShippingOptions(destinationCountryCode, products);
+  const selected = requestedLogisticName
+    ? options.find((option) => option.logisticName === requestedLogisticName)
+    : options[0];
+  if (!selected) throw new Error("Aucun transporteur ne respecte actuellement le délai maximum de 10 jours.");
+  return selected.logisticName;
 }
 
 /**
@@ -238,9 +291,9 @@ export async function findCjOrderByOrderNumber(
   };
 }
 
-export async function createCjOrder(shipping: CjShippingInfo, products: CjLineItem[]) {
+export async function createCjOrder(shipping: CjShippingInfo, products: CjLineItem[], logisticName?: string) {
   const token = await getAccessToken();
-  const logisticName = await getCheapestAvailableLogistics(shipping.shippingCountryCode, products);
+  const selectedLogisticName = await getCheapestAvailableLogistics(shipping.shippingCountryCode, products, logisticName);
   const shippingCountry = shipping.shippingCountryCode === "FR"
     ? "France"
     : shipping.shippingCountryCode === "CH"
@@ -258,7 +311,7 @@ export async function createCjOrder(shipping: CjShippingInfo, products: CjLineIt
       shippingCustomerName: shipping.shippingCustomerName,
       shippingCountryCode: shipping.shippingCountryCode,
       shippingCountry,
-      logisticName,
+      logisticName: selectedLogisticName,
       // Crée la commande sans paiement via le flux CJ hébergé obsolète.
       payType: 3,
       shippingProvince: shipping.shippingProvince,

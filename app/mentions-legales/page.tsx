@@ -21,7 +21,7 @@ export default function MentionsLegales() {
           <strong>Rue Joseph-Pasquier 1, 1203 Genève, Suisse</strong>.
         </p>
         <p>
-          Contact : <strong>contact@bkentreprise.com</strong> — <strong>+41 79 934 99 46</strong>
+          Contact : <strong>contact@bk-entreprise.com</strong> · <strong>bkentreprise88@gmail.com</strong> — <strong>+41 79 934 99 46</strong>
         </p>
         <p>Directeur de la publication : BK Entreprise.</p>
       </section>
@@ -39,17 +39,15 @@ export default function MentionsLegales() {
         <p>
           L'ensemble des contenus présents sur ce site (textes, visuels, logo) est la propriété de
           SWELTR, sauf mention contraire. Les photographies produit sont fournies par nos
-          partenaires fournisseurs et utilisées dans le cadre de la commercialisation des produits
-          présentés.
+          partenaires de la marque et utilisées pour présenter les produits de la collection.
         </p>
       </section>
 
       <section>
         <h2>Activité</h2>
         <p>
-          SWELTR est un site de vente en ligne fonctionnant selon un modèle de dropshipping : les
-          produits commandés sont expédiés directement par nos fournisseurs partenaires vers
-          l'adresse indiquée par le client lors de la commande.
+          SWELTR est une boutique en ligne. Les produits commandés sont expédiés à l'adresse
+          indiquée par le client lors de la commande.
         </p>
       </section>
 
@@ -65,7 +63,7 @@ export default function MentionsLegales() {
         <h2>Contact</h2>
         <p>
           Pour toute question relative au site ou à une commande, tu peux nous contacter à l'adresse{" "}
-          <strong>contact@bkentreprise.com</strong> ou par téléphone au{" "}
+          <strong>contact@bk-entreprise.com</strong> ou <strong>bkentreprise88@gmail.com</strong>, ou par téléphone au{" "}
           <strong>+41 79 934 99 46</strong>.
         </p>
       </section>

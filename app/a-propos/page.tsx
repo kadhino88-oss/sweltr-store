@@ -43,7 +43,7 @@ export default function AboutPage() {
           <Layers3 className="text-gold-deep" size={24} />
           <h2 className="mt-5 font-display text-xl font-semibold text-ink">Isolation complémentaire</h2>
           <p className="mt-3">
-            Les chaussettes du kit Trio sont thermiques et sans batterie : elles retiennent la
+            Les chaussettes du Kit Grand Froid sont thermiques et sans batterie : elles retiennent la
             chaleur naturelle du pied au lieu d'en produire.
           </p>
         </article>

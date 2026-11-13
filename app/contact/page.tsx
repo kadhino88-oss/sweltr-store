@@ -25,12 +25,10 @@ export default function ContactPage() {
           <Mail className="text-gold-deep" size={24} />
           <h2 className="mt-5 font-display text-xl font-semibold text-ink">Écris-nous</h2>
           <p className="mt-2">Pour toute question sur un produit ou une commande.</p>
-          <a
-            className="mt-5 inline-flex items-center gap-2 break-all font-semibold text-gold-deep underline underline-offset-4"
-            href="mailto:contact@bkentreprise.com"
-          >
-            contact@bkentreprise.com <ArrowUpRight size={16} />
-          </a>
+          <div className="mt-5 grid gap-2">
+            <a className="inline-flex items-center gap-2 break-all font-semibold text-gold-deep underline underline-offset-4" href="mailto:contact@bk-entreprise.com">contact@bk-entreprise.com <ArrowUpRight size={16} /></a>
+            <a className="inline-flex items-center gap-2 break-all font-semibold text-gold-deep underline underline-offset-4" href="mailto:bkentreprise88@gmail.com">bkentreprise88@gmail.com <ArrowUpRight size={16} /></a>
+          </div>
         </article>
         <article className="rounded-2xl border border-line bg-panel p-6 md:p-8">
           <Phone className="text-gold-deep" size={24} />

@@ -47,7 +47,7 @@ export default function Confidentialite() {
         </p>
         <ul>
           <li>Stripe (traitement du paiement)</li>
-          <li>Notre fournisseur logistique (expédition du colis)</li>
+          <li>Le service de livraison choisi pour acheminer le colis</li>
           <li>Vercel (hébergement technique du site)</li>
         </ul>
       </section>
@@ -66,7 +66,7 @@ export default function Confidentialite() {
         <p>
           Conformément au RGPD, tu disposes d'un droit d'accès, de rectification, d'effacement, de
           limitation et d'opposition concernant tes données personnelles. Pour exercer ces droits,
-          contacte-nous à <strong>contact@bkentreprise.com</strong>.
+          contacte-nous à <strong>contact@bk-entreprise.com</strong> ou <strong>bkentreprise88@gmail.com</strong>.
         </p>
       </section>
 

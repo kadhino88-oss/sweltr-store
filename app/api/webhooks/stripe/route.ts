@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { SHIPPING_COUNTRIES } from "@/lib/shipping-countries";
-import { cjOrderItems, kitOrderTotalCents, normalizeKitOrder } from "@/lib/kit-order";
+import { normalizeStoreOrder, storeOrderItems, storeOrderTotalCents } from "@/lib/kit-order";
 import { createCjOrder, findCjOrderByOrderNumber, getCjOrderNumber, payCjOrder, prepareCjOrderForPayment } from "@/lib/cj";
+import { createStoreShippingQuote } from "@/lib/shipping-quote";
 
 // Stripe doit recevoir le corps brut pour vérifier la signature du webhook.
 export const runtime = "nodejs";
@@ -129,26 +130,36 @@ export async function POST(req: NextRequest) {
       return webhookResponse();
     }
 
-    let kitOrder = null;
+    let storeOrder = null;
     if (session.metadata?.cartItems) {
       try {
-        kitOrder = normalizeKitOrder({ items: JSON.parse(session.metadata.cartItems) });
+        storeOrder = normalizeStoreOrder({ items: JSON.parse(session.metadata.cartItems) });
       } catch {
-        kitOrder = null;
+        storeOrder = null;
       }
     } else {
-      kitOrder = normalizeKitOrder({
+      storeOrder = normalizeStoreOrder({
         tierId: session.metadata?.tierId,
         quantity: session.metadata?.quantity || 1,
       });
     }
-    if (!kitOrder) {
+    if (!storeOrder) {
       console.error(`Contenu de panier invalide pour la session Stripe ${session.id}. Traitement requis.`);
       return webhookRetryResponse("Contenu de commande invalide : vérification requise.");
     }
 
-    // Recalculer les prix côté serveur avant toute création de commande fournisseur.
-    const expectedAmount = kitOrderTotalCents(kitOrder);
+    // Vérifier le montant des articles et des frais de livraison avant tout traitement.
+    const expectedItemsAmount = storeOrderTotalCents(storeOrder);
+    const shipping = session.shipping_details;
+    const address = shipping?.address;
+    const destinationCountry = session.metadata?.destinationCountry || address?.country || "";
+    const hasShippingQuote = Boolean(session.metadata?.destinationCountry && session.metadata?.logisticName);
+    const shippingAmountCents = hasShippingQuote ? Number(session.metadata?.shippingAmountCents) : 0;
+    if (hasShippingQuote && (!Number.isInteger(shippingAmountCents) || shippingAmountCents < 0 || address?.country !== destinationCountry)) {
+      console.error(`Devis d’expédition incohérent pour la session Stripe ${session.id}.`);
+      return webhookRetryResponse("Devis de livraison incohérent : vérification requise.");
+    }
+    const expectedAmount = expectedItemsAmount + shippingAmountCents;
     if (session.currency !== "chf" || session.amount_total !== expectedAmount) {
       console.error(
         `Montant/devise incohérents pour la session Stripe ${session.id} : devise=${session.currency}, montant=${session.amount_total}. Traitement requis.`,
@@ -156,7 +167,7 @@ export async function POST(req: NextRequest) {
       return webhookRetryResponse("Montant du paiement incohérent : commande fournisseur suspendue.");
     }
 
-    const supplierItems = cjOrderItems(kitOrder);
+    const supplierItems = storeOrderItems(storeOrder);
     if (!supplierItems.length) {
       console.error(
         `Aucun produit CJ configuré pour le contenu de la session Stripe ${session.id}.`,
@@ -164,8 +175,6 @@ export async function POST(req: NextRequest) {
       return webhookRetryResponse("Produits fournisseur non configurés pour ce kit.");
     }
 
-    const shipping = session.shipping_details;
-    const address = shipping?.address;
     if (!address?.country || !address.line1 || !address.city || !address.postal_code) {
       console.error(
         `Adresse de livraison incomplète pour la session Stripe ${session.id}. Traitement manuel requis.`,
@@ -175,11 +184,45 @@ export async function POST(req: NextRequest) {
 
     // Aucune session ne peut expédier vers une destination qui n'est pas proposée
     // par le Checkout international ; CJ confirmera le transporteur lors de la commande.
-    if (!(SHIPPING_COUNTRIES as readonly string[]).includes(address.country)) {
+    if (!(SHIPPING_COUNTRIES as readonly string[]).includes(address.country) || address.country !== destinationCountry) {
       console.error(
         `Pays de livraison non pris en charge pour la session Stripe ${session.id} : ${address.country}.`,
       );
       return webhookRetryResponse("Pays de livraison non pris en charge : commande fournisseur suspendue.");
+    }
+
+    let shippingQuote;
+    try {
+      shippingQuote = await createStoreShippingQuote(
+        storeOrder,
+        address.country,
+        hasShippingQuote ? session.metadata?.logisticName : undefined,
+      );
+    } catch (error: unknown) {
+      console.error(`Stock ou expédition non confirmés après paiement pour ${session.id} :`, getStripeErrorDetails(error));
+      const paymentIntent = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
+      if (!paymentIntent) return webhookRetryResponse("Paiement à rembourser : adresse ou expédition non confirmée.");
+      try {
+        await stripe.refunds.create({ payment_intent: paymentIntent, reason: "requested_by_customer" }, { idempotencyKey: `sweltr-unshippable-${session.id}` });
+        console.error(`Remboursement Stripe lancé pour ${session.id}, car aucune livraison conforme n’est disponible.`);
+        return webhookResponse();
+      } catch (refundError: unknown) {
+        console.error(`Remboursement Stripe requis pour ${session.id} :`, getStripeErrorDetails(refundError));
+        return webhookRetryResponse("Expédition non confirmée : remboursement en cours de vérification.");
+      }
+    }
+
+    if (hasShippingQuote && shippingQuote.shippingAmountCents > shippingAmountCents) {
+      const paymentIntent = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
+      if (!paymentIntent) return webhookRetryResponse("Montant de livraison à rembourser : vérification requise.");
+      try {
+        await stripe.refunds.create({ payment_intent: paymentIntent, reason: "requested_by_customer" }, { idempotencyKey: `sweltr-shipping-adjust-${session.id}` });
+        console.error(`Remboursement Stripe lancé pour ${session.id}, car le tarif de livraison a augmenté après le devis.`);
+        return webhookResponse();
+      } catch (refundError: unknown) {
+        console.error(`Remboursement Stripe requis pour ${session.id} :`, getStripeErrorDetails(refundError));
+        return webhookRetryResponse("Tarif de livraison modifié : remboursement en cours de vérification.");
+      }
     }
 
     // La référence stable permet de retrouver une commande créée lors d'une tentative
@@ -201,6 +244,7 @@ export async function POST(req: NextRequest) {
         email: session.customer_details?.email || "",
       },
       supplierItems,
+      shippingQuote.logisticName,
     );
     if (!order?.orderId) {
       console.error("CJ n'a retourné aucun identifiant pour la session Stripe " + session.id + ".");

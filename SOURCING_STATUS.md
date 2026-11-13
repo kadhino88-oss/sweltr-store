@@ -1,5 +1,13 @@
 # SWELTR — état du sourcing fournisseur
-Mise à jour : 2 novembre 2026
+Mise à jour : 13 novembre 2026
+
+## Contrôle de lancement du 13 novembre 2026
+- Les 26 images actuellement utilisées ont été copiées dans `public/images/catalog/` et les 44 références des catalogues ont été remplacées par des chemins locaux. Les images montrent les bons articles, mais certaines photos contiennent encore les marquages du fabricant visibles sur le produit.
+- Les prix confirmés des kits restent 36,99 CHF, 52,99 CHF et 62,99 CHF. Les prix unitaires gants 36,99 CHF, écharpe 16,00 CHF et chaussettes 10,00 CHF reprennent l’écart exact entre les prix des kits ; leur marge fournisseur et leur éligibilité logistique restent à confirmer.
+- Le checkout de production n’est pas ouvert : `STORE_SALES_ENABLED` est absent des variables du projet. Le code bloque désormais les paiements en mode test comme en mode réel sans activation explicite.
+- Le code local recalcule désormais stock et prix d’achat des variantes, sélectionne uniquement un devis d’expédition estimé à 10 jours maximum, affiche et facture les frais au checkout, puis revalide la disponibilité et le transporteur au webhook. Si la vérification post-paiement échoue, il lance un remboursement idempotent.
+- L’activation en production reste à vérifier : le nouveau parcours doit être essayé avec les variables de production sur les pays desservis et une commande Stripe/CJ de test. `STORE_SALES_ENABLED` n’est pas encore configuré dans le projet Vercel, et aucun déploiement de ces changements n’a été créé.
+- Les références enregistrées dans le catalogue doivent être vérifiées en direct : le contrôle de nom du produit, stock, coût et délai fait désormais échouer le devis si une VID ne correspond pas à l’article attendu.
 
 ## Objectif non négociable
 Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de catégories. Ne jamais déclarer un produit prêt à vendre sans référence exacte, variante, stock, frais/délai d'expédition et conformité vérifiés.

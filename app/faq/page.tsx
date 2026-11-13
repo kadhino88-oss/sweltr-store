@@ -31,7 +31,7 @@ export default function FaqPage() {
     },
     {
       q: "Comment demander de l'aide pour une commande ?",
-      a: "Écris au service client à contact@bkentreprise.com ou appelle le +41 79 934 99 46. Pour faciliter la recherche, indique le numéro de commande et l'adresse e-mail utilisée lors du paiement. N'envoie jamais tes données de carte bancaire.",
+      a: "Écris au service client à contact@bk-entreprise.com ou bkentreprise88@gmail.com, ou appelle le +41 79 934 99 46. Pour faciliter la recherche, indique le numéro de commande et l'adresse e-mail utilisée lors du paiement. N'envoie jamais tes données de carte bancaire.",
     },
     {
       q: "Les chaussettes thermiques chauffent-elles avec une batterie ?",

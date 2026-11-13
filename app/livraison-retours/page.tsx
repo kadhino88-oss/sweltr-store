@@ -95,9 +95,8 @@ export default function DeliveryReturnsPage() {
 
       <p>
         Les prix de la boutique sont affichés en CHF. Les transporteurs, frais et délais varient
-        selon la destination et le produit ; une estimation CJ pour une configuration de la
-        couverture vers la Suisse indique 8 à 15 jours de livraison après 1 à 4 jours de traitement.
-        Cette estimation ne s’applique pas aux autres pays ou variantes. Pour d'autres questions,
+        selon la destination et le produit. Les délais applicables à ta commande sont communiqués
+        avant sa validation. Pour d'autres questions,
         consulte la <Link href="/faq" className="text-gold-deep underline">FAQ</Link>.
       </p>
     </ContentPage>

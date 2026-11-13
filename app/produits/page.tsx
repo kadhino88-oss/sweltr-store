@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2, Clock3, Search } from "lucide-react";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
+import AddProductToCartButton from "@/components/AddProductToCartButton";
 import SiteHeader from "@/components/SiteHeader";
 import { TIERS } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
@@ -65,11 +66,11 @@ export default async function ProductsCatalogPage({ searchParams }: { searchPara
         </section>}
 
         {active.length > 0 && <section aria-labelledby="accessoires-title" className="mb-12">
-          <div className="mb-6"><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-amber-700">Inclus dans les kits disponibles</p><h2 id="accessoires-title" className="mt-2 font-display text-2xl font-black sm:text-3xl">Les accessoires, en détail</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Les prix unitaires ne sont pas affichés : ces articles sont proposés dans les kits dont le tarif complet est confirmé.</p></div>
+          <div className="mb-6"><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-amber-700">Disponibles seuls ou en kit</p><h2 id="accessoires-title" className="mt-2 font-display text-2xl font-black sm:text-3xl">Choisis tes accessoires à l’unité</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Chaque accessoire affiche son prix à l’unité. Tu peux aussi le retrouver dans les kits d’hiver SWELTR.</p></div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {active.map((product) => <article key={product.slug} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
               <Link href={`/produits/${product.slug}`} className="block"><div className="relative aspect-[4/3] bg-white"><Image src={product.image} alt={product.alt} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-contain p-5"/></div></Link>
-              <div className="p-5"><p className="font-mono text-[10px] font-bold uppercase tracking-widest text-amber-700">{product.category}</p><h3 className="mt-2 text-xl font-bold">{product.name}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{product.short}</p><p className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-emerald-800"><CheckCircle2 size={15}/> Inclus dans les kits indiqués sur la fiche</p><Link href={`/produits/${product.slug}`} className="mt-4 flex min-h-11 items-center justify-center gap-2 rounded-full border border-slate-300 px-4 text-sm font-semibold transition hover:border-amber-500 hover:bg-amber-50">Voir la fiche détaillée <ArrowRight size={15}/></Link></div>
+              <div className="flex flex-1 flex-col p-5"><p className="font-mono text-[10px] font-bold uppercase tracking-widest text-amber-700">{product.category}</p><h3 className="mt-2 text-xl font-bold">{product.name}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{product.short}</p><p className="mt-auto pt-4 text-2xl font-black">{product.retailPrice !== undefined ? formatPrice(product.retailPrice) : "Bientôt disponible · prix à confirmer"}</p><div className="mt-3 grid gap-2"><AddProductToCartButton productSlug={product.slug}/><Link href={`/produits/${product.slug}`} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-slate-300 px-4 text-sm font-semibold transition hover:border-amber-500 hover:bg-amber-50">Détails et kits associés <ArrowRight size={15}/></Link></div></div>
             </article>)}
           </div>
         </section>}

@@ -15,7 +15,7 @@ const statusCopy = {
   confirmed: {
     title: "Paiement confirmé",
     message:
-      "Stripe confirme que ton paiement a été effectué. La création et la préparation de la commande fournisseur peuvent encore nécessiter un délai. Si tu as une question, contacte notre service client.",
+      "Stripe confirme que ton paiement a été effectué. La préparation de ta commande peut encore nécessiter un délai. Si tu as une question, contacte notre service client.",
     Icon: CheckCircle2,
     iconClass: "text-gold-deep",
   },
@@ -82,7 +82,7 @@ export default function SuccessPageClient({ status, tracking }: SuccessPageClien
               <>
                 <p className="mb-2 text-xs font-bold uppercase tracking-widest text-gold-deep">Prochaine étape</p>
                 <h2 className="font-display text-lg font-semibold text-ink">Préparation de ta commande</h2>
-                <p className="mt-2 text-sm text-soft">Le numéro de suivi apparaîtra ici dès que le transporteur sera attribué par notre fournisseur. Tu peux revenir sur cette page pour vérifier.</p>
+                <p className="mt-2 text-sm text-soft">Le numéro de suivi apparaîtra ici dès qu’il sera disponible. Tu peux revenir sur cette page pour vérifier.</p>
               </>
             )}
           </div>

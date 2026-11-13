@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Flower2, Leaf, ShieldCheck, Snowflake, Sun } from "lucide-react";
 import AddToCartButton from "@/components/AddToCartButton";
+import AddProductToCartButton from "@/components/AddProductToCartButton";
 import { PRODUCT_IMAGES, TIERS } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
 import { WINTER_PRODUCTS } from "@/lib/winter-products";
@@ -67,7 +68,7 @@ export default function WinterShowcase() {
       <section id="essentiels" className="scroll-mt-20 bg-[#F8F6F0] px-3 py-8 text-slate-950 sm:px-5 md:px-8 md:py-12" aria-labelledby="featured-title">
         <div className="mx-auto max-w-[1540px]">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3 sm:mb-7">
-            <div><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-amber-800">À découvrir chez SWELTR</p><h2 id="featured-title" className="mt-2 font-display text-2xl font-black sm:text-3xl">Nos kits et essentiels d’hiver</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Des kits à choisir maintenant et trois nouveautés avec leur prix public SWELTR déjà affiché.</p></div>
+            <div><p className="font-mono text-[10px] font-bold uppercase tracking-[.2em] text-amber-800">À découvrir chez SWELTR</p><h2 id="featured-title" className="mt-2 font-display text-2xl font-black sm:text-3xl">Nos kits et essentiels d’hiver</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Choisis un kit ou découvre les accessoires à l’unité, avec leur prix affiché.</p></div>
             <Link href="/produits" className="inline-flex items-center gap-2 text-sm font-bold text-amber-900 transition hover:gap-3">Voir tout le catalogue <ArrowRight size={16}/></Link>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">
@@ -77,7 +78,7 @@ export default function WinterShowcase() {
             </article>)}
             {pricedProducts.map((product) => <article key={product.slug} className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
               <Link href={`/produits/${product.slug}`} className="relative block aspect-square bg-white" aria-label={`Découvrir ${product.name}`}><Image src={product.image} alt={product.alt} fill sizes="(max-width: 640px) 45vw, (max-width: 1200px) 30vw, 16vw" className="object-contain p-3"/><span className="absolute left-2 top-2 rounded-full bg-slate-950/80 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-white">Hiver</span></Link>
-              <div className="flex flex-1 flex-col p-3 sm:p-4"><h3 className="font-display text-sm font-black leading-tight sm:text-base">{product.name}</h3><p className="mt-1 line-clamp-2 text-[11px] leading-4 text-slate-600">{product.short}</p><p className="mt-auto pt-3 text-lg font-black">{formatPrice(product.retailPrice!)}</p><Link href={`/produits/${product.slug}`} className="mt-2 inline-flex min-h-10 items-center justify-center rounded-full border border-slate-300 px-3 text-[11px] font-bold transition hover:border-amber-500 hover:bg-amber-50">{product.availability === "planned" ? "Découvrir · bientôt" : "Voir le produit"}</Link></div>
+              <div className="flex flex-1 flex-col p-3 sm:p-4"><h3 className="font-display text-sm font-black leading-tight sm:text-base">{product.name}</h3><p className="mt-1 line-clamp-2 text-[11px] leading-4 text-slate-600">{product.short}</p><p className="mt-auto pt-3 text-lg font-black">{formatPrice(product.retailPrice!)}</p>{product.availability === "existing" ? <div className="mt-2"><AddProductToCartButton productSlug={product.slug}/></div> : <Link href={`/produits/${product.slug}`} className="mt-2 inline-flex min-h-10 items-center justify-center rounded-full border border-slate-300 px-3 text-[11px] font-bold transition hover:border-amber-500 hover:bg-amber-50">Découvrir le produit</Link>}</div>
             </article>)}
           </div>
         </div>

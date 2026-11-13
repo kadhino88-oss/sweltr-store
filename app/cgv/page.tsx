@@ -43,9 +43,8 @@ export default function CGV() {
       <section>
         <h2>4. Livraison</h2>
         <p>
-          Les produits sont expédiés depuis les entrepôts de nos fournisseurs partenaires. Le délai
-          de livraison dépend du pays de destination, du produit et du transporteur disponible.
-          Certaines destinations internationales prennent plus longtemps. Les informations de
+          Le délai de livraison dépend du pays de destination, du produit et du transporteur
+          disponible. Certaines destinations internationales prennent plus longtemps. Les informations de
           livraison communiquées pour l’article et la destination concernés prévalent sur toute
           estimation générale.
         </p>

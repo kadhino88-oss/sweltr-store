@@ -4,47 +4,43 @@ export type Tier = {
   tagline: string;
   price: number;
   items: string[];
-  // À remplir une fois les vid récupérés via /api/admin/find-vid.
-  // Un kit peut contenir plusieurs produits CJ (ex: le Trio = 3 vid différents).
-  cjItems?: { vid: string; quantity: number }[];
-  // Vraies photos produit récupérées depuis les fiches CJ (galerie complète, page produit)
   images: string[];
   // Une seule vignette par article, pour les petites cartes de la page d'accueil
   cardImages: string[];
   description: string;
 };
 
-// Photos produit officielles CJ Dropshipping (une par article sourcé) — gamme hiver, sourcée le 03/09/2026
+// Visuels de la collection hiver SWELTR.
 export const PRODUCT_IMAGES = {
-  heatedGloves: "https://cf.cjdropshipping.com/20180920/2155711379153.jpg",
-  heatedScarf: "https://cf.cjdropshipping.com/quick/product/72a24559-48af-49ce-b41c-0d3ceb7c9614.jpg",
-  thermalSocks: "https://cf.cjdropshipping.com/00978b38-af86-4a0e-8569-e9f40a644f72.jpg",
+  heatedGloves: "/images/catalog/product-038fa3284733.jpg",
+  heatedScarf: "/images/catalog/product-8a5d97402aa6.jpg",
+  thermalSocks: "/images/catalog/product-01829a433b99.jpg",
 };
 
-// Galerie complète des gants chauffants (via productImageSet CJ)
+// Galerie des gants chauffants.
 export const HEATED_GLOVES_GALLERY = [
-  "https://cf.cjdropshipping.com/20180920/28896142656039.jpg",
-  "https://cf.cjdropshipping.com/20180920/188040013818.jpg",
-  "https://cf.cjdropshipping.com/20180920/2155711379153.jpg",
+  "/images/catalog/product-c5e22899ade2.jpg",
+  "/images/catalog/product-fb0b401e07d0.jpg",
+  "/images/catalog/product-038fa3284733.jpg",
 ];
 
-// Galerie complète de l'écharpe chauffante (via productImageSet CJ)
+// Galerie de l’écharpe chauffante.
 export const HEATED_SCARF_GALLERY = [
-  "https://cf.cjdropshipping.com/quick/product/72a24559-48af-49ce-b41c-0d3ceb7c9614.jpg",
-  "https://cf.cjdropshipping.com/quick/product/b0cfd092-bb3d-4cbb-8057-b6c84adfff2e.jpg",
-  "https://cf.cjdropshipping.com/quick/product/da4bdaad-0ebc-4bee-ab3e-a951afe847d7.jpg",
-  "https://cf.cjdropshipping.com/quick/product/ed3b69ac-e870-4b82-8fe2-406f45894e00.jpg",
-  "https://cf.cjdropshipping.com/quick/product/8b28030b-d38f-4db3-ac4e-f81174e83a3c.jpg",
-  "https://oss-cf.cjdropshipping.com/product/2024/12/12/06/d2ed1c7d-9d9b-41e5-847d-001e7b0b186b.jpg",
+  "/images/catalog/product-8a5d97402aa6.jpg",
+  "/images/catalog/product-9a661085539e.jpg",
+  "/images/catalog/product-209fb4e6eadb.jpg",
+  "/images/catalog/product-9636159893f8.jpg",
+  "/images/catalog/product-9b20be5c7876.jpg",
+  "/images/catalog/product-45ce274ff496.jpg",
 ];
 
-// Galerie complète des chaussettes thermiques (via productImageSet CJ)
+// Galerie des chaussettes thermiques.
 export const THERMAL_SOCKS_GALLERY = [
-  "https://cf.cjdropshipping.com/528d7e19-3a89-40fd-a47c-fc3137747bee.jpg",
-  "https://cf.cjdropshipping.com/bd43baeb-209b-4279-9c3c-56e605366c25.jpg",
-  "https://cf.cjdropshipping.com/c0692fef-0c89-4659-986e-06a268ff2df1.jpg",
-  "https://cf.cjdropshipping.com/284c047b-9da8-4a3c-b900-db5a8d290d6a.jpg",
-  "https://cf.cjdropshipping.com/00978b38-af86-4a0e-8569-e9f40a644f72.jpg",
+  "/images/catalog/product-b939c723d765.jpg",
+  "/images/catalog/product-6658f6545325.jpg",
+  "/images/catalog/product-990070a85694.jpg",
+  "/images/catalog/product-0819606a11a9.jpg",
+  "/images/catalog/product-01829a433b99.jpg",
 ];
 
 export const TIERS: Tier[] = [
@@ -54,7 +50,6 @@ export const TIERS: Tier[] = [
     tagline: "1x Gants chauffants",
     price: 36.99,
     items: ["1× Gants chauffants SWELTR"],
-    cjItems: [{ vid: "42BD9CA6-6D95-4B26-8F20-A52375663923", quantity: 1 }],
     images: HEATED_GLOVES_GALLERY,
     cardImages: [PRODUCT_IMAGES.heatedGloves],
     description:
@@ -66,10 +61,6 @@ export const TIERS: Tier[] = [
     tagline: "Gants chauffants + Écharpe chauffante",
     price: 52.99,
     items: ["1× Gants chauffants SWELTR", "1× Écharpe chauffante USB"],
-    cjItems: [
-      { vid: "42BD9CA6-6D95-4B26-8F20-A52375663923", quantity: 1 }, // gants chauffants
-      { vid: "2410090540221610300", quantity: 1 }, // écharpe chauffante
-    ],
     images: [...HEATED_GLOVES_GALLERY.slice(0, 3), ...HEATED_SCARF_GALLERY.slice(0, 3)],
     cardImages: [PRODUCT_IMAGES.heatedGloves, PRODUCT_IMAGES.heatedScarf],
     description:
@@ -84,11 +75,6 @@ export const TIERS: Tier[] = [
       "1× Gants chauffants SWELTR",
       "1× Écharpe chauffante USB",
       "1× Chaussettes thermiques",
-    ],
-    cjItems: [
-      { vid: "42BD9CA6-6D95-4B26-8F20-A52375663923", quantity: 1 }, // gants chauffants
-      { vid: "2410090540221610300", quantity: 1 }, // écharpe chauffante
-      { vid: "1573872746495488003", quantity: 1 }, // chaussettes thermiques
     ],
     images: [
       ...HEATED_GLOVES_GALLERY.slice(0, 2),
