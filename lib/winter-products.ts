@@ -148,10 +148,9 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
       "/images/catalog/product-7212126e7499.jpg",
     ],
     alt: "Ensemble thermique rouge composé d’un haut à manches longues et d’un pantalon assorti",
-    highlights: ["Ensemble haut pullover et pantalon assorti", "Coupe confortable pour les journées froides", "Prix SWELTR : 39,99 CHF"],
+    highlights: ["Modèle et variantes en cours de confirmation", "Description et prix affichés après validation", "Bientôt disponible · prix à confirmer"],
     category: "Vêtements thermiques",
     availability: "planned",
-    retailPrice: 39.99,
     variants: ["Coloris présenté : rouge", "Consulte les mesures du guide des tailles avant de choisir."],
   },
 ];

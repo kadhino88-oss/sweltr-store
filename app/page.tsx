@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import SiteHeader from "@/components/SiteHeader";
 import WinterShowcase from "@/components/WinterShowcase";
+import HomeProductGallery from "@/components/HomeProductGallery";
 import ProductTiers from "@/components/ProductTiers";
 import TrustBar from "@/components/TrustBar";
 import HowItWorks from "@/components/HowItWorks";
@@ -22,6 +23,7 @@ export default function Home() {
     <main className="min-h-screen bg-ivory text-ink">
       <SiteHeader />
       <WinterShowcase />
+      <HomeProductGallery />
       <ProductTiers />
       <TrustBar />
       <HowItWorks />
