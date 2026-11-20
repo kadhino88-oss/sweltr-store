@@ -23,12 +23,11 @@ test("webhook retries ambiguous CJ payment failures instead of acknowledging unp
   assert.match(webhook, /statut CJ non confirmé/);
 });
 
-test("CJ sandbox confirms supplier payment status without live fulfilment", () => {
-  const sandbox = read("app/api/admin/cj-sandbox-test/route.ts");
-  assert.match(sandbox, /isSandbox: true/);
-  assert.match(sandbox, /payCjOrder\(prepared\.shipmentOrderId, prepared\.payId, \{ isSandbox: true \}\)/);
-  assert.match(sandbox, /isCjOrderPaid\(confirmed\.orderStatus\)/);
-  assert.match(sandbox, /cjBalanceSufficientForSample: true/);
+test("CJ marks sandbox orders explicitly and blocks real payment until validated", () => {
+  const cj = read("lib/cj.ts");
+  assert.match(cj, /options\.isSandbox \? \{ isSandbox: 1 \} : \{\}/);
+  assert.match(cj, /!options\.isSandbox && process\.env\.CJ_PAYMENT_FLOW_VALIDATED !== "true"/);
+  assert.match(cj, /shopping\/pay\/payBalanceV2/);
 });
 
 test("parallel CJ checks share one token request and retry transient auth throttling", () => {
