@@ -30,3 +30,10 @@ test("CJ sandbox confirms supplier payment status without live fulfilment", () =
   assert.match(sandbox, /isCjOrderPaid\(confirmed\.orderStatus\)/);
   assert.match(sandbox, /cjBalanceSufficientForSample: true/);
 });
+
+test("parallel CJ checks share one token request and retry transient auth throttling", () => {
+  const cj = read("lib/cj.ts");
+  assert.match(cj, /let pendingToken: Promise<string> \| null = null/);
+  assert.match(cj, /if \(!pendingToken\)/);
+  assert.match(cj, /res\.status === 429 && !pointsExhausted && attempt < 2/);
+});

@@ -22,6 +22,7 @@ export function getCjOrderNumber(stripeSessionId: string) {
 }
 
 let cachedToken: { accessToken: string; expiresAt: number } | null = null;
+let pendingToken: Promise<string> | null = null;
 
 type CjAccessTokenResponse = {
   result: boolean;
@@ -44,25 +45,48 @@ export async function getCjAccessToken({
   const apiKey = process.env.CJ_API_KEY;
   if (!apiKey) throw new Error(missingApiKeyMessage);
 
-  const res = await fetch(`${CJ_API_BASE_URL}/authentication/getAccessToken`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ apiKey }),
-  });
-  if (!res.ok) {
-    throw new Error(`Échec HTTP de l'authentification CJ (HTTP ${res.status}).`);
+  let data: CjAccessTokenResponse | undefined;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const res = await fetch(`${CJ_API_BASE_URL}/authentication/getAccessToken`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ apiKey }),
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      let errorCode: number | undefined;
+      let errorMessage = "";
+      try {
+        const body = await res.json() as { code?: unknown; message?: unknown };
+        const parsedCode = Number(body.code);
+        errorCode = Number.isFinite(parsedCode) ? parsedCode : undefined;
+        errorMessage = typeof body.message === "string" ? body.message : "";
+      } catch {
+        // Keep the status-only error when CJ does not return JSON.
+      }
+      const pointsExhausted = errorCode === 429 || /insufficient.*points/i.test(errorMessage);
+      if (res.status === 429 && !pointsExhausted && attempt < 2) {
+        const retryAfter = Number(res.headers.get("retry-after"));
+        const delayMs = Number.isFinite(retryAfter) && retryAfter > 0
+          ? Math.min(5000, retryAfter * 1000)
+          : 1200 * (attempt + 1);
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+        continue;
+      }
+      throw new Error(`Échec HTTP de l'authentification CJ (HTTP ${res.status}${errorCode ? `, code ${errorCode}` : ""}).`);
+    }
+
+    try {
+      data = (await res.json()) as CjAccessTokenResponse;
+    } catch {
+      throw new Error("Réponse d'authentification CJ invalide.");
+    }
+    break;
   }
 
-  let data: CjAccessTokenResponse;
-  try {
-    data = (await res.json()) as CjAccessTokenResponse;
-  } catch {
-    throw new Error("Réponse d'authentification CJ invalide.");
-  }
-
-  if (!data.result || !data.data?.accessToken || !data.data?.accessTokenExpiryDate) {
+  if (!data?.result || !data.data?.accessToken || !data.data?.accessTokenExpiryDate) {
     throw new Error(
-      authenticationErrorPrefix ? `${authenticationErrorPrefix}${data.message}` : data.message
+      authenticationErrorPrefix ? `${authenticationErrorPrefix}${data?.message || "réponse CJ invalide"}` : data?.message || "Réponse CJ invalide."
     );
   }
 
@@ -74,21 +98,25 @@ async function getAccessToken(): Promise<string> {
     return cachedToken.accessToken;
   }
 
-  const data = await getCjAccessToken({
-    missingApiKeyMessage: "CJ_API_KEY manquante dans les variables d'environnement.",
-    authenticationErrorPrefix: "Échec d'authentification CJ : ",
-  });
+  if (!pendingToken) {
+    pendingToken = (async () => {
+      const data = await getCjAccessToken({
+        missingApiKeyMessage: "CJ_API_KEY manquante dans les variables d'environnement.",
+        authenticationErrorPrefix: "Échec d'authentification CJ : ",
+      });
 
-  const expiresAt = Date.parse(data.accessTokenExpiryDate);
-  if (!Number.isFinite(expiresAt) || expiresAt <= Date.now() + 60_000) {
-    throw new Error("CJ a retourné un jeton dont la date d'expiration est invalide ou trop proche.");
+      const expiresAt = Date.parse(data.accessTokenExpiryDate);
+      if (!Number.isFinite(expiresAt) || expiresAt <= Date.now() + 60_000) {
+        throw new Error("CJ a retourné un jeton dont la date d'expiration est invalide ou trop proche.");
+      }
+
+      cachedToken = { accessToken: data.accessToken, expiresAt };
+      return cachedToken.accessToken;
+    })().finally(() => {
+      pendingToken = null;
+    });
   }
-
-  cachedToken = {
-    accessToken: data.accessToken,
-    expiresAt,
-  };
-  return cachedToken.accessToken;
+  return pendingToken;
 }
 
 export type CjShippingInfo = {
