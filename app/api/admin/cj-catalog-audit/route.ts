@@ -4,6 +4,7 @@ import { CJ_API_BASE_URL, getCjAccessToken } from "@/lib/cj";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const CURRENT_VARIANTS = [
   "42BD9CA6-6D95-4B26-8F20-A52375663923",
@@ -17,6 +18,8 @@ const SEARCH_TERMS = [
   "thermal fleece socks",
 ];
 
+let lastCjRequestAt = 0;
+
 function isAuthorized(req: NextRequest) {
   const expected = process.env.SWELTR_CJ_AUDIT_TOKEN ?? "";
   const supplied = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
@@ -25,6 +28,9 @@ function isAuthorized(req: NextRequest) {
 }
 
 async function readJson(url: URL, token: string) {
+  const waitMs = Math.max(0, 1_150 - (Date.now() - lastCjRequestAt));
+  if (waitMs) await new Promise((resolve) => setTimeout(resolve, waitMs));
+  lastCjRequestAt = Date.now();
   const response = await fetch(url, {
     headers: { "CJ-Access-Token": token },
     cache: "no-store",
@@ -40,6 +46,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const { accessToken } = await getCjAccessToken();
+    lastCjRequestAt = Date.now();
     const balanceUrl = new URL(`${CJ_API_BASE_URL}/shopping/pay/getBalance`);
     const { response: balanceResponse, body: balanceBody } = await readJson(balanceUrl, accessToken);
     const supplierBalance = balanceBody.result === true && Number.isFinite(Number(balanceBody.data?.amount))
@@ -90,8 +97,38 @@ export async function GET(req: NextRequest) {
           deliveryCycle: product.deliveryCycle ?? null,
           productType: product.productType ?? null,
         }));
+      const details = [];
+      for (const product of products.slice(0, 2)) {
+        if (!product.pid) continue;
+        const detailUrl = new URL(`${CJ_API_BASE_URL}/product/query`);
+        detailUrl.searchParams.set("pid", String(product.pid));
+        const { response: detailResponse, body: detailBody } = await readJson(detailUrl, accessToken);
+        const item = detailBody.data && typeof detailBody.data === "object" ? detailBody.data as Record<string, any> : {};
+        details.push(detailBody.result === true ? {
+          pid: item.pid ?? product.pid,
+          productName: item.productNameEn ?? product.name,
+          variants: Array.isArray(item.variants) ? item.variants.map((variant: Record<string, any>) => ({
+            vid: variant.vid ?? null,
+            name: variant.variantNameEn ?? null,
+            variantKey: variant.variantKey ?? null,
+            sku: variant.variantSku ?? null,
+            priceUsd: variant.variantSellPrice ?? null,
+            weightG: variant.variantWeight ?? null,
+            inventories: Array.isArray(variant.inventories) ? variant.inventories.map((row: Record<string, any>) => ({
+              countryCode: row.countryCode ?? null,
+              totalInventory: row.totalInventory ?? null,
+              cjInventory: row.cjInventory ?? null,
+              factoryInventory: row.factoryInventory ?? null,
+              verifiedWarehouse: row.verifiedWarehouse ?? null,
+            })) : [],
+          })) : [],
+        } : {
+          pid: product.pid,
+          error: { httpStatus: detailResponse.status, code: detailBody.code ?? null, message: detailBody.message ?? null },
+        });
+      }
       searches.push(body.result === true
-        ? { keyWord, products }
+        ? { keyWord, products, details }
         : { keyWord, error: { httpStatus: response.status, code: body.code ?? null, message: body.message ?? null } });
     }
 
