@@ -31,7 +31,7 @@ test("checkout only accepts verified stock and a shipping estimate of 10 days or
   assert.match(shippingQuote, /productCostCents >= storeOrderTotalCents/);
   assert.match(cart, /Calculer livraison et disponibilité/);
   assert.match(cart, /!quote/);
-  assert.match(shippingQuoteRoute, /STORE_SALES_ENABLED !== "true"/);
+  assert.match(shippingQuoteRoute, /isStoreFulfillmentReady\(\)/);
 });
 
 test("public catalog images are local and every referenced image exists", () => {

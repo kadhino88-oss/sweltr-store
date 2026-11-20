@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { SHIPPING_COUNTRIES } from "@/lib/shipping-countries";
 import { normalizeStoreOrder } from "@/lib/kit-order";
 import { createStoreShippingQuote } from "@/lib/shipping-quote";
+import { isStoreFulfillmentReady } from "@/lib/fulfillment-readiness";
 
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  if (process.env.STORE_SALES_ENABLED !== "true") {
+  if (!isStoreFulfillmentReady()) {
     return NextResponse.json(
       { error: "Les commandes en ligne ne sont pas encore ouvertes. Réessaie bientôt ou contacte notre service client." },
       { status: 503, headers: { "Cache-Control": "no-store" } },

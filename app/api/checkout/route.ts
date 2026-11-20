@@ -3,6 +3,8 @@ import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { normalizeStoreOrder } from "@/lib/kit-order";
 import { SHIPPING_COUNTRIES } from "@/lib/shipping-countries";
 import { createStoreShippingQuote } from "@/lib/shipping-quote";
+import { isStoreFulfillmentReady } from "@/lib/fulfillment-readiness";
+import { randomBytes } from "node:crypto";
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -31,7 +33,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Choisis un pays de livraison valide." }, { status: 400 });
   }
 
-  if (process.env.STORE_SALES_ENABLED !== "true") {
+  if (!isStoreFulfillmentReady()) {
     return NextResponse.json(
       {
         code: "STORE_NOT_LAUNCH_READY",
@@ -55,7 +57,6 @@ export async function POST(req: NextRequest) {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       locale: "auto",
-      payment_method_types: ["card"],
       phone_number_collection: { enabled: true },
       line_items: items.map((item) => ({
         price_data: {
@@ -77,6 +78,7 @@ export async function POST(req: NextRequest) {
           ? { tierId: item.tierId, quantity: item.quantity }
           : { productSlug: item.productSlug, quantity: item.quantity })),
       },
+      integration_identifier: `sweltr-nextjs-${Array.from(randomBytes(8), (byte) => String.fromCharCode(97 + byte % 26)).join("")}`,
       shipping_address_collection: { allowed_countries: [countryCode as typeof SHIPPING_COUNTRIES[number]] },
       shipping_options: [{
         shipping_rate_data: {

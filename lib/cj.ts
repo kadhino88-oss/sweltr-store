@@ -7,10 +7,8 @@
  * 2. createOrder()     -> crée la commande chez CJ avec l'adresse du client final
  * 3. payOrder()        -> paie la commande avec le SOLDE de ton compte CJ (argent réel dépensé)
  *
- * IMPORTANT : payOrder() ne s'exécute que si CJ_AUTO_PAY=true dans tes variables
- * d'environnement. Tant que c'est absent/false, les commandes sont créées chez CJ
- * mais restent "non payées" — tu peux les valider à la main dans MyCJ le temps
- * de vérifier que tout fonctionne comme prévu.
+ * Le checkout reste fermé tant que l'autopaiement et la validation sandbox ne sont
+ * pas activés. Une fois prêt, le webhook paie la commande CJ avec le solde SWELTR.
  */
 
 import { createHash } from "node:crypto";
@@ -186,6 +184,21 @@ export async function getVariantCostAndStock(vid: string): Promise<{ costUsd: nu
   return { costUsd, availableQuantity };
 }
 
+export async function getCjBalance(): Promise<number> {
+  const token = await getAccessToken();
+  const res = await fetch(`${CJ_API_BASE_URL}/shopping/pay/getBalance`, {
+    headers: { "CJ-Access-Token": token },
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`Impossible de vérifier le solde fournisseur (HTTP ${res.status}).`);
+  const result = await res.json() as { result?: boolean; data?: { amount?: unknown } };
+  const amount = Number(result.data?.amount);
+  if (!result.result || !Number.isFinite(amount) || amount < 0) {
+    throw new Error("Le solde fournisseur n’a pas pu être confirmé.");
+  }
+  return amount;
+}
+
 async function getCheapestAvailableLogistics(
   destinationCountryCode: string,
   products: CjLineItem[],
@@ -291,7 +304,17 @@ export async function findCjOrderByOrderNumber(
   };
 }
 
-export async function createCjOrder(shipping: CjShippingInfo, products: CjLineItem[], logisticName?: string) {
+export function isCjOrderPaid(orderStatus?: string) {
+  return ["PAID", "PENDING", "PROCESSING", "UNSHIPPED", "SHIPPED", "DELIVERED"]
+    .includes((orderStatus || "").trim().toUpperCase());
+}
+
+export async function createCjOrder(
+  shipping: CjShippingInfo,
+  products: CjLineItem[],
+  logisticName?: string,
+  options: { isSandbox?: boolean } = {},
+) {
   const token = await getAccessToken();
   const selectedLogisticName = await getCheapestAvailableLogistics(shipping.shippingCountryCode, products, logisticName);
   const shippingCountry = shipping.shippingCountryCode === "FR"
@@ -326,6 +349,7 @@ export async function createCjOrder(shipping: CjShippingInfo, products: CjLineIt
       fromCountryCode: "CN",
       platform: "api",
       orderFlow: 1,
+      ...(options.isSandbox ? { isSandbox: 1 } : {}),
       products,
     }),
   });
@@ -396,11 +420,11 @@ export async function prepareCjOrderForPayment(orderId: string, knownShipmentOrd
   return { shipmentOrderId, payId: parentData.data?.payId };
 }
 
-export async function payCjOrder(shipmentOrderId: string, payId?: string) {
+export async function payCjOrder(shipmentOrderId: string, payId?: string, options: { isSandbox?: boolean } = {}) {
   // Safety gate: createOrderV2 alone is not the complete CJ fulfillment/payment flow.
   // Do not allow a real balance debit until the full CJ flow has been implemented
   // and verified against a real test order and the returned parent/payment IDs.
-  if (process.env.CJ_PAYMENT_FLOW_VALIDATED !== "true") {
+  if (!options.isSandbox && process.env.CJ_PAYMENT_FLOW_VALIDATED !== "true") {
     throw new Error(
       "Paiement automatique CJ bloqué : définir CJ_PAYMENT_FLOW_VALIDATED=true uniquement après validation complète du flux CJ."
     );

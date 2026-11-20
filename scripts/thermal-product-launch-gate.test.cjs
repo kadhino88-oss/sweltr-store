@@ -9,9 +9,18 @@ function read(relativePath) {
 
 test("Stripe checkout remains blocked in every mode until store release approval", () => {
   const route = read("app/api/checkout/route.ts");
-  assert.match(route, /process\.env\.STORE_SALES_ENABLED !== "true"/);
+  assert.match(route, /isStoreFulfillmentReady\(\)/);
   assert.match(route, /STORE_NOT_LAUNCH_READY/);
   assert.match(read(".env.local.example"), /STORE_SALES_ENABLED=false/);
+});
+
+test("live checkout requires sales approval and validated automatic CJ payment", () => {
+  const readiness = read("lib/fulfillment-readiness.ts");
+  assert.match(readiness, /STORE_SALES_ENABLED === "true"/);
+  assert.match(readiness, /CJ_AUTO_PAY === "true"/);
+  assert.match(readiness, /CJ_PAYMENT_FLOW_VALIDATED === "true"/);
+  assert.match(read("app/api/webhooks/stripe/route.ts"), /checkout\.session\.async_payment_succeeded/);
+  assert.match(read("app/api/webhooks/stripe/route.ts"), /isCjOrderPaid/);
 });
 
 test("unconfirmed thermal product never exposes supplier variants or an invented price", () => {

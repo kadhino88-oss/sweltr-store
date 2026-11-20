@@ -6,7 +6,7 @@ export function getStripeClient(): Stripe | null {
   const secretKey = process.env.STRIPE_SECRET_KEY;
   if (!secretKey) return null;
 
-  stripeClient ??= new Stripe(secretKey, { apiVersion: "2024-06-20" });
+  stripeClient ??= new Stripe(secretKey, { apiVersion: "2026-11-18.endive" });
   return stripeClient;
 }
 

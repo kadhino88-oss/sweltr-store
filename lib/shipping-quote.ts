@@ -1,4 +1,4 @@
-import { getEligibleShippingOptions, getVariantCostAndStock } from "@/lib/cj";
+import { getCjBalance, getEligibleShippingOptions, getVariantCostAndStock } from "@/lib/cj";
 import { storeOrderItems, storeOrderTotalCents, type StoreOrderLine } from "@/lib/kit-order";
 
 export type StoreShippingQuote = {
@@ -39,9 +39,12 @@ export async function createStoreShippingQuote(items: StoreOrderLine[], country:
   const rates = await getEligibleShippingOptions(country, supplierItems);
   const shipping = requestedLogisticName ? rates.find((option) => option.logisticName === requestedLogisticName) : rates[0];
   if (!shipping) throw new Error("Aucun transporteur disponible ne respecte le délai maximum de 10 jours pour ce pays.");
-  const exchangeRate = await usdToChfRate();
+  const [exchangeRate, cjBalance] = await Promise.all([usdToChfRate(), getCjBalance()]);
   const productCostCents = Math.ceil(productCostUsd * exchangeRate * 100);
   if (productCostCents >= storeOrderTotalCents(items)) throw new Error("Cette sélection ne peut pas être commandée pour le prix affiché. Contacte-nous pour une vérification.");
+  if (cjBalance < productCostUsd + shipping.costUsd) {
+    throw new Error("Cette commande ne peut pas être préparée pour le moment.");
+  }
 
   // 15% buffer for the daily reference rate and freight quote changing between checkout and fulfillment.
   const shippingAmountCents = Math.max(0, Math.ceil(shipping.costUsd * exchangeRate * 1.15 * 100));
