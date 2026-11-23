@@ -3,11 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Loader2, ShieldCheck, ShoppingBag, Truck } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ShieldCheck, ShoppingBag, Truck } from "lucide-react";
 import { TIERS, type Tier } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
 import AddToCartButton from "@/components/AddToCartButton";
+import { useCart } from "@/components/CartProvider";
 import ProductCard from "@/components/ProductCard";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
@@ -35,29 +37,17 @@ const kitGuides: Record<string, { who: string; benefit: string; usage: string; p
 
 export default function ProductDetailClient({ tier }: { tier: Tier }) {
   const [activeImage, setActiveImage] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const { addItem } = useCart();
   const reduceMotion = useReducedMotion();
   const guide = kitGuides[tier.id] ?? kitGuides.solo;
   const gallery = [...new Set([...tier.images, ...tier.cardImages])];
   const relatedTiers = TIERS.filter((item) => item.id !== tier.id);
 
-  async function handleCheckout() {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tierId: tier.id }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.url) throw new Error(data.error || "Le paiement est momentanément indisponible.");
-      window.location.assign(data.url);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Une erreur est survenue. Réessaie plus tard.");
-      setLoading(false);
-    }
+  function handleCheckout() {
+    // Country and live delivery quote are collected in the cart before Stripe opens.
+    addItem(tier.id);
+    router.push("/panier");
   }
 
   const faqs = [
@@ -106,11 +96,10 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
             </div>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <AddToCartButton tierId={tier.id} />
-              <button type="button" onClick={handleCheckout} disabled={loading} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-bold text-slate-900 transition hover:border-amber-500 hover:bg-amber-50 disabled:cursor-wait disabled:opacity-60">
-                {loading ? <Loader2 size={16} className="animate-spin" /> : <ShoppingBag size={16} />}{loading ? "Ouverture du paiement…" : "Commander directement"}
+              <button type="button" onClick={handleCheckout} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-bold text-slate-900 transition hover:border-amber-500 hover:bg-amber-50">
+                <ShoppingBag size={16} />Acheter maintenant · choisir la livraison
               </button>
             </div>
-            {error && <p role="alert" className="mt-3 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
             <p className="mt-4 text-xs leading-5 text-slate-500">Les accessoires chauffants doivent être utilisés conformément à la notice du fabricant.</p>
           </div>
         </section>

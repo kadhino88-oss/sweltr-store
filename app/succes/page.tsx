@@ -1,5 +1,5 @@
 import SuccessPageClient from "@/components/SuccessPageClient";
-import { findCjOrderByOrderNumber, getCjOrderNumber } from "@/lib/cj";
+import { findCjOrderByOrderNumber, getCjOrderNumber, isCjOrderPaid } from "@/lib/cj";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 
 export const metadata = {
@@ -28,13 +28,26 @@ export default async function SuccesPage({ searchParams }: SuccessPageProps) {
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    if (session.payment_status !== "paid") {
-      return <SuccessPageClient status="pending" />;
+    const paymentIntentId = typeof session.payment_intent === "string"
+      ? session.payment_intent
+      : session.payment_intent?.id;
+    const paymentIntent = paymentIntentId
+      ? await stripe.paymentIntents.retrieve(paymentIntentId)
+      : null;
+
+    if (paymentIntent?.status === "canceled" || paymentIntent?.status === "requires_payment_method") {
+      return <SuccessPageClient status="cancelled" />;
+    }
+    if (session.payment_status !== "paid" || paymentIntent?.status !== "succeeded") {
+      return <SuccessPageClient status="pending" sessionId={sessionId} />;
     }
 
     let tracking: { number: string; url: string; carrier?: string; status?: string } | undefined;
     try {
       const order = await findCjOrderByOrderNumber(getCjOrderNumber(session.id));
+      if (!order || !isCjOrderPaid(order.orderStatus)) {
+        return <SuccessPageClient status="pending" sessionId={sessionId} />;
+      }
       if (order?.trackingNumber) {
         const candidateUrl = order.trackingUrl;
         let url = "https://www.17track.net/fr?nums=" + encodeURIComponent(order.trackingNumber);
@@ -54,8 +67,9 @@ export default async function SuccesPage({ searchParams }: SuccessPageProps) {
         };
       }
     } catch (error: unknown) {
-      // A temporary CJ lookup failure must not hide a payment already confirmed by Stripe.
+      // Do not show a final confirmation until the supplier-paid order is verified.
       console.error("Consultation du suivi CJ indisponible :", getStripeErrorDetails(error));
+      return <SuccessPageClient status="pending" sessionId={sessionId} />;
     }
 
     return <SuccessPageClient status="confirmed" tracking={tracking} />;

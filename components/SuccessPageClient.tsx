@@ -1,13 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, CircleHelp, Clock3 } from "lucide-react";
+import { CheckCircle2, CircleHelp, Clock3, XCircle } from "lucide-react";
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
 
 type SuccessPageClientProps = {
-  status: "confirmed" | "pending" | "unverified";
+  status: "confirmed" | "pending" | "cancelled" | "unverified";
+  sessionId?: string;
   tracking?: { number: string; url: string; carrier?: string; status?: string };
 };
 
@@ -20,11 +23,18 @@ const statusCopy = {
     iconClass: "text-gold-deep",
   },
   pending: {
-    title: "Paiement en cours",
+    title: "Commande en cours de confirmation",
     message:
-      "Stripe n'a pas encore confirmé le paiement de cette session. Si tu viens de terminer le paiement, patiente un instant avant de réessayer afin d'éviter un doublon.",
+      "Le montant est réservé sur ta carte pendant la vérification de la commande. Il sera encaissé une fois la commande confirmée. Si elle ne peut pas être confirmée, la réservation sera annulée ; le délai d’affichage dépend de ta banque.",
     Icon: Clock3,
     iconClass: "text-gold-deep",
+  },
+  cancelled: {
+    title: "Paiement non encaissé",
+    message:
+      "La commande n’a pas été confirmée et aucun paiement n’a été encaissé. Si ta banque affiche encore une réservation temporaire, elle sera levée selon ses délais de traitement.",
+    Icon: XCircle,
+    iconClass: "text-soft",
   },
   unverified: {
     title: "Confirmation indisponible",
@@ -35,7 +45,19 @@ const statusCopy = {
   },
 };
 
-export default function SuccessPageClient({ status, tracking }: SuccessPageClientProps) {
+export default function SuccessPageClient({ status, tracking, sessionId }: SuccessPageClientProps) {
+  const router = useRouter();
+  useEffect(() => {
+    if (status !== "pending" || !sessionId) return;
+    let attempts = 0;
+    const interval = window.setInterval(() => {
+      attempts += 1;
+      router.refresh();
+      if (attempts >= 15) window.clearInterval(interval);
+    }, 3000);
+    return () => window.clearInterval(interval);
+  }, [router, sessionId, status]);
+
   const copy = statusCopy[status];
   const StatusIcon = copy.Icon;
 

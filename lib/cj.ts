@@ -448,6 +448,13 @@ export async function prepareCjOrderForPayment(orderId: string, knownShipmentOrd
   return { shipmentOrderId, payId: parentData.data?.payId };
 }
 
+export class CjPaymentRejectedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "CjPaymentRejectedError";
+  }
+}
+
 export async function payCjOrder(shipmentOrderId: string, payId?: string, options: { isSandbox?: boolean } = {}) {
   // Safety gate: createOrderV2 alone is not the complete CJ fulfillment/payment flow.
   // Do not allow a real balance debit until the full CJ flow has been implemented
@@ -483,7 +490,7 @@ export async function payCjOrder(shipmentOrderId: string, payId?: string, option
   }
 
   if (!data.result) {
-    throw new Error(`Échec de paiement CJ : ${data.message || "réponse invalide"}`);
+    throw new CjPaymentRejectedError(`Échec de paiement CJ : ${data.message || "réponse invalide"}`);
   }
   return data.data;
 }

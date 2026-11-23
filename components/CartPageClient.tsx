@@ -128,7 +128,7 @@ export default function CartPageClient() {
                 {loading && <Loader2 size={16} className="animate-spin"/>}{loading ? "Ouverture du paiement…" : "Continuer vers le paiement"}
               </button>
               {error && <p role="alert" className="mt-3 rounded-xl bg-red-50 p-3 text-sm leading-5 text-red-800">{error}</p>}
-              <p className="mt-3 text-center text-[11px] text-slate-500">Le total et la livraison sont confirmés avant le paiement. Le panier reste enregistré sur cet appareil.</p>
+              <p className="mt-3 text-center text-[11px] leading-5 text-slate-500">Le montant est d’abord réservé sur la carte, puis encaissé après confirmation de la commande. Si elle ne peut pas être confirmée, la réservation est annulée ; le délai d’affichage dépend de la banque.</p>
             </aside>
           </div>
         )}

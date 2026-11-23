@@ -48,13 +48,13 @@ La fiche « Ensemble thermique » reste consultable, mais les variantes et le pa
 
 ## Paiement et traitement des commandes
 
-1. Le client paie à SWELTR le prix public et les frais de livraison affichés avec Stripe Checkout.
-2. Le webhook signé confirme le paiement, puis revalide la commande et le transport.
+1. Stripe Checkout autorise le montant sur la carte du client sans le capturer. Le Checkout utilise uniquement les cartes compatibles avec la capture manuelle.
+2. Le webhook signé vérifie l'autorisation, puis revalide la commande et le transport.
 3. SWELTR crée la commande fournisseur CJ avec l'adresse de livraison du client, l'ajoute au panier CJ, la confirme et génère l'ordre parent / identifiant de paiement.
-4. `CJ_AUTO_PAY=true` paie la commande fournisseur avec le solde du compte CJ via `payBalanceV2`. CJ prépare puis expédie le colis à l'adresse transmise après réception du paiement fournisseur.
-5. Si le statut CJ confirme qu'une commande est restée non payée, le webhook rembourse le paiement Stripe avec une clé idempotente. Si l'état du paiement fournisseur est ambigu, le webhook renvoie une erreur temporaire afin que Stripe retente au lieu de déclarer la commande traitée.
+4. `CJ_AUTO_PAY=true` paie la commande fournisseur avec le solde préfinancé du compte CJ via `payBalanceV2`. CJ prépare puis expédie le colis à l'adresse transmise après réception du paiement fournisseur.
+5. Seulement après confirmation du statut payé par CJ, le webhook capture le montant autorisé sur la carte client. Si CJ refuse explicitement le paiement et que la commande est toujours impayée, le webhook annule l'autorisation Stripe ; les commandes anciennes déjà capturées sont remboursées avec une clé idempotente. Une erreur réseau ou un statut ambigu déclenche une nouvelle tentative et garde l'autorisation en attente, sans supposer que le paiement fournisseur a échoué.
 
-**Flux de trésorerie :** Stripe encaisse la vente pour SWELTR ; il n'y a aucun partage Stripe automatique avec CJ. Le coût fournisseur et le transport sont débités séparément du solde CJ de SWELTR. La marge brute reste dans le solde Stripe, moins les frais Stripe, remboursements, impôts/taxes et autres charges. Le versement bancaire suit le calendrier Stripe et le solde CJ doit être approvisionné pour financer les commandes.
+**Flux de trésorerie :** Stripe ne capture le paiement client qu'après confirmation que CJ a reçu le paiement fournisseur. Il n'y a aucun partage Stripe automatique avec CJ : le coût produit et le transport sont débités du solde CJ préfinancé de SWELTR. Le chiffre d'affaires encaissé et la marge brute restent dans le solde Stripe, moins les frais Stripe, remboursements, impôts/taxes et autres charges. Le versement bancaire suit le calendrier Stripe et le solde CJ doit être approvisionné pour financer les commandes. Si CJ ne peut pas être payé, Stripe annule la réservation ; le délai d'affichage dépend de la banque.
 
 Le webhook Stripe peut être rejoué. Une commande fournisseur doit être vérifiée dans MyCJ en cas d'erreur ou de réponse réseau ambiguë. Ne pas considérer une commande comme payée, expédiée ou livrée tant que son statut fournisseur n'a pas été vérifié.
 

@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { SHIPPING_COUNTRIES } from "@/lib/shipping-countries";
 import { normalizeStoreOrder, storeOrderItems, storeOrderTotalCents } from "@/lib/kit-order";
-import { createCjOrder, findCjOrderByOrderNumber, getCjOrderNumber, isCjOrderPaid, payCjOrder, prepareCjOrderForPayment } from "@/lib/cj";
+import { CjPaymentRejectedError, createCjOrder, findCjOrderByOrderNumber, getCjOrderNumber, isCjOrderPaid, payCjOrder, prepareCjOrderForPayment } from "@/lib/cj";
 import { createStoreShippingQuote } from "@/lib/shipping-quote";
 import { isCjAutoPaymentReady } from "@/lib/fulfillment-readiness";
 
@@ -25,6 +25,68 @@ function webhookRetryResponse(error: string) {
     { error },
     { status: 503, headers: { "Cache-Control": "no-store" } },
   );
+}
+
+function getPaymentIntentId(session: Stripe.Checkout.Session): string | null {
+  const paymentIntent = session.payment_intent;
+  return typeof paymentIntent === "string" ? paymentIntent : paymentIntent?.id ?? null;
+}
+
+async function releaseCustomerPayment(
+  stripe: Stripe,
+  session: Stripe.Checkout.Session,
+  idempotencyKey: string,
+): Promise<"authorization_released" | "refunded" | "not_captured"> {
+  const paymentIntentId = getPaymentIntentId(session);
+  if (!paymentIntentId) {
+    if (session.payment_status === "paid") throw new Error("Session payée sans PaymentIntent : remboursement à vérifier.");
+    return "not_captured";
+  }
+
+  const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+  if (paymentIntent.status === "requires_capture") {
+    await stripe.paymentIntents.cancel(paymentIntentId, {}, { idempotencyKey });
+    return "authorization_released";
+  }
+  if (paymentIntent.status === "succeeded") {
+    await stripe.refunds.create({ payment_intent: paymentIntentId }, { idempotencyKey });
+    return "refunded";
+  }
+  if (paymentIntent.status === "canceled" || paymentIntent.status === "requires_payment_method") {
+    return "not_captured";
+  }
+  throw new Error(`État Stripe ${paymentIntent.status} non terminal : paiement à réconcilier.`);
+}
+
+async function captureCustomerPayment(
+  stripe: Stripe,
+  session: Stripe.Checkout.Session,
+): Promise<void> {
+  const paymentIntentId = getPaymentIntentId(session);
+  if (!paymentIntentId) throw new Error("PaymentIntent absent : capture client impossible.");
+
+  const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+  if (paymentIntent.status === "succeeded") return;
+  if (paymentIntent.status !== "requires_capture") {
+    throw new Error(`Capture Stripe bloquée : statut ${paymentIntent.status}.`);
+  }
+  if (
+    !Number.isInteger(session.amount_total)
+    || paymentIntent.currency !== session.currency
+    || paymentIntent.amount !== session.amount_total
+    || paymentIntent.amount_capturable < (session.amount_total ?? 0)
+  ) {
+    throw new Error("Montant autorisé insuffisant ou devise incohérente : capture Stripe bloquée.");
+  }
+
+  const captured = await stripe.paymentIntents.capture(
+    paymentIntentId,
+    { amount_to_capture: session.amount_total! },
+    { idempotencyKey: `sweltr-capture-${session.id}` },
+  );
+  if (captured.status !== "succeeded") {
+    throw new Error(`Stripe n’a pas confirmé la capture client (statut ${captured.status}).`);
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -71,31 +133,36 @@ export async function POST(req: NextRequest) {
     // Relire la session depuis Stripe permet de travailler avec l'état de paiement
     // et les coordonnées de livraison actuels, plutôt qu'avec le seul événement.
     const session = await stripe.checkout.sessions.retrieve(eventSession.id);
+    const paymentIntentId = getPaymentIntentId(session);
+    const paymentIntent = paymentIntentId
+      ? await stripe.paymentIntents.retrieve(paymentIntentId)
+      : null;
+    const paymentAuthorized = paymentIntent?.status === "requires_capture";
 
-    if (session.payment_status !== "paid") {
+    if (session.payment_status !== "paid" && !paymentAuthorized) {
       console.warn(
-        `Session Stripe ${session.id} terminée mais non payée (statut : ${session.payment_status}). Aucune commande CJ créée.`,
+        `Session Stripe ${session.id} sans paiement encaissé ni autorisation capturable (session : ${session.payment_status}, PaymentIntent : ${paymentIntent?.status || "absent"}). Aucune commande fournisseur créée.`,
       );
       return webhookResponse();
     }
 
-    const refundPaidSession = async (idempotencyKey: string) => {
-      const paymentIntent = typeof session.payment_intent === "string"
-        ? session.payment_intent
-        : session.payment_intent?.id;
-      if (!paymentIntent) throw new Error("Intention de paiement absente : remboursement impossible.");
-      await stripe.refunds.create({ payment_intent: paymentIntent }, { idempotencyKey });
+    const releaseAndAcknowledge = async (idempotencyKey: string, retryMessage: string) => {
+      try {
+        const disposition = await releaseCustomerPayment(stripe, session, idempotencyKey);
+        console.warn(`Paiement client ${disposition} pour ${session.id} : la commande fournisseur ne peut pas continuer.`);
+        return webhookResponse();
+      } catch (error: unknown) {
+        console.error(`Libération ou remboursement Stripe requis pour ${session.id} :`, getStripeErrorDetails(error));
+        return webhookRetryResponse(retryMessage);
+      }
     };
 
     if (session.metadata?.productType === "thermal-underwear") {
       if (!isCjAutoPaymentReady()) {
-        try {
-          await refundPaidSession(`sweltr-fulfillment-disabled-${session.id}`);
-          return webhookResponse();
-        } catch (error: unknown) {
-          console.error("Remboursement requis : l’automatisation fournisseur n’est pas prête :", getStripeErrorDetails(error));
-          return webhookRetryResponse("Traitement fournisseur non prêt : remboursement à confirmer.");
-        }
+        return releaseAndAcknowledge(
+          `sweltr-fulfillment-disabled-${session.id}`,
+          "Traitement fournisseur non prêt : libération du paiement à confirmer.",
+        );
       }
       const destination = session.metadata.destinationCountry;
       const variantId = session.metadata.thermalVariantId;
@@ -103,15 +170,22 @@ export async function POST(req: NextRequest) {
       const expectedAmount = 3990;
       if (!variantId || !expectedCurrency || session.currency !== expectedCurrency || session.amount_total !== expectedAmount) {
         console.error("Montant, devise ou variante thermique incohérents pour la session " + session.id);
-        return webhookRetryResponse("Paiement thermique incohérent : commande fournisseur suspendue.");
+        return releaseAndAcknowledge(`sweltr-thermal-invalid-${session.id}`, "Paiement thermique incohérent : libération à confirmer.");
       }
       const shipping = session.collected_information?.shipping_details;
       const address = shipping?.address;
-      if (!address?.country || !address.line1 || !address.city || !address.postal_code) return webhookRetryResponse("Adresse de livraison incomplète : commande fournisseur en attente.");
-      if (address.country !== destination || !(SHIPPING_COUNTRIES as readonly string[]).includes(address.country)) return webhookRetryResponse("Le pays de livraison ne correspond pas au paiement ou n’est pas pris en charge.");
+      if (!address?.country || !address.line1 || !address.city || !address.postal_code) {
+        return releaseAndAcknowledge(`sweltr-thermal-address-${session.id}`, "Adresse thermique invalide : libération à confirmer.");
+      }
+      if (address.country !== destination || !(SHIPPING_COUNTRIES as readonly string[]).includes(address.country)) {
+        return releaseAndAcknowledge(`sweltr-thermal-country-${session.id}`, "Pays thermique invalide : libération à confirmer.");
+      }
       const cjOrderNumber = getCjOrderNumber(session.id);
       const existingOrder = await findCjOrderByOrderNumber(cjOrderNumber);
-      if (existingOrder && isCjOrderPaid(existingOrder.orderStatus)) return webhookResponse();
+      if (existingOrder && isCjOrderPaid(existingOrder.orderStatus)) {
+        await captureCustomerPayment(stripe, session);
+        return webhookResponse();
+      }
       if (existingOrder && !["CREATED", "IN_CART", "UNPAID"].includes((existingOrder.orderStatus || "").toUpperCase())) {
         return webhookRetryResponse("Statut de commande fournisseur non confirmé.");
       }
@@ -145,23 +219,40 @@ export async function POST(req: NextRequest) {
         console.error("Paiement thermique CJ bloqué : shipmentOrderId absent pour " + order.orderId + ".");
         return webhookRetryResponse("Identifiant de paiement fournisseur absent : vérification requise.");
       } else if (process.env.CJ_AUTO_PAY === "true") {
-        try { await payCjOrder(shipmentOrderId!, cjPayId); console.log("Commande thermique CJ payée automatiquement : " + order.orderId); }
+        try {
+          await payCjOrder(shipmentOrderId!, cjPayId);
+          const paidOrder = await findCjOrderByOrderNumber(cjOrderNumber);
+          if (!paidOrder || !isCjOrderPaid(paidOrder.orderStatus)) {
+            return webhookRetryResponse("CJ n’a pas encore confirmé le paiement de la commande thermique.");
+          }
+          await captureCustomerPayment(stripe, session);
+          console.log("Commande thermique CJ payée et paiement client capturé : " + order.orderId);
+          return webhookResponse();
+        }
         catch (error: unknown) {
           console.error("Paiement fournisseur non confirmé pour " + order.orderId + " :", getStripeErrorDetails(error));
           try {
             const currentOrder = await findCjOrderByOrderNumber(cjOrderNumber);
-            if (currentOrder && isCjOrderPaid(currentOrder.orderStatus)) return webhookResponse();
-            if (currentOrder?.orderStatus?.toUpperCase() === "UNPAID") {
-              await refundPaidSession(`sweltr-cj-unpaid-${session.id}`);
+            if (currentOrder && isCjOrderPaid(currentOrder.orderStatus)) {
+              await captureCustomerPayment(stripe, session);
               return webhookResponse();
             }
+            if (error instanceof CjPaymentRejectedError && currentOrder?.orderStatus?.toUpperCase() === "UNPAID") {
+              return releaseAndAcknowledge(
+                `sweltr-cj-unpaid-${session.id}`,
+                "Le paiement fournisseur est refusé : libération du paiement client à confirmer.",
+              );
+            }
           } catch (verificationError: unknown) {
-            console.error("État CJ ou remboursement thermique non confirmé :", getStripeErrorDetails(verificationError));
+            console.error("État CJ ou libération du paiement thermique non confirmé :", getStripeErrorDetails(verificationError));
           }
           return webhookRetryResponse("Paiement fournisseur non confirmé : nouvelle vérification nécessaire.");
         }
-      } else { console.log("CJ_AUTO_PAY désactivé — commande thermique " + order.orderId + " préparée mais non payée."); }
-      return webhookResponse();
+      }
+      return releaseAndAcknowledge(
+        `sweltr-thermal-payment-disabled-${session.id}`,
+        "Paiement fournisseur désactivé : libération du paiement client à confirmer.",
+      );
     }
 
     let storeOrder = null;
@@ -179,18 +270,14 @@ export async function POST(req: NextRequest) {
     }
     if (!storeOrder) {
       console.error(`Contenu de panier invalide pour la session Stripe ${session.id}. Traitement requis.`);
-      return webhookRetryResponse("Contenu de commande invalide : vérification requise.");
+      return releaseAndAcknowledge(`sweltr-invalid-order-${session.id}`, "Contenu invalide : libération du paiement client à confirmer.");
     }
 
     if (!isCjAutoPaymentReady()) {
-      try {
-        await refundPaidSession(`sweltr-fulfillment-disabled-${session.id}`);
-        console.error(`Remboursement Stripe lancé pour ${session.id} : le paiement fournisseur automatique n’est pas prêt.`);
-        return webhookResponse();
-      } catch (error: unknown) {
-        console.error("Remboursement requis : l’automatisation fournisseur n’est pas prête :", getStripeErrorDetails(error));
-        return webhookRetryResponse("Traitement fournisseur non prêt : remboursement à confirmer.");
-      }
+      return releaseAndAcknowledge(
+        `sweltr-fulfillment-disabled-${session.id}`,
+        "Traitement fournisseur non prêt : libération du paiement client à confirmer.",
+      );
     }
 
     // Vérifier le montant des articles et des frais de livraison avant tout traitement.
@@ -202,14 +289,14 @@ export async function POST(req: NextRequest) {
     const shippingAmountCents = hasShippingQuote ? Number(session.metadata?.shippingAmountCents) : 0;
     if (hasShippingQuote && (!Number.isInteger(shippingAmountCents) || shippingAmountCents < 0 || address?.country !== destinationCountry)) {
       console.error(`Devis d’expédition incohérent pour la session Stripe ${session.id}.`);
-      return webhookRetryResponse("Devis de livraison incohérent : vérification requise.");
+      return releaseAndAcknowledge(`sweltr-shipping-quote-invalid-${session.id}`, "Devis de livraison incohérent : libération à confirmer.");
     }
     const expectedAmount = expectedItemsAmount + shippingAmountCents;
     if (session.currency !== "chf" || session.amount_total !== expectedAmount) {
       console.error(
         `Montant/devise incohérents pour la session Stripe ${session.id} : devise=${session.currency}, montant=${session.amount_total}. Traitement requis.`,
       );
-      return webhookRetryResponse("Montant du paiement incohérent : commande fournisseur suspendue.");
+      return releaseAndAcknowledge(`sweltr-amount-invalid-${session.id}`, "Montant ou devise incohérents : libération à confirmer.");
     }
 
     const supplierItems = storeOrderItems(storeOrder);
@@ -217,14 +304,14 @@ export async function POST(req: NextRequest) {
       console.error(
         `Aucun produit CJ configuré pour le contenu de la session Stripe ${session.id}.`,
       );
-      return webhookRetryResponse("Produits fournisseur non configurés pour ce kit.");
+      return releaseAndAcknowledge(`sweltr-products-unmapped-${session.id}`, "Produit non configuré : libération du paiement client à confirmer.");
     }
 
     if (!address?.country || !address.line1 || !address.city || !address.postal_code) {
       console.error(
         `Adresse de livraison incomplète pour la session Stripe ${session.id}. Traitement manuel requis.`,
       );
-      return webhookRetryResponse("Adresse de livraison incomplète : commande fournisseur en attente.");
+      return releaseAndAcknowledge(`sweltr-address-invalid-${session.id}`, "Adresse invalide : libération du paiement client à confirmer.");
     }
 
     // Aucune session ne peut expédier vers une destination qui n'est pas proposée
@@ -233,7 +320,7 @@ export async function POST(req: NextRequest) {
       console.error(
         `Pays de livraison non pris en charge pour la session Stripe ${session.id} : ${address.country}.`,
       );
-      return webhookRetryResponse("Pays de livraison non pris en charge : commande fournisseur suspendue.");
+      return releaseAndAcknowledge(`sweltr-country-invalid-${session.id}`, "Pays non pris en charge : libération du paiement client à confirmer.");
     }
 
     let shippingQuote;
@@ -245,29 +332,17 @@ export async function POST(req: NextRequest) {
       );
     } catch (error: unknown) {
       console.error(`Stock ou expédition non confirmés après paiement pour ${session.id} :`, getStripeErrorDetails(error));
-      const paymentIntent = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
-      if (!paymentIntent) return webhookRetryResponse("Paiement à rembourser : adresse ou expédition non confirmée.");
-      try {
-        await stripe.refunds.create({ payment_intent: paymentIntent, reason: "requested_by_customer" }, { idempotencyKey: `sweltr-unshippable-${session.id}` });
-        console.error(`Remboursement Stripe lancé pour ${session.id}, car aucune livraison conforme n’est disponible.`);
-        return webhookResponse();
-      } catch (refundError: unknown) {
-        console.error(`Remboursement Stripe requis pour ${session.id} :`, getStripeErrorDetails(refundError));
-        return webhookRetryResponse("Expédition non confirmée : remboursement en cours de vérification.");
-      }
+      return releaseAndAcknowledge(
+        `sweltr-unshippable-${session.id}`,
+        "Expédition non confirmée : libération du paiement client à confirmer.",
+      );
     }
 
     if (hasShippingQuote && shippingQuote.shippingAmountCents > shippingAmountCents) {
-      const paymentIntent = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
-      if (!paymentIntent) return webhookRetryResponse("Montant de livraison à rembourser : vérification requise.");
-      try {
-        await stripe.refunds.create({ payment_intent: paymentIntent, reason: "requested_by_customer" }, { idempotencyKey: `sweltr-shipping-adjust-${session.id}` });
-        console.error(`Remboursement Stripe lancé pour ${session.id}, car le tarif de livraison a augmenté après le devis.`);
-        return webhookResponse();
-      } catch (refundError: unknown) {
-        console.error(`Remboursement Stripe requis pour ${session.id} :`, getStripeErrorDetails(refundError));
-        return webhookRetryResponse("Tarif de livraison modifié : remboursement en cours de vérification.");
-      }
+      return releaseAndAcknowledge(
+        `sweltr-shipping-adjust-${session.id}`,
+        "Le tarif de livraison a changé : libération du paiement client à confirmer.",
+      );
     }
 
     // La référence stable permet de retrouver une commande créée lors d'une tentative
@@ -277,6 +352,7 @@ export async function POST(req: NextRequest) {
     const existingOrder = await findCjOrderByOrderNumber(cjOrderNumber);
     if (existingOrder && isCjOrderPaid(existingOrder.orderStatus)) {
       console.log(`Commande CJ déjà payée pour la session ${session.id}; aucun second débit.`);
+      await captureCustomerPayment(stripe, session);
       return webhookResponse();
     }
     if (existingOrder && !["CREATED", "IN_CART", "UNPAID"].includes((existingOrder.orderStatus || "").toUpperCase())) {
@@ -329,24 +405,32 @@ export async function POST(req: NextRequest) {
           console.error("CJ n’a pas confirmé le paiement de la commande " + order.orderId + ".");
           return webhookRetryResponse("Paiement fournisseur envoyé mais statut CJ non confirmé.");
         }
+        await captureCustomerPayment(stripe, session);
         console.log("Commande CJ " + order.orderId + " payée et statut confirmé.");
       } catch (error: unknown) {
         console.error("La commande CJ " + order.orderId + " existe, mais son paiement automatique a échoué. Vérification manuelle requise :", getStripeErrorDetails(error));
         try {
           const currentOrder = await findCjOrderByOrderNumber(cjOrderNumber);
-          if (currentOrder && isCjOrderPaid(currentOrder.orderStatus)) return webhookResponse();
-          if (currentOrder?.orderStatus?.toUpperCase() === "UNPAID") {
-            await refundPaidSession(`sweltr-cj-unpaid-${session.id}`);
-            console.error(`Remboursement Stripe lancé pour ${session.id} : CJ confirme la commande non payée.`);
+          if (currentOrder && isCjOrderPaid(currentOrder.orderStatus)) {
+            await captureCustomerPayment(stripe, session);
             return webhookResponse();
           }
+          if (error instanceof CjPaymentRejectedError && currentOrder?.orderStatus?.toUpperCase() === "UNPAID") {
+            return releaseAndAcknowledge(
+              `sweltr-cj-unpaid-${session.id}`,
+              "CJ confirme que le fournisseur n’a pas été payé : libération client à confirmer.",
+            );
+          }
         } catch (verificationError: unknown) {
-          console.error("État CJ ou remboursement non confirmé :", getStripeErrorDetails(verificationError));
+          console.error("État CJ ou libération du paiement client non confirmé :", getStripeErrorDetails(verificationError));
         }
         return webhookRetryResponse("Paiement fournisseur non confirmé : nouvelle vérification nécessaire.");
       }
     } else {
-      console.log("CJ_AUTO_PAY désactivé — commande " + order.orderId + " préparée mais non payée. Vérifier puis régler dans MyCJ.");
+      return releaseAndAcknowledge(
+        `sweltr-cj-autopay-disabled-${session.id}`,
+        "Paiement fournisseur désactivé : libération du paiement client à confirmer.",
+      );
     }
 
     return webhookResponse();

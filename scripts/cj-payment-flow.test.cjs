@@ -14,6 +14,34 @@ test("customer checkout is not offered unless CJ balance payment is enabled and 
   assert.match(read("lib/shipping-quote.ts"), /getCjBalance/);
 });
 
+test("card funds are authorized first and captured only after provider payment is confirmed", () => {
+  const checkout = read("app/api/checkout/route.ts");
+  const webhook = read("app/api/webhooks/stripe/route.ts");
+  assert.match(checkout, /allowed_payment_method_types: \["card"\]/);
+  assert.match(checkout, /capture_method: "manual"/);
+  assert.match(webhook, /paymentIntents\.cancel\(paymentIntentId/);
+  assert.match(webhook, /amount_to_capture: session\.amount_total/);
+  const providerPaidCheck = webhook.indexOf("!paidOrder || !isCjOrderPaid(paidOrder.orderStatus)");
+  const customerCaptureAfterProvider = webhook.indexOf("await captureCustomerPayment(stripe, session);", providerPaidCheck);
+  assert.ok(providerPaidCheck >= 0, "CJ paid status must be verified");
+  assert.ok(customerCaptureAfterProvider > providerPaidCheck, "customer capture must follow the CJ paid status check");
+  assert.match(webhook, /sweltr-cj-unpaid-/);
+  assert.match(webhook, /error instanceof CjPaymentRejectedError && currentOrder\?\.orderStatus\?\.toUpperCase\(\) === "UNPAID"/);
+  assert.match(read("lib/cj.ts"), /class CjPaymentRejectedError extends Error/);
+});
+
+test("success page confirms only a captured card payment and a provider-paid order", () => {
+  const page = read("app/succes/page.tsx");
+  const client = read("components/SuccessPageClient.tsx");
+  assert.match(page, /paymentIntent\?\.status !== "succeeded"/);
+  assert.match(page, /status="pending" sessionId=\{sessionId\}/);
+  assert.match(page, /isCjOrderPaid\(order\.orderStatus\)/);
+  assert.match(client, /Commande en cours de confirmation/);
+  assert.match(client, /Le montant est réservé sur ta carte/);
+  assert.match(client, /Paiement non encaissé/);
+  assert.match(client, /router\.refresh\(\)/);
+});
+
 test("webhook retries ambiguous CJ payment failures instead of acknowledging unpaid fulfillment", () => {
   const webhook = read("app/api/webhooks/stripe/route.ts");
   assert.match(webhook, /Paiement fournisseur non confirmé : nouvelle vérification nécessaire/);

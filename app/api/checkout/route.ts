@@ -57,7 +57,18 @@ export async function POST(req: NextRequest) {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       locale: "auto",
+      // Manual capture is only offered for compatible card payments.
+      allowed_payment_method_types: ["card"],
       phone_number_collection: { enabled: true },
+      // Reserve the customer's card amount first. The webhook captures it only
+      // after CJ confirms the supplier order is paid; failures release the hold.
+      payment_intent_data: {
+        capture_method: "manual",
+        metadata: {
+          orderType: "store-cart",
+          transactionFlow: "supplier-paid-before-capture-v1",
+        },
+      },
       line_items: items.map((item) => ({
         price_data: {
           currency: "chf",
