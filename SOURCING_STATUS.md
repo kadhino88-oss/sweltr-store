@@ -1,12 +1,13 @@
 # SWELTR — état du sourcing fournisseur
-Mise à jour : 13 novembre 2026
+Mise à jour : 23 novembre 2026
 
 ## Contrôle de lancement du 13 novembre 2026
 - Les 26 images actuellement utilisées ont été copiées dans `public/images/catalog/` et les 44 références des catalogues ont été remplacées par des chemins locaux. Les images montrent les bons articles, mais certaines photos contiennent encore les marquages du fabricant visibles sur le produit.
 - Les prix confirmés des kits restent 36,99 CHF, 52,99 CHF et 62,99 CHF. Les prix unitaires gants 36,99 CHF, écharpe 16,00 CHF et chaussettes 10,00 CHF reprennent l’écart exact entre les prix des kits ; leur marge fournisseur et leur éligibilité logistique restent à confirmer.
 - Le checkout de production n’est pas ouvert : `STORE_SALES_ENABLED` est absent des variables du projet. Le code bloque désormais les paiements en mode test comme en mode réel sans activation explicite.
-- Le code local recalcule désormais stock et prix d’achat des variantes, sélectionne uniquement un devis d’expédition estimé à 10 jours maximum, affiche et facture les frais au checkout, puis revalide la disponibilité et le transporteur au webhook. Si la vérification post-paiement échoue, il lance un remboursement idempotent.
-- L’activation en production reste à vérifier : le nouveau parcours doit être essayé avec les variables de production sur les pays desservis et une commande Stripe/CJ de test. `STORE_SALES_ENABLED` n’est pas encore configuré dans le projet Vercel, et aucun déploiement de ces changements n’a été créé.
+- Le code local recalcule le stock et le prix d’achat des variantes, choisit un transporteur disponible par destination et affiche/facture les frais avec son délai estimé, y compris au-delà de 10 jours. La disponibilité et le transporteur sont revérifiés au webhook. Si la vérification post-paiement échoue, le code lance un remboursement idempotent.
+- Le compte CJ a été rouvert via la connexion Google. Le solde fournisseur doit être approvisionné avant de financer des commandes réelles. Les références CJ actuellement reliées au catalogue SWELTR et les transports par destination doivent encore être validés avant l’ouverture des ventes.
+- `STORE_SALES_ENABLED` et `CJ_PAYMENT_FLOW_VALIDATED` sont absents des variables de production ; la vente reste donc fermée. Aucun paiement, achat ni envoi réel n’a été effectué.
 - Les références enregistrées dans le catalogue doivent être vérifiées en direct : le contrôle de nom du produit, stock, coût et délai fait désormais échouer le devis si une VID ne correspond pas à l’article attendu.
 
 ## Objectif non négociable
@@ -19,7 +20,7 @@ Conserver exactement les sept produits de la collection hiver. Ne pas ajouter de
 - Client API CJ : `lib/cj.ts`
 - Route admin existante : `app/api/admin/find-vid/route.ts`
 - Site de production indiqué dans le dépôt : https://sweltr-store-five.vercel.app
-- Expédition visée à l’international, notamment aux États-Unis, au Canada et au Royaume-Uni. Les méthodes et délais CJ restent propres au produit et à la destination ; ne pas appliquer le devis CH de la couverture aux autres pays.
+- Expédition visée à l’international, notamment aux États-Unis, au Canada et au Royaume-Uni. Les méthodes, coûts et délais CJ restent propres au produit et à la destination ; ne pas appliquer le devis CH de la couverture aux autres pays.
 - Contrôle effectué le 28 octobre 2026 : la page d'accueil de production répond HTTP 200.
 - Une tentative de lecture d'une route de déploiement protégée par Vercel a été refusée par l'authentification du déploiement. Aucun secret n'a été contourné.
 - La route CJ existante exige `x-admin-secret` et ne cherche que dans `product/myProduct/query`. Sans accès autorisé au secret, le stock réel et les VID ne peuvent pas être interrogés à partir de cette route.

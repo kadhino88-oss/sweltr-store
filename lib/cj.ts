@@ -175,7 +175,7 @@ export async function getEligibleShippingOptions(
     const logisticName = typeof option.logisticName === "string" ? option.logisticName.trim() : "";
     const costUsd = Number(option.logisticPrice);
     const maxDays = maxDeliveryDays(option.logisticAging);
-    return logisticName && Number.isFinite(costUsd) && costUsd >= 0 && maxDays !== null && maxDays <= 10
+    return logisticName && Number.isFinite(costUsd) && costUsd >= 0 && maxDays !== null
       ? [{ logisticName, costUsd, maxDays }]
       : [];
   }).sort((a, b) => a.costUsd - b.costUsd);
@@ -236,7 +236,7 @@ async function getCheapestAvailableLogistics(
   const selected = requestedLogisticName
     ? options.find((option) => option.logisticName === requestedLogisticName)
     : options[0];
-  if (!selected) throw new Error("Aucun transporteur ne respecte actuellement le délai maximum de 10 jours.");
+  if (!selected) throw new Error("Aucun transporteur n’est actuellement disponible pour cette destination.");
   return selected.logisticName;
 }
 

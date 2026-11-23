@@ -38,7 +38,7 @@ export async function createStoreShippingQuote(items: StoreOrderLine[], country:
   const productCostUsd = supplierItems.reduce((sum, line) => sum + variants.get(line.vid)!.costUsd * line.quantity, 0);
   const rates = await getEligibleShippingOptions(country, supplierItems);
   const shipping = requestedLogisticName ? rates.find((option) => option.logisticName === requestedLogisticName) : rates[0];
-  if (!shipping) throw new Error("Aucun transporteur disponible ne respecte le délai maximum de 10 jours pour ce pays.");
+  if (!shipping) throw new Error("Aucun transporteur n’est actuellement disponible pour cette destination.");
   const [exchangeRate, cjBalance] = await Promise.all([usdToChfRate(), getCjBalance()]);
   const productCostCents = Math.ceil(productCostUsd * exchangeRate * 100);
   if (productCostCents >= storeOrderTotalCents(items)) throw new Error("Cette sélection ne peut pas être commandée pour le prix affiché. Contacte-nous pour une vérification.");

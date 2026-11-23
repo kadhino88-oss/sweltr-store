@@ -40,7 +40,7 @@ Ne jamais committer de fichier `.env.local`, de clé Stripe, de clé CJ ou de se
 
 ## Activation des ventes en mode live
 
-Le checkout reste fermé tant que les trois drapeaux `STORE_SALES_ENABLED`, `CJ_AUTO_PAY` et `CJ_PAYMENT_FLOW_VALIDATED` ne sont pas tous à `true`. Il vérifie à nouveau la variante, le stock, la marge, le devis logistique sous 10 jours et le solde CJ avant de créer une session de paiement. Une destination sans transport conforme, ou un solde CJ insuffisant pour financer produit et transport, est refusé avant le paiement Stripe.
+Le checkout reste fermé tant que les trois drapeaux `STORE_SALES_ENABLED`, `CJ_AUTO_PAY` et `CJ_PAYMENT_FLOW_VALIDATED` ne sont pas tous à `true`. Il vérifie à nouveau la variante, le stock, la marge, un transporteur disponible pour le pays avec son délai estimé, et le solde CJ avant de créer une session de paiement. Les délais peuvent dépasser 10 jours et sont affichés selon le pays ; une destination sans route valide, ou un solde CJ insuffisant pour financer produit et transport, est refusé avant le paiement Stripe.
 
 ## Disponibilité de l’ensemble thermique
 
@@ -60,7 +60,7 @@ Le webhook Stripe peut être rejoué. Une commande fournisseur doit être vérif
 
 ## Marchés et devise
 
-Le paiement Checkout est configuré en CHF. La boutique accepte les destinations activées dans la liste internationale du projet uniquement si CJ retourne une méthode de transport estimée à 10 jours maximum pour l'article et l'adresse concernés. La Suisse, la France, les États-Unis, le Canada et le Royaume-Uni sont inclus dans le parcours lorsqu'une telle méthode est disponible. Les prix en CHF et la compatibilité du transporteur doivent être vérifiés pour chaque panier; les taxes, droits de douane et éventuels frais à réception dépendent du pays de destination. Vérifier les obligations locales avant le lancement commercial.
+Le paiement Checkout est configuré en CHF. La boutique peut proposer les destinations de sa liste internationale lorsqu’une route CJ est disponible pour les articles et l’adresse concernés. Elle affiche alors le délai estimé propre au pays, y compris lorsqu’il dépasse 10 jours ; elle ne promet pas un délai universel. La Suisse, la France, les États-Unis, le Canada et le Royaume-Uni sont inclus dans la liste de destinations, mais chaque route et son coût doivent être confirmés avant d’ouvrir les ventes. Les taxes, droits de douane et éventuels frais à réception dépendent du pays de destination. Vérifier les obligations locales avant le lancement commercial.
 
 ## Vérifications avant lancement
 

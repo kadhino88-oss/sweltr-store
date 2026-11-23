@@ -24,9 +24,10 @@ test("international checkout includes the US, Canada, UK, and the full Stripe co
   assert.match(header, /International/);
 });
 
-test("checkout only accepts verified stock and a shipping estimate of 10 days or less", () => {
+test("checkout accepts verified stock and any valid destination-specific shipping estimate", () => {
   assert.match(cj, /getVariantCostAndStock/);
-  assert.match(cj, /maxDays <= 10/);
+  assert.match(cj, /maxDays !== null/);
+  assert.doesNotMatch(cj, /maxDays <= 10/);
   assert.match(shippingQuote, /availableQuantity < line\.quantity/);
   assert.match(shippingQuote, /productCostCents >= storeOrderTotalCents/);
   assert.match(cart, /Calculer livraison et disponibilité/);
