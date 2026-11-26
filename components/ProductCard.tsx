@@ -1,18 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Tier } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
 import AddToCartButton from "@/components/AddToCartButton";
+import KitCompositionImage from "@/components/KitCompositionImage";
 
 export default function ProductCard({ tier }: { tier: Tier }) {
-  const images = (tier.cardImages.length ? tier.cardImages : tier.images).slice(0, 3);
-
   return (
     <article id={tier.id} className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <div className="relative grid aspect-[4/3] overflow-hidden bg-white" style={{ gridTemplateColumns: `repeat(${Math.max(images.length, 1)}, minmax(0, 1fr))` }}>
-        {images.map((image, index) => <div key={image} className="relative min-w-0 overflow-hidden border-r border-slate-100 last:border-r-0">
-          <Image src={image} alt={tier.items[index] || tier.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-contain p-2 transition-transform duration-500 hover:scale-105" />
-        </div>)}
+      <div className="relative overflow-hidden">
+        <KitCompositionImage tier={tier} className="aspect-[4/3]" />
         <span className="absolute left-4 top-4 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-amber-900">Kit hiver</span>
       </div>
 

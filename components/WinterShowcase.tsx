@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Flower2, Leaf, ShieldCheck, Snowflake, Sun } from "lucide-react";
 import AddToCartButton from "@/components/AddToCartButton";
 import AddProductToCartButton from "@/components/AddProductToCartButton";
+import KitCompositionImage from "@/components/KitCompositionImage";
 import { PRODUCT_IMAGES, TIERS } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
 import { WINTER_PRODUCTS } from "@/lib/winter-products";
@@ -73,7 +74,7 @@ export default function WinterShowcase() {
           </div>
           <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">
             {TIERS.map((tier) => <article key={tier.id} className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-              <Link href={`/produit/${tier.id}`} className="relative block aspect-square bg-white" aria-label={`Découvrir ${tier.name}`}><Image src={tier.cardImages[0]} alt={tier.items[0]} fill sizes="(max-width: 640px) 45vw, (max-width: 1200px) 30vw, 16vw" className="object-contain p-3"/><span className="absolute left-2 top-2 rounded-full bg-amber-400 px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-slate-950">Kit hiver</span></Link>
+              <Link href={`/produit/${tier.id}`} className="relative block aspect-square bg-white" aria-label={`Découvrir ${tier.name}`}><KitCompositionImage tier={tier} className="h-full w-full"/><span className="absolute left-2 top-2 rounded-full bg-amber-400 px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-slate-950">Kit hiver</span></Link>
               <div className="flex flex-1 flex-col p-3 sm:p-4"><h3 className="font-display text-sm font-black leading-tight sm:text-base">{tier.name}</h3><p className="mt-1 line-clamp-2 text-[11px] leading-4 text-slate-600">{tier.tagline}</p><p className="mt-auto pt-3 text-lg font-black">{formatPrice(tier.price)}</p><Link href={`/produit/${tier.id}`} className="mt-2 inline-flex min-h-10 items-center justify-center rounded-full bg-amber-400 px-3 text-[11px] font-bold text-slate-950 transition hover:bg-amber-300">Voir le kit</Link></div>
             </article>)}
             {pricedProducts.map((product) => <article key={product.slug} className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">

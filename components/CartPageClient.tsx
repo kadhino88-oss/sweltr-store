@@ -7,10 +7,22 @@ import { ArrowRight, Loader2, Minus, Plus, ShoppingBag, Trash2 } from "lucide-re
 import { useCart } from "@/components/CartProvider";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
-import { TIERS } from "@/lib/data";
+import { TIERS, type Tier } from "@/lib/data";
 import { WINTER_PRODUCTS } from "@/lib/winter-products";
 import { formatPrice } from "@/lib/format";
 import { SHIPPING_COUNTRIES } from "@/lib/shipping-countries";
+import KitCompositionImage from "@/components/KitCompositionImage";
+
+type CartDisplayItem = {
+  id: string;
+  kind: "kit" | "product";
+  quantity: number;
+  name: string;
+  description: string;
+  price: number;
+  image?: string;
+  tier?: Tier;
+};
 
 export default function CartPageClient() {
   const { items, ready, setQuantity, removeItem } = useCart();
@@ -19,10 +31,10 @@ export default function CartPageClient() {
   const [error, setError] = useState("");
   const [countryCode, setCountryCode] = useState("CH");
   const [quote, setQuote] = useState<{ countryCode: string; itemsKey: string; shippingAmountCents: number; maxDays: number } | null>(null);
-  const details = useMemo(() => items.flatMap<{ id: string; kind: "kit" | "product"; quantity: number; name: string; description: string; price: number; image: string }>((item) => {
+  const details = useMemo<CartDisplayItem[]>(() => items.flatMap<CartDisplayItem>((item) => {
     if (item.tierId) {
       const tier = TIERS.find((candidate) => candidate.id === item.tierId);
-      return tier ? [{ id: item.tierId, kind: "kit" as const, quantity: item.quantity, name: tier.name, description: tier.items.join(" · "), price: tier.price, image: tier.cardImages[0] || tier.images[0] }] : [];
+      return tier ? [{ id: item.tierId, kind: "kit", quantity: item.quantity, name: tier.name, description: tier.items.join(" · "), price: tier.price, tier }] : [];
     }
     const product = WINTER_PRODUCTS.find((candidate) => candidate.slug === item.productSlug && candidate.availability === "existing" && candidate.retailPrice !== undefined);
     return product ? [{ id: product.slug, kind: "product" as const, quantity: item.quantity, name: product.name, description: product.short, price: product.retailPrice!, image: product.image }] : [];
@@ -91,9 +103,11 @@ export default function CartPageClient() {
         ) : (
           <div className="mt-8 grid items-start gap-6 lg:grid-cols-[1fr_360px]">
             <section aria-label="Articles dans le panier" className="space-y-4">
-              {details.map(({ id, kind, name, description, price, image, quantity }) => <article key={`${kind}:${id}`} className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-[132px_1fr] sm:p-5">
+              {details.map(({ id, kind, name, description, price, image, tier, quantity }) => <article key={`${kind}:${id}`} className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-[132px_1fr] sm:p-5">
                 <div className="relative aspect-square overflow-hidden rounded-xl bg-slate-50">
-                  <Image src={image} alt={name} fill sizes="132px" className="object-contain p-2"/>
+                  {kind === "kit" && tier
+                    ? <KitCompositionImage tier={tier} className="h-full w-full" />
+                    : image && <Image src={image} alt={name} fill sizes="132px" className="object-contain p-2"/>}
                 </div>
                 <div className="flex flex-col justify-between gap-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">

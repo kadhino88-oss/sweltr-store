@@ -17,12 +17,14 @@ export async function generateMetadata({ params }: { params: Promise<{ tierId: s
   const title = `${tier.name} — kit d’hiver SWELTR`;
   const description = `${tier.description} Prix du kit : ${tier.price.toFixed(2).replace(".", ",")} CHF. Consulte le contenu, les conseils d’usage et les réponses aux questions fréquentes.`;
   const canonical = `${siteUrl}/produit/${tier.id}`;
+  const shareImage = tier.cardImages.at(-1) || tier.images[0];
+  const shareAlt = `${tier.name} : ${tier.items.join(" · ")}`;
   return {
     title,
     description,
     alternates: { canonical },
-    openGraph: { title, description, url: canonical, siteName: "SWELTR", locale: "fr_CH", type: "website", images: [{ url: tier.cardImages[0], alt: `${tier.name} — articles inclus dans le kit` }] },
-    twitter: { card: "summary_large_image", title, description, images: [tier.cardImages[0]] },
+    openGraph: { title, description, url: canonical, siteName: "SWELTR", locale: "fr_CH", type: "website", images: [{ url: shareImage, alt: shareAlt }] },
+    twitter: { card: "summary_large_image", title, description, images: [shareImage] },
   };
 }
 

@@ -11,6 +11,7 @@ import { formatPrice } from "@/lib/format";
 import AddToCartButton from "@/components/AddToCartButton";
 import { useCart } from "@/components/CartProvider";
 import ProductCard from "@/components/ProductCard";
+import KitCompositionImage from "@/components/KitCompositionImage";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
 
@@ -41,7 +42,7 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
   const { addItem } = useCart();
   const reduceMotion = useReducedMotion();
   const guide = kitGuides[tier.id] ?? kitGuides.solo;
-  const gallery = [...new Set([...tier.images, ...tier.cardImages])];
+  const gallery = [...new Set([...tier.cardImages, ...tier.images])].slice(0, 7);
   const relatedTiers = TIERS.filter((item) => item.id !== tier.id);
 
   function handleCheckout() {
@@ -66,10 +67,15 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
         <section className="mt-5 grid overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm xl:grid-cols-2">
           <div className="bg-slate-100 p-3 md:p-5">
             <motion.div key={activeImage} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="relative aspect-square overflow-hidden rounded-2xl bg-white">
-              <Image src={gallery[activeImage]} alt={`${tier.name} — visuel des articles inclus`} fill priority sizes="(max-width: 1024px) 100vw, 50vw" className="object-contain p-2" />
+              {activeImage === 0
+                ? <KitCompositionImage tier={tier} className="h-full w-full" />
+                : <Image src={gallery[activeImage - 1]} alt={`${tier.name} — article inclus ${activeImage}`} fill priority sizes="(max-width: 1024px) 100vw, 50vw" className="object-contain p-2" />}
             </motion.div>
-            {gallery.length > 1 && <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6" aria-label="Galerie des articles du kit">
-              {gallery.slice(0, 8).map((image, index) => <button key={`${image}-${index}`} type="button" onClick={() => setActiveImage(index)} aria-label={`Afficher le visuel ${index + 1} de ${tier.name}`} aria-pressed={activeImage === index} className={`relative aspect-square overflow-hidden rounded-xl border bg-white transition ${activeImage === index ? "border-amber-500 ring-2 ring-amber-200" : "border-slate-200 hover:border-amber-400"}`}>
+            {gallery.length > 0 && <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6" aria-label="Galerie des articles du kit">
+              <button type="button" onClick={() => setActiveImage(0)} aria-label={`Afficher le visuel complet de ${tier.name}`} aria-pressed={activeImage === 0} className={`relative aspect-square overflow-hidden rounded-xl border bg-white transition ${activeImage === 0 ? "border-amber-500 ring-2 ring-amber-200" : "border-slate-200 hover:border-amber-400"}`}>
+                <KitCompositionImage tier={tier} className="h-full w-full" />
+              </button>
+              {gallery.map((image, index) => <button key={`${image}-${index}`} type="button" onClick={() => setActiveImage(index + 1)} aria-label={`Afficher l’article ${index + 1} de ${tier.name}`} aria-pressed={activeImage === index + 1} className={`relative aspect-square overflow-hidden rounded-xl border bg-white transition ${activeImage === index + 1 ? "border-amber-500 ring-2 ring-amber-200" : "border-slate-200 hover:border-amber-400"}`}>
                 <Image src={image} alt="" fill sizes="(max-width: 640px) 22vw, 100px" className="object-contain p-1" />
               </button>)}
             </div>}
