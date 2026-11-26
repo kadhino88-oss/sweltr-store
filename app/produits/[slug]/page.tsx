@@ -72,10 +72,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const product = getWinterProduct(slug);
   if (!product) return {};
-  const title = `${product.name} ${product.retailPrice !== undefined ? `à ${product.retailPrice.toFixed(2)} CHF` : ""} | SWELTR`;
+  const title = `${product.name}${product.retailPrice !== undefined ? ` à ${formatPrice(product.retailPrice)}` : ""} | SWELTR`;
   const description = product.availability === "existing"
     ? `${product.short} Découvrez les kits SWELTR qui le contiennent, leurs tarifs et les conseils d’utilisation.`
-    : `${product.name} chez SWELTR : ${product.short} ${product.retailPrice !== undefined ? `Prix public ${product.retailPrice.toFixed(2)} CHF.` : "Produit en préparation, prix à confirmer."} Consultez les détails et les informations avant sa mise en vente.`;
+    : `${product.name} chez SWELTR : ${product.short} ${product.retailPrice !== undefined ? `Prix public ${formatPrice(product.retailPrice)}.` : "Produit en préparation, prix à confirmer."} Consultez les détails et les informations avant sa mise en vente.`;
   const canonical = `${siteUrl}/produits/${product.slug}`;
   return {
     title,
