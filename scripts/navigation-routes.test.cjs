@@ -8,7 +8,7 @@ const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), "u
 
 test("kit cards link to the implemented kit detail route", () => {
   const card = read("components/ProductCard.tsx");
-  assert.match(card, /href=\{\`\/produit\/\$\{tier\.id\}\`\}/);
+  assert.match(card, /href=\{\`\/produit\/\$\{tier\.slug\}\`\}/);
   assert.ok(fs.existsSync(path.join(root, "app", "produit", "[tierId]", "page.tsx")));
   assert.doesNotMatch(card, /href=\{\`\/kits\/\$\{tier\.id\}\`\}/);
 });

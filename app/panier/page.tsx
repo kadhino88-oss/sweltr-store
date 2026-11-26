@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import CartPageClient from "@/components/CartPageClient";
+import { isStoreFulfillmentReady } from "@/lib/fulfillment-readiness";
+
+export const dynamic = "force-dynamic";
 
 const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
@@ -13,5 +16,5 @@ export const metadata: Metadata = {
 };
 
 export default function CartPage() {
-  return <CartPageClient />;
+  return <CartPageClient salesReady={isStoreFulfillmentReady()} />;
 }

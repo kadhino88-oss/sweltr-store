@@ -58,7 +58,7 @@ export default function WinterShowcase() {
                 <span className="font-display text-2xl font-black">{formatPrice(featured.price)}</span>
               </div>
               <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-2">
-                <Link href="/produit/trio" className="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-xs font-bold text-slate-900 transition hover:border-amber-500 hover:bg-amber-50">Détails du kit</Link>
+                <Link href="/produit/kit-grand-froid" className="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-xs font-bold text-slate-900 transition hover:border-amber-500 hover:bg-amber-50">Détails du kit</Link>
                 <AddToCartButton tierId={featured.id} compact />
               </div>
             </motion.aside>
@@ -74,8 +74,8 @@ export default function WinterShowcase() {
           </div>
           <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">
             {TIERS.map((tier) => <article key={tier.id} className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-              <Link href={`/produit/${tier.id}`} className="relative block aspect-square bg-white" aria-label={`Découvrir ${tier.name}`}><KitCompositionImage tier={tier} className="h-full w-full"/><span className="absolute left-2 top-2 rounded-full bg-amber-400 px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-slate-950">Kit hiver</span></Link>
-              <div className="flex flex-1 flex-col p-3 sm:p-4"><h3 className="font-display text-sm font-black leading-tight sm:text-base">{tier.name}</h3><p className="mt-1 line-clamp-2 text-[11px] leading-4 text-slate-600">{tier.tagline}</p><p className="mt-auto pt-3 text-lg font-black">{formatPrice(tier.price)}</p><Link href={`/produit/${tier.id}`} className="mt-2 inline-flex min-h-10 items-center justify-center rounded-full bg-amber-400 px-3 text-[11px] font-bold text-slate-950 transition hover:bg-amber-300">Voir le kit</Link></div>
+              <Link href={`/produit/${tier.slug}`} className="relative block aspect-square bg-white" aria-label={`Découvrir ${tier.name}`}><KitCompositionImage tier={tier} className="h-full w-full"/><span className="absolute left-2 top-2 rounded-full bg-amber-400 px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-slate-950">Kit hiver</span></Link>
+              <div className="flex flex-1 flex-col p-3 sm:p-4"><h3 className="font-display text-sm font-black leading-tight sm:text-base">{tier.name}</h3><p className="mt-1 line-clamp-2 text-[11px] leading-4 text-slate-600">{tier.tagline}</p><p className="mt-auto pt-3 text-lg font-black">{formatPrice(tier.price)}</p><Link href={`/produit/${tier.slug}`} className="mt-2 inline-flex min-h-10 items-center justify-center rounded-full bg-amber-400 px-3 text-[11px] font-bold text-slate-950 transition hover:bg-amber-300">Voir le kit</Link></div>
             </article>)}
             {pricedProducts.map((product) => <article key={product.slug} className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
               <Link href={`/produits/${product.slug}`} className="relative block aspect-square bg-white" aria-label={`Découvrir ${product.name}`}><Image src={product.image} alt={product.alt} fill sizes="(max-width: 640px) 45vw, (max-width: 1200px) 30vw, 16vw" className="object-contain p-3"/><span className="absolute left-2 top-2 rounded-full bg-slate-950/80 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-white">Hiver</span></Link>

@@ -24,7 +24,7 @@ type CartDisplayItem = {
   tier?: Tier;
 };
 
-export default function CartPageClient() {
+export default function CartPageClient({ salesReady }: { salesReady: boolean }) {
   const { items, ready, setQuantity, removeItem } = useCart();
   const [loading, setLoading] = useState(false);
   const [quoting, setQuoting] = useState(false);
@@ -48,6 +48,7 @@ export default function CartPageClient() {
   useEffect(() => { setQuote(null); }, [itemsKey, countryCode]);
 
   async function calculateShipping() {
+    if (!salesReady) return;
     setQuoting(true);
     setError("");
     setQuote(null);
@@ -66,6 +67,7 @@ export default function CartPageClient() {
   }
 
   async function checkout() {
+    if (!salesReady) return;
     if (!quote || quote.countryCode !== countryCode || quote.itemsKey !== itemsKey) {
       setError("Calcule les frais de livraison avant de poursuivre.");
       return;
@@ -101,6 +103,12 @@ export default function CartPageClient() {
             <Link href="/boutique" className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-amber-400 px-6 py-3 text-sm font-bold text-slate-950 transition hover:bg-amber-300">Voir les kits <ArrowRight size={16}/></Link>
           </section>
         ) : (
+          <>
+          {!salesReady && <div role="status" className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-950 sm:p-6">
+            <h2 className="font-bold">Les commandes en ligne ne sont pas encore ouvertes</h2>
+            <p className="mt-2 text-sm leading-6">Tu peux conserver ta sélection et contacter l’équipe SWELTR pour toute question sur les produits ou leur disponibilité.</p>
+            <Link href="/contact" className="mt-3 inline-flex min-h-10 items-center font-semibold underline underline-offset-4">Contacter SWELTR <ArrowRight size={15} className="ml-2"/></Link>
+          </div>}
           <div className="mt-8 grid items-start gap-6 lg:grid-cols-[1fr_360px]">
             <section aria-label="Articles dans le panier" className="space-y-4">
               {details.map(({ id, kind, name, description, price, image, tier, quantity }) => <article key={`${kind}:${id}`} className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-[132px_1fr] sm:p-5">
@@ -133,8 +141,8 @@ export default function CartPageClient() {
               <select id="shipping-country" value={countryCode} onChange={(event) => setCountryCode(event.target.value)} className="mt-2 min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200">
                 {countries.map(({ code, name }) => <option key={code} value={code}>{name}</option>)}
               </select>
-              <button type="button" onClick={calculateShipping} disabled={quoting || !ready || details.length === 0} className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-bold transition hover:border-amber-500 hover:bg-amber-50 disabled:opacity-50">
-                {quoting && <Loader2 size={14} className="animate-spin"/>}{quoting ? "Calcul des frais…" : "Calculer livraison et disponibilité"}
+              <button type="button" onClick={calculateShipping} disabled={quoting || !salesReady || !ready || details.length === 0} className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-bold transition hover:border-amber-500 hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-50">
+                {quoting && <Loader2 size={14} className="animate-spin"/>}{quoting ? "Calcul des frais…" : salesReady ? "Calculer livraison et disponibilité" : "Commandes en ligne indisponibles"}
               </button>
               <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4 text-sm"><span className="text-slate-600">Sous-total</span><span className="font-bold">{formatPrice(subtotal)}</span></div>
               {quote && <><div className="mt-3 flex items-center justify-between gap-3 text-sm"><span className="text-slate-600">Livraison calculée</span><span className="font-bold">{formatPrice(quote.shippingAmountCents / 100)}</span></div><p className="mt-2 text-xs leading-5 text-slate-500">Mode disponible · délai estimé jusqu’à {quote.maxDays} jours.</p></>}
@@ -145,6 +153,7 @@ export default function CartPageClient() {
               <p className="mt-3 text-center text-[11px] leading-5 text-slate-500">Le montant est d’abord réservé sur la carte, puis encaissé après confirmation de la commande. Si elle ne peut pas être confirmée, la réservation est annulée ; le délai d’affichage dépend de la banque.</p>
             </aside>
           </div>
+          </>
         )}
       </div>
       <Footer />

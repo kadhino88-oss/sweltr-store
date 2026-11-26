@@ -42,7 +42,7 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
   const { addItem } = useCart();
   const reduceMotion = useReducedMotion();
   const guide = kitGuides[tier.id] ?? kitGuides.solo;
-  const gallery = [...new Set([...tier.cardImages, ...tier.images])].slice(0, 7);
+  const gallery = tier.images;
   const relatedTiers = TIERS.filter((item) => item.id !== tier.id);
 
   function handleCheckout() {
@@ -69,14 +69,14 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
             <motion.div key={activeImage} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="relative aspect-square overflow-hidden rounded-2xl bg-white">
               {activeImage === 0
                 ? <KitCompositionImage tier={tier} className="h-full w-full" />
-                : <Image src={gallery[activeImage - 1]} alt={`${tier.name} — article inclus ${activeImage}`} fill priority sizes="(max-width: 1024px) 100vw, 50vw" className="object-contain p-2" />}
+                : <Image src={gallery[activeImage - 1]} alt={`${tier.name} — ${tier.imageLabels[activeImage - 1]}`} fill priority sizes="(max-width: 1024px) 100vw, 50vw" className="object-contain p-3 sm:p-5" />}
             </motion.div>
             {gallery.length > 0 && <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6" aria-label="Galerie des articles du kit">
               <button type="button" onClick={() => setActiveImage(0)} aria-label={`Afficher le visuel complet de ${tier.name}`} aria-pressed={activeImage === 0} className={`relative aspect-square overflow-hidden rounded-xl border bg-white transition ${activeImage === 0 ? "border-amber-500 ring-2 ring-amber-200" : "border-slate-200 hover:border-amber-400"}`}>
                 <KitCompositionImage tier={tier} className="h-full w-full" />
               </button>
-              {gallery.map((image, index) => <button key={`${image}-${index}`} type="button" onClick={() => setActiveImage(index + 1)} aria-label={`Afficher l’article ${index + 1} de ${tier.name}`} aria-pressed={activeImage === index + 1} className={`relative aspect-square overflow-hidden rounded-xl border bg-white transition ${activeImage === index + 1 ? "border-amber-500 ring-2 ring-amber-200" : "border-slate-200 hover:border-amber-400"}`}>
-                <Image src={image} alt="" fill sizes="(max-width: 640px) 22vw, 100px" className="object-contain p-1" />
+              {gallery.map((image, index) => <button key={`${image}-${index}`} type="button" onClick={() => setActiveImage(index + 1)} aria-label={`Afficher ${tier.imageLabels[index]} — image ${index + 1}`} aria-pressed={activeImage === index + 1} className={`relative aspect-square overflow-hidden rounded-xl border bg-[#F8F6F0] transition ${activeImage === index + 1 ? "border-amber-500 ring-2 ring-amber-200" : "border-slate-200 hover:border-amber-400"}`}>
+                <Image src={image} alt="" fill sizes="(max-width: 640px) 22vw, 100px" className="object-contain p-2" />
               </button>)}
             </div>}
             <p className="mt-3 px-1 text-xs leading-5 text-slate-500">Les images montrent les articles associés à ce kit. Les caractéristiques précises suivent le modèle et la notice fournis.</p>
@@ -103,7 +103,7 @@ export default function ProductDetailClient({ tier }: { tier: Tier }) {
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <AddToCartButton tierId={tier.id} />
               <button type="button" onClick={handleCheckout} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-bold text-slate-900 transition hover:border-amber-500 hover:bg-amber-50">
-                <ShoppingBag size={16} />Acheter maintenant · choisir la livraison
+                <ShoppingBag size={16} />Ajouter au panier et voir le récapitulatif
               </button>
             </div>
             <p className="mt-4 text-xs leading-5 text-slate-500">Les accessoires chauffants doivent être utilisés conformément à la notice du fabricant.</p>

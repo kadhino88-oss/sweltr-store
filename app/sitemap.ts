@@ -8,7 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   const kitPages: MetadataRoute.Sitemap = TIERS.map((tier) => ({
-    url: `${siteUrl}/produit/${tier.id}`,
+    url: `${siteUrl}/produit/${tier.slug}`,
     lastModified: now,
     changeFrequency: "weekly",
     priority: 0.85,

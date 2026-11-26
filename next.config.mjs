@@ -11,5 +11,11 @@ const nextConfig = {
       { protocol: "https", hostname: "cc-west-usa.oss-accelerate.aliyuncs.com" },
     ],
   },
+  async redirects() {
+    return [
+      { source: "/favicon.ico", destination: "/favicon.svg", permanent: true },
+      { source: "/produit/trio", destination: "/produit/kit-grand-froid", permanent: true },
+    ];
+  },
 };
 export default nextConfig;

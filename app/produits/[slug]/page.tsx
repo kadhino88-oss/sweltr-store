@@ -141,12 +141,12 @@ export default async function WinterProductPage({ params }: { params: Promise<{ 
               <p className="mt-1 text-xs leading-5 text-slate-600">Le prix affiché correspond au kit complet indiqué sur la fiche.</p>
             </div>}
 
-            {isAvailable && <div className="mt-6"><p className="text-xs font-bold uppercase tracking-widest text-slate-500">Kits qui contiennent cet article</p><div className="mt-3 grid gap-2 sm:grid-cols-2">{relatedTiers.map((tier) => <Link key={tier.id} href={`/produit/${tier.id}`} className="rounded-xl border border-slate-200 bg-white p-3 transition hover:border-amber-400 hover:bg-amber-50"><span className="block text-sm font-bold">{tier.name}</span><span className="mt-1 block text-lg font-black">{formatPrice(tier.price)}</span><span className="mt-1 block text-[11px] leading-4 text-slate-600">{tier.items.join(" · ")}</span></Link>)}</div></div>}
+            {isAvailable && <div className="mt-6"><p className="text-xs font-bold uppercase tracking-widest text-slate-500">Kits qui contiennent cet article</p><div className="mt-3 grid gap-2 sm:grid-cols-2">{relatedTiers.map((tier) => <Link key={tier.id} href={`/produit/${tier.slug}`} className="rounded-xl border border-slate-200 bg-white p-3 transition hover:border-amber-400 hover:bg-amber-50"><span className="block text-sm font-bold">{tier.name}</span><span className="mt-1 block text-lg font-black">{formatPrice(tier.price)}</span><span className="mt-1 block text-[11px] leading-4 text-slate-600">{tier.items.join(" · ")}</span></Link>)}</div></div>}
 
             {isAvailable
               ? <div className="mt-6 grid gap-3">
                   {product.retailPrice !== undefined && <AddProductToCartButton productSlug={product.slug} />}
-                  {relatedTiers.length > 0 && <Link href={relatedTiers.length === 1 ? `/produit/${relatedTiers[0].id}` : "/boutique"} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 text-sm font-bold text-slate-950 transition hover:border-amber-400 hover:bg-amber-50">Comparer les kits avec cet article <ArrowRight size={16}/></Link>}
+                  {relatedTiers.length > 0 && <Link href={relatedTiers.length === 1 ? `/produit/${relatedTiers[0].slug}` : "/boutique"} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 text-sm font-bold text-slate-950 transition hover:border-amber-400 hover:bg-amber-50">Comparer les kits avec cet article <ArrowRight size={16}/></Link>}
                 </div>
               : <Link href="/boutique" className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-bold text-white transition hover:bg-slate-800">Voir les kits disponibles <ArrowRight size={16}/></Link>}
           </div>

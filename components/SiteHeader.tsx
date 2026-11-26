@@ -20,15 +20,16 @@ export default function SiteHeader() {
           <span className="leading-tight"><span className="block font-display text-lg font-black tracking-[.1em] sm:text-xl">SWELTR<sup className="ml-0.5 align-top text-[9px]">®</sup></span><span className="hidden text-[9px] uppercase tracking-[.14em] text-white/60 sm:block">Comfort all year round</span></span>
         </Link>
 
-        <form action="/produits" role="search" className="hidden w-full max-w-[300px] items-center rounded-full border border-white/20 bg-white/5 pl-4 pr-1.5 focus-within:border-amber-300 2xl:flex">
-          <input name="q" type="search" placeholder="Rechercher un kit ou un produit…" className="min-w-0 flex-1 bg-transparent py-2.5 text-xs text-white outline-none placeholder:text-white/45" aria-label="Rechercher un produit ou un kit" />
+        <form action="/produits" role="search" className="hidden w-full min-w-[170px] max-w-[220px] flex-1 items-center rounded-full border border-white/20 bg-white/5 pl-4 pr-1.5 focus-within:border-amber-300 xl:flex">
+          <input name="q" type="search" placeholder="Rechercher un produit…" className="min-w-0 flex-1 bg-transparent py-2.5 text-xs text-white outline-none placeholder:text-white/45" aria-label="Rechercher un produit ou un kit" />
           <button type="submit" aria-label="Rechercher" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-amber-400 text-slate-950 transition hover:bg-amber-300"><Search size={16} /></button>
         </form>
 
-        <div className="hidden items-center gap-4 text-[11px] font-semibold text-white/80 2xl:flex">
+        <div className="hidden shrink-0 items-center gap-2 whitespace-nowrap text-[10px] font-semibold text-white/80 2xl:gap-3 xl:flex">
           <Link href="/" className="transition hover:text-amber-300">Accueil</Link>
           <Link href="/boutique" className="transition hover:text-amber-300">Boutique</Link>
-          <Link href="/#saisons" className="transition hover:text-amber-300">Les saisons</Link>
+          <Link href="/produits" className="transition hover:text-amber-300">Tous produits</Link>
+          <Link href="/#saisons" className="transition hover:text-amber-300">Saisons</Link>
           <Link href="/produits#nouveautes" className="transition hover:text-amber-300">Nouveautés</Link>
           <Link href="/guides" className="transition hover:text-amber-300">Guides</Link>
           <Link href="/a-propos" className="transition hover:text-amber-300">À propos</Link>
@@ -41,13 +42,13 @@ export default function SiteHeader() {
             {count > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-red-500 px-1 text-[10px] font-black text-white" aria-hidden="true">{count}</span>}
           </Link>
           <span className="hidden items-center gap-1.5 rounded-full border border-white/15 px-3 py-2 text-[10px] font-semibold tracking-wide text-white/80 md:inline-flex"><Globe size={13} className="text-amber-300"/> International <span className="text-amber-300">·</span> CHF</span>
-          <button type="button" onClick={() => setMenuOpen((open) => !open)} className="grid h-10 w-10 place-items-center rounded-full border border-white/15 transition hover:border-amber-300 2xl:hidden" aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"} aria-expanded={menuOpen} aria-controls="mobile-navigation">
+          <button type="button" onClick={() => setMenuOpen((open) => !open)} className="grid h-10 w-10 place-items-center rounded-full border border-white/15 transition hover:border-amber-300 xl:hidden" aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"} aria-expanded={menuOpen} aria-controls="mobile-navigation">
             {menuOpen ? <X size={19} /> : <Menu size={19} />}
           </button>
         </div>
       </nav>
 
-      {menuOpen && <div id="mobile-navigation" className="border-t border-white/10 bg-[#10151D] px-5 py-5 2xl:hidden"><div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm">
+      {menuOpen && <div id="mobile-navigation" className="border-t border-white/10 bg-[#10151D] px-5 py-5 xl:hidden"><div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm">
         <form action="/produits" role="search" className="flex items-center rounded-full border border-white/20 bg-white/5 pl-4 pr-1.5"><input name="q" type="search" placeholder="Rechercher un produit…" className="min-w-0 flex-1 bg-transparent py-3 text-sm text-white outline-none placeholder:text-white/45" aria-label="Rechercher un produit ou un kit" /><button type="submit" aria-label="Rechercher" className="grid h-10 w-10 place-items-center rounded-full bg-amber-400 text-slate-950"><Search size={17} /></button></form>
         <Link href="/" onClick={() => setMenuOpen(false)}>Accueil</Link>
         <Link href="/boutique" onClick={() => setMenuOpen(false)}>Boutique</Link>

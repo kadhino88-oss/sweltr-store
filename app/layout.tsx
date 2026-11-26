@@ -8,6 +8,10 @@ const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    shortcut: ["/favicon.svg"],
+  },
   title: "SWELTR — Kits d’hiver et accessoires de confort",
   description: "Choisissez votre kit d’hiver SWELTR : gants chauffants, écharpe chauffante USB et chaussettes thermiques. Contenu et prix clairement indiqués.",
   alternates: { canonical: siteUrl },
@@ -30,7 +34,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="fr" data-scroll-behavior="smooth">
       <body
         className="font-body bg-ivory text-ink antialiased"
         style={{

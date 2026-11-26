@@ -1,10 +1,14 @@
 export type Tier = {
   id: string;
+  /** Public, SEO-friendly URL slug. Keep id stable for carts and supplier orders. */
+  slug: string;
   name: string;
   tagline: string;
   price: number;
   items: string[];
   images: string[];
+  /** Product label for each corresponding image in the product gallery. */
+  imageLabels: string[];
   // Une seule vignette par article, pour les petites cartes de la page d'accueil
   cardImages: string[];
   description: string;
@@ -46,28 +50,36 @@ export const THERMAL_SOCKS_GALLERY = [
 export const TIERS: Tier[] = [
   {
     id: "solo",
+    slug: "solo-chaleur-mains",
     name: "Solo Chaleur Mains",
     tagline: "1x Gants chauffants",
     price: 36.99,
     items: ["1× Gants chauffants SWELTR"],
     images: HEATED_GLOVES_GALLERY,
+    imageLabels: ["Gants chauffants", "Gants chauffants", "Gants chauffants"],
     cardImages: [PRODUCT_IMAGES.heatedGloves],
     description:
       "Tu veux équiper tes mains sans ajouter d’autres articles ? Le Solo réunit une paire de gants chauffants dans une offre simple à comparer. Les consignes et caractéristiques précises sont celles du modèle fourni.",
   },
   {
     id: "duo",
+    slug: "duo-chaleur-totale",
     name: "Duo Chaleur Totale",
     tagline: "Gants chauffants + Écharpe chauffante",
     price: 52.99,
     items: ["1× Gants chauffants SWELTR", "1× Écharpe chauffante USB"],
     images: [...HEATED_GLOVES_GALLERY.slice(0, 3), ...HEATED_SCARF_GALLERY.slice(0, 3)],
+    imageLabels: [
+      "Gants chauffants", "Gants chauffants", "Gants chauffants",
+      "Écharpe chauffante USB", "Écharpe chauffante USB", "Écharpe chauffante USB",
+    ],
     cardImages: [PRODUCT_IMAGES.heatedGloves, PRODUCT_IMAGES.heatedScarf],
     description:
       "Choisis le Duo si tu souhaites réunir un accessoire pour les mains et un autre pour le cou. Le kit comprend les gants chauffants et une écharpe chauffante USB ; son tarif complet est affiché avant la commande.",
   },
   {
     id: "trio",
+    slug: "kit-grand-froid",
     name: "Kit Grand Froid",
     tagline: "Gants chauffants + Écharpe chauffante + Chaussettes thermiques",
     price: 62.99,
@@ -80,6 +92,11 @@ export const TIERS: Tier[] = [
       ...HEATED_GLOVES_GALLERY.slice(0, 2),
       ...HEATED_SCARF_GALLERY.slice(0, 2),
       ...THERMAL_SOCKS_GALLERY.slice(0, 2),
+    ],
+    imageLabels: [
+      "Gants chauffants", "Gants chauffants",
+      "Écharpe chauffante USB", "Écharpe chauffante USB",
+      "Chaussettes thermiques", "Chaussettes thermiques",
     ],
     cardImages: [PRODUCT_IMAGES.heatedGloves, PRODUCT_IMAGES.heatedScarf, PRODUCT_IMAGES.thermalSocks],
     description:

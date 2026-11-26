@@ -116,7 +116,7 @@ export const WINTER_PRODUCTS: WinterProduct[] = [
     category: "Accessoires thermiques",
     availability: "existing",
     retailPrice: 10.00,
-    href: "/boutique#trio",
+    href: "/produit/kit-grand-froid",
   },
   {
     slug: "chauffe-mains",

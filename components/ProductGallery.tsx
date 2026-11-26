@@ -9,7 +9,7 @@ import Reveal from "@/components/Reveal";
 const ITEMS = [
   { key: "heatedGloves", label: "Gants chauffants", src: PRODUCT_IMAGES.heatedGloves, href: "/produit/solo" },
   { key: "heatedScarf", label: "Écharpe chauffante", src: PRODUCT_IMAGES.heatedScarf, href: "/produit/duo" },
-  { key: "thermalSocks", label: "Chaussettes thermiques", src: PRODUCT_IMAGES.thermalSocks, href: "/produit/trio" },
+  { key: "thermalSocks", label: "Chaussettes thermiques", src: PRODUCT_IMAGES.thermalSocks, href: "/produit/kit-grand-froid" },
 ];
 
 export default function ProductGallery() {
@@ -30,7 +30,7 @@ export default function ProductGallery() {
             <Link href={item.href}>
               <motion.div
                 whileHover={{ y: -6 }}
-                className="group relative rounded-2xl overflow-hidden bg-panel border border-line aspect-square cursor-pointer"
+                className="group relative aspect-square cursor-pointer overflow-hidden rounded-2xl border border-line bg-[#F2EFE6]"
               >
                 <motion.div
                   className="w-full h-full"
@@ -42,7 +42,7 @@ export default function ProductGallery() {
                     alt={item.label}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover"
+                    className="object-contain p-5"
                     unoptimized
                   />
                 </motion.div>

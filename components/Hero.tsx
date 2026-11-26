@@ -64,7 +64,7 @@ export default function Hero() {
             </span>
           </Link>
           <Link
-            href="/produit/trio"
+            href="/produit/kit-grand-froid"
             className="group relative min-h-[8.8rem] overflow-hidden rounded-2xl bg-panel2 md:min-h-0"
           >
             <Image
