@@ -35,8 +35,10 @@ export default function DeliveryReturnsPage() {
           <h2 className="mt-5 font-display text-xl font-semibold text-ink">Délai estimé</h2>
           <p className="mt-3">
             SWELTR vise les destinations internationales, dont les États-Unis, le Canada et le
-            Royaume-Uni, lorsque le transporteur du produit dessert l’adresse. Le délai varie selon
-            le pays, le produit et la méthode disponible ; certains trajets prennent plus longtemps.
+            Royaume-Uni, lorsque le transporteur du produit dessert l’adresse. Avant le paiement,
+            seules les méthodes dont l’estimation maximale annoncée ne dépasse pas 10 jours sont
+            proposées. Cette estimation dépend du pays, du produit et des conditions logistiques ;
+            elle n’est pas une garantie de date de réception.
           </p>
         </article>
         <article className="rounded-2xl border border-line bg-panel p-6">

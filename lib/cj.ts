@@ -144,6 +144,7 @@ export type CjFreightOption = {
 };
 
 export type EligibleCjFreight = { logisticName: string; costUsd: number; maxDays: number };
+export const MAX_DELIVERY_DAYS = 10;
 
 export function maxDeliveryDays(value: unknown): number | null {
   if (typeof value !== "string" && typeof value !== "number") return null;
@@ -178,7 +179,7 @@ export async function getEligibleShippingOptions(
     return logisticName && Number.isFinite(costUsd) && costUsd >= 0 && maxDays !== null
       ? [{ logisticName, costUsd, maxDays }]
       : [];
-  }).sort((a, b) => a.costUsd - b.costUsd);
+  }).filter((option) => option.maxDays <= MAX_DELIVERY_DAYS).sort((a, b) => a.costUsd - b.costUsd);
 }
 
 export async function getVariantCostAndStock(vid: string): Promise<{ costUsd: number; availableQuantity: number }> {

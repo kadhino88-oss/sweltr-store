@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     console.error("Échec du calcul des frais de livraison :", error instanceof Error ? error.message : String(error));
     const detail = error instanceof Error ? error.message : "";
     const message = detail.includes("Aucun transporteur")
-      ? "Aucun mode de livraison n’est actuellement disponible pour ce pays."
+      ? "Aucun transporteur ne confirme actuellement un délai estimé de 10 jours maximum pour ce pays."
       : detail.includes("plus disponible")
         ? "Un article de ton panier n’est plus disponible. Actualise le panier ou contacte-nous."
         : detail.includes("prix affiché")

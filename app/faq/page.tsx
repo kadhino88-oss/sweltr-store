@@ -23,7 +23,7 @@ export default function FaqPage() {
     },
     {
       q: "Quel est le délai de livraison ?",
-      a: "Le délai indicatif mentionné dans les conditions générales de vente est de 7 à 15 jours ouvrés selon la destination. Il peut varier selon les conditions logistiques. Consulte les CGV pour les informations applicables à ta commande.",
+      a: "Avant le paiement, SWELTR ne propose que les méthodes dont le transporteur annonce une estimation maximale de 10 jours pour le pays choisi. Cette durée reste une estimation, pas une garantie : le traitement, les contrôles douaniers et les conditions locales peuvent la faire varier. Le délai affiché dans le panier avant paiement s’applique à ta sélection.",
     },
     {
       q: "Comment fonctionne le délai de rétractation ?",
