@@ -408,28 +408,46 @@ export async function prepareCjOrderForPayment(orderId: string, knownShipmentOrd
   const token = await getAccessToken();
   const headers = { "Content-Type": "application/json", "CJ-Access-Token": token };
 
-  const addRes = await fetch(`${CJ_API_BASE_URL}/shopping/order/addCart`, {
-    method: "POST", headers, body: JSON.stringify({ cjOrderIdList: [orderId] }), cache: "no-store",
-  });
-  if (!addRes.ok) throw new Error(`Échec HTTP ajout au panier CJ (HTTP ${addRes.status}).`);
-  const addData = await addRes.json() as { result?: boolean; success?: boolean; code?: number; message?: string };
-  if (addData.result === false && addData.code !== 200) {
-    console.warn("Ajout au panier CJ non confirmé, tentative de confirmation : " + (addData.message || "réponse sans détail"));
-  }
+  let shipmentOrderId = knownShipmentOrderId;
 
-  const confirmRes = await fetch(`${CJ_API_BASE_URL}/shopping/order/addCartConfirm`, {
-    method: "POST", headers, body: JSON.stringify({ cjOrderIdList: [orderId] }), cache: "no-store",
-  });
-  if (!confirmRes.ok) throw new Error(`Échec HTTP confirmation CJ (HTTP ${confirmRes.status}).`);
-  const confirmData = await confirmRes.json() as {
-    result?: boolean; success?: boolean; code?: number; message?: string;
-    data?: { submitSuccess?: boolean; shipmentsId?: string; shipmentOrderId?: string };
-  };
-  if (confirmData.result === false || confirmData.data?.submitSuccess === false || (!confirmData.result && !confirmData.success && confirmData.code !== 200)) {
-    throw new Error("CJ n’a pas confirmé la commande : " + (confirmData.message || "confirmation en attente"));
-  }
+  // A retry can find an order already confirmed in CJ. Reuse its parent order
+  // instead of adding/confirming it again; regenerate the payment quote below.
+  if (!shipmentOrderId) {
+    const addRes = await fetch(`${CJ_API_BASE_URL}/shopping/order/addCart`, {
+      method: "POST", headers, body: JSON.stringify({ cjOrderIdList: [orderId] }), cache: "no-store",
+    });
+    if (!addRes.ok) throw new Error(`Échec HTTP ajout au panier CJ (HTTP ${addRes.status}).`);
+    const addData = await addRes.json() as { result?: boolean; success?: boolean; code?: number; message?: string };
+    if (addData.result === false && addData.code !== 200) {
+      console.warn("Ajout au panier CJ non confirmé, tentative de confirmation : " + (addData.message || "réponse sans détail"));
+    }
 
-  const shipmentOrderId = confirmData.data?.shipmentOrderId || confirmData.data?.shipmentsId || knownShipmentOrderId;
+    const confirmRes = await fetch(`${CJ_API_BASE_URL}/shopping/order/addCartConfirm`, {
+      method: "POST", headers, body: JSON.stringify({ cjOrderIdList: [orderId] }), cache: "no-store",
+    });
+    if (!confirmRes.ok) throw new Error(`Échec HTTP confirmation CJ (HTTP ${confirmRes.status}).`);
+    const confirmData = await confirmRes.json() as {
+      result?: boolean; success?: boolean; code?: number; message?: string;
+      data?: {
+        submitSuccess?: boolean; shipmentsId?: string; shipmentOrderId?: string; result?: number;
+        interceptOrders?: unknown[]; unMatchOrderCodes?: unknown[]; unMatchProductCodes?: unknown[];
+      };
+    };
+    if (confirmData.result === false || confirmData.data?.submitSuccess === false || (!confirmData.result && !confirmData.success && confirmData.code !== 200)) {
+      throw new Error("CJ n’a pas confirmé la commande : " + (confirmData.message || "confirmation en attente"));
+    }
+    if (
+      confirmData.data?.interceptOrders?.length
+      || confirmData.data?.unMatchOrderCodes?.length
+      || confirmData.data?.unMatchProductCodes?.length
+      || confirmData.data?.result === 1
+      || confirmData.data?.result === 2
+    ) {
+      throw new CjOrderPreparationRejectedError("CJ a signalé un article bloqué ou indisponible à la confirmation.");
+    }
+
+    shipmentOrderId = confirmData.data?.shipmentOrderId || confirmData.data?.shipmentsId;
+  }
   if (!shipmentOrderId) {
     throw new Error("CJ a confirmé la commande mais n’a retourné aucun shipmentOrderId. Paiement automatique bloqué.");
   }
@@ -440,12 +458,43 @@ export async function prepareCjOrderForPayment(orderId: string, knownShipmentOrd
   if (!parentRes.ok) throw new Error(`Échec HTTP génération de commande parent CJ (HTTP ${parentRes.status}).`);
   const parentData = await parentRes.json() as {
     result?: boolean; success?: boolean; code?: number; message?: string;
-    data?: { submitSuccess?: boolean; successOrders?: string[]; unMatchOrderCodes?: string[]; payId?: string };
+    data?: {
+      submitSuccess?: boolean; successOrders?: string[]; unMatchOrderCodes?: string[];
+      unMatchProductCodes?: string[]; interceptOrders?: unknown[]; payId?: string; orderMoney?: unknown;
+      paymentInformation?: { payableAmount?: unknown; actualPayment?: unknown };
+    };
   };
   if (parentData.result === false || parentData.data?.submitSuccess === false || (!parentData.result && !parentData.success && parentData.code !== 200)) {
     throw new Error("CJ n’a pas généré la commande parent : " + (parentData.message || "réponse invalide"));
   }
-  return { shipmentOrderId, payId: parentData.data?.payId };
+  if (
+    (Array.isArray(parentData.data?.successOrders) && parentData.data.successOrders.length === 0)
+    || parentData.data?.interceptOrders?.length
+    || parentData.data?.unMatchOrderCodes?.length
+    || parentData.data?.unMatchProductCodes?.length
+  ) {
+    throw new CjOrderPreparationRejectedError("CJ a exclu un article de la commande parent.");
+  }
+
+  const payableAmount = parentData.data?.paymentInformation?.payableAmount
+    ?? parentData.data?.paymentInformation?.actualPayment
+    ?? parentData.data?.orderMoney;
+  if ((typeof payableAmount !== "number" && typeof payableAmount !== "string") || String(payableAmount).trim() === "") {
+    throw new CjOrderPreparationRejectedError("CJ n’a pas fourni le montant exact à payer pour cette commande.");
+  }
+  const payableAmountUsd = Number(payableAmount);
+  if (!Number.isFinite(payableAmountUsd) || payableAmountUsd < 0) {
+    throw new CjOrderPreparationRejectedError("Le montant fournisseur retourné par CJ n’est pas exploitable.");
+  }
+
+  return { shipmentOrderId, payId: parentData.data?.payId, payableAmountUsd };
+}
+
+export class CjOrderPreparationRejectedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "CjOrderPreparationRejectedError";
+  }
 }
 
 export class CjPaymentRejectedError extends Error {

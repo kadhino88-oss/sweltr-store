@@ -51,6 +51,23 @@ test("webhook retries ambiguous CJ payment failures instead of acknowledging unp
   assert.match(webhook, /statut CJ non confirmé/);
 });
 
+test("CJ blocks incomplete parent orders and checks the exact supplier amount before payment", () => {
+  const cj = read("lib/cj.ts");
+  const webhook = read("app/api/webhooks/stripe/route.ts");
+  assert.match(cj, /unMatchOrderCodes\?\.length/);
+  assert.match(cj, /interceptOrders\?\.length/);
+  assert.match(cj, /CjOrderPreparationRejectedError/);
+  assert.match(cj, /paymentInformation\?\.payableAmount/);
+  assert.match(cj, /payableAmountUsd/);
+  const supplierAmountCheck = webhook.indexOf("const supplierAmountCents");
+  const supplierPayments = Array.from(webhook.matchAll(/await payCjOrder\(shipmentOrderId!/g), (match) => match.index);
+  const supplierPayment = supplierPayments.at(-1) ?? -1;
+  assert.ok(supplierAmountCheck >= 0, "exact CJ cost must be checked against the customer's payment");
+  assert.ok(supplierPayment > supplierAmountCheck, "CJ must not be paid before the exact cost check");
+  assert.match(webhook, /supplierAmountCents >= session\.amount_total/);
+  assert.match(webhook, /sweltr-cj-cost-exceeds-sale-/);
+});
+
 test("CJ marks sandbox orders explicitly and blocks real payment until validated", () => {
   const cj = read("lib/cj.ts");
   assert.match(cj, /options\.isSandbox \? \{ isSandbox: 1 \} : \{\}/);

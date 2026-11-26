@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { getStripeClient, getStripeErrorDetails } from "@/lib/stripe";
 import { SHIPPING_COUNTRIES } from "@/lib/shipping-countries";
 import { normalizeStoreOrder, storeOrderItems, storeOrderTotalCents } from "@/lib/kit-order";
-import { CjPaymentRejectedError, createCjOrder, findCjOrderByOrderNumber, getCjOrderNumber, isCjOrderPaid, payCjOrder, prepareCjOrderForPayment } from "@/lib/cj";
+import { CjOrderPreparationRejectedError, CjPaymentRejectedError, createCjOrder, findCjOrderByOrderNumber, getCjOrderNumber, isCjOrderPaid, payCjOrder, prepareCjOrderForPayment } from "@/lib/cj";
 import { createStoreShippingQuote } from "@/lib/shipping-quote";
 import { isCjAutoPaymentReady } from "@/lib/fulfillment-readiness";
 
@@ -204,15 +204,19 @@ export async function POST(req: NextRequest) {
       if (!order?.orderId) return webhookRetryResponse("Commande fournisseur non confirmée.");
       let shipmentOrderId = order.shipmentOrderId;
       let cjPayId: string | undefined;
-      if (!existingOrder || !shipmentOrderId) {
-        try {
-          const prepared = await prepareCjOrderForPayment(order.orderId, shipmentOrderId);
-          shipmentOrderId = prepared.shipmentOrderId;
-          cjPayId = prepared.payId;
-        } catch (error: unknown) {
-          console.error("Préparation de la commande thermique CJ incomplète :", getStripeErrorDetails(error));
-          return webhookRetryResponse("Commande créée chez le fournisseur mais confirmation CJ incomplète. Nouvelle tentative nécessaire.");
+      try {
+        const prepared = await prepareCjOrderForPayment(order.orderId, shipmentOrderId);
+        shipmentOrderId = prepared.shipmentOrderId;
+        cjPayId = prepared.payId;
+      } catch (error: unknown) {
+        console.error("Préparation de la commande thermique CJ incomplète :", getStripeErrorDetails(error));
+        if (error instanceof CjOrderPreparationRejectedError) {
+          return releaseAndAcknowledge(
+            `sweltr-thermal-cj-blocked-${session.id}`,
+            "CJ ne peut pas confirmer le contenu de cette commande : libération à vérifier.",
+          );
         }
+        return webhookRetryResponse("Commande créée chez le fournisseur mais confirmation CJ incomplète. Nouvelle tentative nécessaire.");
       }
       console.log("Commande thermique CJ " + (existingOrder ? "retrouvée" : "créée") + " pour " + session.id + " : " + order.orderId);
       if (process.env.CJ_AUTO_PAY === "true" && !shipmentOrderId) {
@@ -382,15 +386,34 @@ export async function POST(req: NextRequest) {
 
     let shipmentOrderId = order.shipmentOrderId;
     let cjPayId: string | undefined;
-    if (!existingOrder || !shipmentOrderId) {
-      try {
-        const prepared = await prepareCjOrderForPayment(order.orderId, shipmentOrderId);
-        shipmentOrderId = prepared.shipmentOrderId;
-        cjPayId = prepared.payId;
-      } catch (error: unknown) {
-        console.error("Préparation de la commande CJ incomplète :", getStripeErrorDetails(error));
-        return webhookRetryResponse("Commande créée chez le fournisseur mais confirmation CJ incomplète. Nouvelle tentative nécessaire.");
+    let payableAmountUsd: number;
+    try {
+      const prepared = await prepareCjOrderForPayment(order.orderId, shipmentOrderId);
+      shipmentOrderId = prepared.shipmentOrderId;
+      cjPayId = prepared.payId;
+      payableAmountUsd = prepared.payableAmountUsd;
+    } catch (error: unknown) {
+      console.error("Préparation de la commande CJ incomplète :", getStripeErrorDetails(error));
+      if (error instanceof CjOrderPreparationRejectedError) {
+        return releaseAndAcknowledge(
+          `sweltr-cj-order-blocked-${session.id}`,
+          "CJ ne peut pas confirmer tous les articles de cette commande : libération à vérifier.",
+        );
       }
+      return webhookRetryResponse("Commande créée chez le fournisseur mais confirmation CJ incomplète. Nouvelle tentative nécessaire.");
+    }
+
+    const supplierAmountCents = Math.ceil(payableAmountUsd * shippingQuote.exchangeRate * 100);
+    if (
+      !Number.isFinite(supplierAmountCents)
+      || !Number.isSafeInteger(session.amount_total)
+      || supplierAmountCents >= session.amount_total!
+    ) {
+      console.error(`Coût fournisseur CJ supérieur ou égal au montant client pour ${session.id}; aucun paiement CJ ne sera envoyé.`);
+      return releaseAndAcknowledge(
+        `sweltr-cj-cost-exceeds-sale-${session.id}`,
+        "Le coût final du fournisseur ne permet pas de confirmer la commande : la réservation du paiement sera levée.",
+      );
     }
 
     console.log((existingOrder ? "Commande CJ existante retrouvée" : "Commande CJ créée") + " pour la session Stripe " + session.id + " (référence fournisseur " + cjOrderNumber + ") : " + order.orderId);
